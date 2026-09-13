@@ -10,13 +10,18 @@ When you've eaten enough, swim to the glowing burrow at the edge of the pond and
 You come out as a **mini toad** and discover the pond was only **1%** of a colossal world!
 
 Out in the world you'll find:
-- 🍄 **1,000 mushrooms** scattered everywhere. Every time you collect one, a new one spawns somewhere random.
+- 🍄 **1,000 spotted mushrooms** scattered over rolling hills. Every time you collect one, a new one spawns somewhere random.
 - ✨ **Golden mushrooms** that give you free clothes.
-- 🏪 The **Mushroom Shop** (a giant mushroom house near the pond) where mushrooms buy hats, glasses, capes, and more.
-- 🐸 **Toad friends** who are also racing to become the most legendary toad. Check the 🏆 Race board to see your rank.
-- 🌲 A giant mushroom forest, a stone circle, and four more ponds to explore.
+- 🌸 **Petals** floating on the lakes. They buy the fanciest shop gear and feed your bird.
+- 🏪 The **Mushroom Shop** (a giant mushroom house near the pond): 23 hats, glasses, capes, scarves, and a tutu.
+- 🧱 **Fort building** (press B): trade stones for walls, roofs, beds, tables, chairs, lamps, rugs, bookshelves, and treasure chests. Press E to use them.
+- 🥚 A **baby toad** you can hatch once you're a Toad. Name it and choose whether it follows you or lives at your fort.
+- ✨ A glowing sprite near the pond who becomes your **best friend** and follows you everywhere.
+- 🐸 **Toad friends**, snails, butterflies, ducks, and dragonflies to talk to (press E). The toads are racing you to become the most legendary toad. Check the 🏆 Race board.
+- 🌈 The **Rainbow Bird**: find its egg in the stone circle, feed it petals, and once it's grown, press E to ride it and fly up to the **sky islands**.
+- 🌲 A giant mushroom forest (press E on a giant mushroom to bounce!), a stone circle, four lakes, and four floating sky islands.
 
-Evolution: Tadpole → Mini Toad → Toad → Big Toad → 👑 Legendary Toad.
+Evolution: Tadpole → Mini Toad → Toad → Big Toad → 👑 Legendary Toad → 💜 Mega Toad → 🔮 Mythic Toad → 🌈 Rainbow Toad.
 
 ## Controls
 | Action | Keys |
@@ -24,8 +29,9 @@ Evolution: Tadpole → Mini Toad → Toad → Big Toad → 👑 Legendary Toad.
 | Move | WASD or arrow keys (touch joystick on tablets/phones) |
 | Swim up / down | Space / Shift |
 | Jump (on land) | Space |
-| Build a fort piece | B (uses one pebble) |
-| Interact (burrow, shop) | E |
+| Build menu / pick up a piece | B / X |
+| Talk, pet, feed, sit, ride, use, hatch | E |
+| Fly up / down (on the bird) | Space / Shift |
 | Shop / Race board / Help | P / L / H |
 | Look around / zoom | Drag the mouse / scroll |
 
