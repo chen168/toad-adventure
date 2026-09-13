@@ -18,10 +18,15 @@ Out in the world you'll find:
 - 🥚 A **baby toad** you can hatch once you're a Toad. Name it and choose whether it follows you or lives at your fort.
 - ✨ A glowing sprite near the pond who becomes your **best friend** and follows you everywhere.
 - 🐸 **Toad friends**, snails, butterflies, ducks, and dragonflies to talk to (press E). The toads are racing you to become the most legendary toad. Check the 🏆 Race board.
-- 🌈 The **Rainbow Bird**: find its egg in the stone circle, feed it petals, and once it's grown, press E to ride it and fly up to the **sky islands**.
+- 🐦 **Five magic birds**: the Rainbow Bird, Fire Phoenix, Ice Bird, Thunder Bird, and Star Bird. Each egg is hidden somewhere different. Feed a bird petals, and once it's grown, press E to ride it and fly up to the **sky islands**. Only one bird is equipped at a time (🐦 Birds button).
+- 🎮 **Play Your Games** (panel on the right): two games against the toad friends.
+  - 🔨 **Hamash**: a hammer arena. Press E to swing, bonk toads off the edge or knock out their hearts. Bigger toads hit harder. Last toad standing wins.
+  - 🏁 **Runny Race**: 6 laps around the track with ⚡ boosters and ❓ power-ups: 🐙 Octopus ink (slows a racer), 💣 Bomb (pass it or get stunned), 🌈 Rainbow Rain (double boosters and double prizes), 🛡️ Force Field (blocks one attack), ✨ Magic Spell (freezes a racer; mash keys to break free).
 - 🌲 A giant mushroom forest (press E on a giant mushroom to bounce!), a stone circle, four lakes, and four floating sky islands.
 
 Evolution: Tadpole → Mini Toad → Toad → Big Toad → 👑 Legendary Toad → 💜 Mega Toad → 🔮 Mythic Toad → 🌈 Rainbow Toad.
+
+Add it to your phone or tablet home screen and it opens like a real app with its own toad icon.
 
 ## Controls
 | Action | Keys |

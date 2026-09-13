@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Toad Adventure</title>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Toad Adventure">
+<meta name="theme-color" content="#4f9a2e">
 <style>
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; overflow: hidden; background: #7ec8ff; font-family: "Chalkboard SE", "Comic Sans MS", "Comic Sans", cursive, sans-serif; touch-action: none; }
@@ -62,11 +68,43 @@
   #knob { position: absolute; left: 40px; top: 40px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,.8); }
   #tbtns { position: absolute; right: 20px; bottom: 200px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; pointer-events: auto; }
   .tb { width: 70px; height: 70px; border-radius: 50%; background: rgba(255,159,67,.85); border: 3px solid #fff; color: #3b1d00; font: inherit; font-weight: bold; font-size: 14px; }
+  #games { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: auto; text-align: center; background: rgba(60, 20, 90, .8); border-color: #ff9ff3; }
+  #games .title { font-size: 15px; font-weight: bold; color: #ff9ff3; margin-bottom: 6px; }
+  #games .btn { display: block; width: 100%; margin: 4px 0; font-size: 15px; }
+  #gamehud { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); font-size: 18px; font-weight: bold; text-align: center; display: none; background: rgba(60, 20, 90, .85); border-color: #ff9ff3; pointer-events: auto; min-width: 320px; }
+  #gamehud .btn { font-size: 13px; padding: 4px 10px; margin-top: 6px; }
+  #gamehud b { color: #ffe66d; }
+  body.ingame #msg { top: 36%; font-size: 22px; }
+  .gcard { display: flex; gap: 14px; align-items: center; background: #fff; border: 3px solid #ffd27f; border-radius: 16px; padding: 12px; margin: 10px 0; text-align: left; }
+  .gcard .em { font-size: 48px; }
+  .gcard .nm { font-weight: bold; font-size: 22px; color: #d35400; }
+  .gcard p { margin: 4px 0; font-size: 14px; line-height: 1.35; }
+  #ink { position: fixed; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s; background:
+    radial-gradient(circle at 20% 30%, #1a1040 0 90px, transparent 130px), radial-gradient(circle at 75% 25%, #1a1040 0 120px, transparent 170px),
+    radial-gradient(circle at 60% 75%, #1a1040 0 100px, transparent 150px), radial-gradient(circle at 15% 80%, #1a1040 0 70px, transparent 110px); }
+  #frozen { position: fixed; inset: 0; pointer-events: none; display: none; align-items: center; justify-content: center; background: rgba(160, 220, 255, .45); box-shadow: inset 0 0 120px #9be7ff; }
+  #frozen div { background: rgba(20, 40, 80, .85); color: #fff; border: 4px solid #9be7ff; border-radius: 20px; padding: 16px 28px; font-size: 26px; font-weight: bold; text-align: center; }
+  #frozen small { display: block; font-size: 16px; color: #9be7ff; }
+  #results .card { text-align: center; }
+  #results table { margin: 10px auto; font-size: 18px; border-collapse: collapse; }
+  #results td { padding: 4px 12px; border-bottom: 2px solid #ffe0a8; }
+  #results tr.me td { background: #e6ffd8; font-weight: bold; }
+  .bird-row { display: flex; align-items: center; gap: 10px; background: #fff; border: 3px solid #ffd27f; border-radius: 16px; padding: 10px; margin: 8px 0; }
+  .bird-row.active { border-color: #7cff5a; background: #f0ffe8; }
+  .bird-row .em { font-size: 36px; }
+  .bird-row .info { flex: 1; font-size: 14px; }
+  .bird-row .nm { font-weight: bold; font-size: 18px; }
   @media (max-width: 700px) {
     #help, #maplabel { display: none; }
     #topleft { min-width: 0; width: 52%; padding: 6px 10px; } #quest { font-size: 12px; } #stage { font-size: 17px; }
     #topright { max-width: 46%; font-size: 13px; padding: 6px 10px; line-height: 1.4; }
     #buttons { top: auto; bottom: 12px; right: 12px; left: 122px; flex-direction: row; flex-wrap: wrap; justify-content: flex-end; } .btn { font-size: 13px; padding: 6px 10px; }
+    #games { top: 42%; left: 12px; right: auto; padding: 6px 8px; } #games .title { font-size: 12px; } #games .btn { font-size: 12px; }
+    #gamehud { font-size: 14px; min-width: 0; max-width: 60%; top: 100px; }
+    body.touch #buttons { left: 8px; right: 8px; bottom: 6px; justify-content: center; gap: 5px; }
+    body.touch #minimap { top: 140px; bottom: auto; left: 12px; }
+    body.touch #stick { bottom: 160px; } body.touch #tbtns { bottom: 100px; }
+    body.touch #prompt { bottom: 320px; } body.touch #games { top: auto; bottom: 330px; }
     #minimap { width: 100px; height: 100px; } #msg { font-size: 18px; top: 24%; } #prompt { font-size: 15px; bottom: 130px; white-space: normal; max-width: 90%; text-align: center; }
     #stick { bottom: 130px; left: 20px; } #tbtns { bottom: 70px; right: 14px; gap: 8px; } .tb { width: 58px; height: 58px; font-size: 12px; }
   }
@@ -92,8 +130,15 @@
     <button class="btn blue" id="buildBtn">🧱 Build</button>
     <button class="btn green" id="boardBtn">🏆 Race</button>
     <button class="btn pink" id="babyBtn" style="display:none">🥚 Hatch a baby toad!</button>
+    <button class="btn" id="birdBtn">🐦 Birds</button>
     <button class="btn" id="helpBtn">❓ Help</button>
   </div>
+  <div id="games" class="panel">
+    <div class="title">🎮 Play Your Games</div>
+    <button class="btn red" id="hamashBtn">🔨 Hamash</button>
+    <button class="btn blue" id="raceBtn">🏁 Runny Race</button>
+  </div>
+  <div id="gamehud" class="panel"><div id="gameinfo"></div><button class="btn red" id="quitGame">🏳️ Quit game</button></div>
   <div id="msg"></div>
   <div id="prompt"></div>
   <div id="bubbles"></div>
@@ -119,6 +164,8 @@
   </div>
 </div>
 
+<div id="ink"></div>
+<div id="frozen"><div>🧊 FROZEN! 🧊<small>MASH ANY KEY (or tap the screen) to break free!</small><span id="mashbar"></span></div></div>
 <div id="overlay"></div>
 
 <div id="start">
@@ -158,6 +205,33 @@
     <div>Who will become the most legendary toad?</div>
     <table id="boardTable"></table>
     <p style="text-align:center"><button class="btn" id="closeBoard">Close</button></p>
+  </div>
+</div>
+
+<div id="gamesModal" class="modal">
+  <div class="card">
+    <h2>🎮 Play Your Games</h2>
+    <div>Play against the toad friends from the world. Win mushrooms 🍄, petals 🌸, and XP!</div>
+    <div class="gcard"><div class="em">🔨</div><div style="flex:1"><div class="nm">Hamash</div><p>Grab your hammer and hop into the arena with 6 other toads. Press <b>E</b> to swing! Bonk toads off the edge or knock out all their hearts. The more evolved your toad, the harder you hit. <b>Last toad standing wins!</b></p></div><button class="btn red" id="playHamash">Play</button></div>
+    <div class="gcard"><div class="em">🏁</div><div style="flex:1"><div class="nm">Runny Race</div><p>Race 7 toads around the track for <b>6 laps</b>. Grab ⚡ boosters and ❓ power-up boxes, then press <b>E</b> to use them: 🐙 Octopus ink slows a racer, 💣 Bomb must be passed on or you're stunned, 🌈 Rainbow Rain doubles boosters and prizes, 🛡️ Force Field blocks one attack, ✨ Magic Spell freezes a racer!</p></div><button class="btn blue" id="playRace">Play</button></div>
+    <p style="text-align:center"><button class="btn" id="closeGames">Close</button></p>
+  </div>
+</div>
+
+<div id="results" class="modal">
+  <div class="card">
+    <h2 id="resultsTitle">Results</h2>
+    <div id="resultsBody"></div>
+    <button class="btn green" id="closeResults">🐸 Back to the world</button>
+  </div>
+</div>
+
+<div id="birds" class="modal">
+  <div class="card">
+    <h2>🐦 Magic Birds</h2>
+    <div>Find bird eggs hidden around the world. Feed them 🌸 petals to raise them. Only one bird can be equipped at a time!</div>
+    <div id="birdList"></div>
+    <p style="text-align:center"><button class="btn" id="closeBirds">Done</button></p>
   </div>
 </div>
 
@@ -210,6 +284,16 @@ const FOREST_POS = { x: -400, z: -160 };
 const BURROW_WATER = { x: MAIN.r - 14, z: 0 };
 const BURROW_LAND = { x: MAIN.r + 9, z: 0 };
 const BIRD_READY_XP = 100;
+const ARENA = { x: -620, z: 600, r: 34, y: 8 };
+const TRACK = { x: 150, z: -250, r: 62, w: 14, laps: 6 };
+const PLATFORMS = [ARENA];
+const BIRDS = [
+  { id: 'rainbow', name: 'Rainbow Bird', em: '🌈', speed: 34, maxY: 220, body: 0xff4d4d, head: 0xff9f43, wing: 0xffe066, wing2: 0x2ecc71, tail: [0x3b82f6, 0x9b59b6, 0x2ecc71], crest: 0x9b59b6, trail: 'rainbow', egg: { x: CIRCLE_POS.x, z: CIRCLE_POS.z }, hint: 'Its egg sleeps in the stone circle to the east.', power: 'The classic. Steady and friendly.' },
+  { id: 'phoenix', name: 'Fire Phoenix', em: '🔥', speed: 50, maxY: 240, body: 0xff5722, head: 0xff9800, wing: 0xffc107, wing2: 0xff3d00, tail: [0xff9800, 0xffeb3b, 0xff3d00], crest: 0xffeb3b, trail: 'fire', egg: { x: FOREST_POS.x + 20, z: FOREST_POS.z + 10 }, hint: 'Its egg glows among the giant mushrooms in the west.', power: 'The FASTEST flyer, with a trail of flames.' },
+  { id: 'ice', name: 'Ice Bird', em: '❄️', speed: 38, maxY: 240, body: 0x9be7ff, head: 0xe3f7ff, wing: 0xffffff, wing2: 0x74b9ff, tail: [0x74b9ff, 0xffffff, 0x9be7ff], crest: 0xffffff, trail: 'snow', egg: { x: -520, z: 60, y: 95 }, hint: 'Its egg is frozen on a sky island to the west. You need a bird to reach it!', power: 'Leaves a sparkly snow trail.' },
+  { id: 'thunder', name: 'Thunder Bird', em: '⚡', speed: 42, maxY: 340, body: 0x7e57c2, head: 0x9575cd, wing: 0xffe066, wing2: 0x512da8, tail: [0xffe066, 0x7e57c2, 0xffe066], crest: 0xffe066, trail: 'spark', egg: { x: 566, z: -396 }, hint: 'Its egg crackles on the shore of Crystal Lake in the north-east.', power: 'Flies HIGHER than any other bird.' },
+  { id: 'star', name: 'Star Bird', em: '⭐', speed: 40, maxY: 300, body: 0x1a237e, head: 0x283593, wing: 0x5c6bc0, wing2: 0xffe066, tail: [0xffe066, 0x1a237e, 0xffffff], crest: 0xffe066, trail: 'stars', egg: { x: -150, z: 620, y: 130 }, hint: 'Its egg twinkles on the highest sky island in the south.', power: 'Night-sky feathers with twinkling stars.' },
+];
 
 const CLOTHES = [
   { id: 'party-hat', name: 'Party Hat', cat: 'hat', price: 15, em: '🎉' },
@@ -302,6 +386,8 @@ function H(x, z) {
   }
   const ds = Math.sqrt(dist2(x, z, SHOP_POS.x, SHOP_POS.z)); if (ds < 60) flat = Math.min(flat, Math.max(0, (ds - 25) / 35));
   const dc = Math.sqrt(dist2(x, z, CIRCLE_POS.x, CIRCLE_POS.z)); if (dc < 70) flat = Math.min(flat, Math.max(0, (dc - 35) / 35));
+  const da = Math.sqrt(dist2(x, z, ARENA.x, ARENA.z)); if (da < ARENA.r + 45) flat = Math.min(flat, Math.max(0, (da - ARENA.r - 8) / 37));
+  const dk = Math.sqrt(dist2(x, z, TRACK.x, TRACK.z)); if (dk < TRACK.r + 55) flat = Math.min(flat, Math.max(0, (dk - TRACK.r - 18) / 37));
   const h = hills(x, z);
   flat = flat * flat * (3 - 2 * flat);
   return h * flat + (1 - flat) * 0;
@@ -309,6 +395,7 @@ function H(x, z) {
 function groundY(x, z, y) {           // where the toad stands: terrain, or a sky island if it is up there
   const isl = islandAt(x, z);
   if (isl && y > isl.y - 3) return isl.y;
+  for (const pf of PLATFORMS) if (dist2(x, z, pf.x, pf.z) < pf.r * pf.r && y > pf.y - 3) return pf.y;
   return H(x, z);
 }
 function randLandPos(margin) {
@@ -319,6 +406,8 @@ function randLandPos(margin) {
     for (const p of PONDS) if (dist2(x, z, p.x, p.z) < (p.r + margin) * (p.r + margin)) ok = false;
     if (dist2(x, z, SHOP_POS.x, SHOP_POS.z) < 22 * 22) ok = false;
     if (dist2(x, z, CIRCLE_POS.x, CIRCLE_POS.z) < 30 * 30) ok = false;
+    if (dist2(x, z, ARENA.x, ARENA.z) < (ARENA.r + 12) * (ARENA.r + 12)) ok = false;
+    if (dist2(x, z, TRACK.x, TRACK.z) < (TRACK.r + 22) * (TRACK.r + 22)) ok = false;
     if (ok) return { x, z };
   }
   return { x: 300, z: 300 };
@@ -350,9 +439,17 @@ function loadSave() {
   try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (s && typeof s.xp === 'number') save = Object.assign(save, s); } catch (e) {}
   save.fort = (save.fort || []).map(f => f.type ? f : Object.assign(f, { type: 'stone' }));
   if (!save.babies) save.babies = [];
+  if (!save.birds) save.birds = {};
+  if (save.bird && !save.birds.rainbow) { save.birds.rainbow = save.bird; save.activeBird = 'rainbow'; }
+  delete save.bird;
+  if (save.activeBird && !save.birds[save.activeBird]) save.activeBird = null;
+  if (!save.wins) save.wins = { hamash: 0, race: 0 };
 }
+function curBird() { return save.activeBird ? save.birds[save.activeBird] : null; }
+function curBirdSpec() { return BIRDS.find(b => b.id === save.activeBird) || BIRDS[0]; }
 function writeSave() {
-  save.pos = { x: player.pos.x, y: player.pos.y, z: player.pos.z };
+  save.pos = mode === 'world' ? { x: player.pos.x, y: player.pos.y, z: player.pos.z } : worldReturn.pos;
+  if (npcs.length) save.npcXp = npcs.map(n => Math.floor(n.xp));   // remember every toad's progress in the Legendary Race
   try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {}
 }
 
@@ -510,11 +607,6 @@ function buildScenery() {
     const stone = new THREE.Mesh(new THREE.BoxGeometry(3, 9, 2), M(0x777777)); stone.position.set(x, H(x, z) + 4.5, z); stone.rotation.y = -a; stone.castShadow = true; scene.add(stone);
   }
   const nest = new THREE.Mesh(new THREE.TorusGeometry(2.2, 0.7, 8, 16), M(0x8b5a2b)); nest.rotation.x = -Math.PI / 2; nest.position.set(CIRCLE_POS.x, H(CIRCLE_POS.x, CIRCLE_POS.z) + 0.5, CIRCLE_POS.z); scene.add(nest);
-  egg = new THREE.Mesh(new THREE.SphereGeometry(1.6, 14, 12), new THREE.MeshLambertMaterial({ vertexColors: true }));
-  const eg = egg.geometry, ec = [], ep = eg.attributes.position;
-  for (let i = 0; i < ep.count; i++) { const col = new THREE.Color().setHSL(((ep.getY(i) + 1.6) / 3.2 * 0.9) % 1, 0.9, 0.6); ec.push(col.r, col.g, col.b); }
-  eg.setAttribute('color', new THREE.Float32BufferAttribute(ec, 3));
-  egg.scale.set(1, 1.3, 1); egg.position.set(CIRCLE_POS.x, H(CIRCLE_POS.x, CIRCLE_POS.z) + 2.2, CIRCLE_POS.z); egg.castShadow = true; scene.add(egg);
   // mushroom shop hut
   const hut = new THREE.Group();
   const hs = new THREE.Mesh(new THREE.CylinderGeometry(4, 5, 8, 12), M(0xf7ead0)); hs.position.y = 4; hut.add(hs);
@@ -524,7 +616,7 @@ function buildScenery() {
   const sign = new THREE.Mesh(new THREE.BoxGeometry(5, 2, 0.3), M(0xffe066)); sign.position.set(0, 10.5, 6); hut.add(sign);
   hut.position.set(SHOP_POS.x, H(SHOP_POS.x, SHOP_POS.z), SHOP_POS.z); hut.rotation.y = Math.PI; scene.add(hut);
 }
-const giants = []; let egg = null;
+const giants = []; const eggs = {};
 
 // ---------------------------------------------------------------- MUSHROOMS (1000, with spots, respawning)
 const mush = { x: new Float32Array(MUSHROOM_COUNT), z: new Float32Array(MUSHROOM_COUNT), y: new Float32Array(MUSHROOM_COUNT), gold: new Uint8Array(MUSHROOM_COUNT), stems: null, caps: null, spots: null };
@@ -683,18 +775,22 @@ function makeFurniture(id) {
   }
   return g;
 }
-function makeBird() {
+function makeBird(sp) {
+  sp = sp || BIRDS[0];
   const g = new THREE.Group();
   const add = (geo, col, x, y, z) => { const m = shadowed(new THREE.Mesh(geo, M(col))); m.position.set(x, y, z); g.add(m); return m; };
-  const body = add(new THREE.SphereGeometry(1, 12, 10), 0xff4d4d, 0, 0, 0); body.scale.set(0.9, 0.8, 1.3);
-  add(new THREE.SphereGeometry(0.6, 10, 8), 0xff9f43, 0, 0.6, 1.0);
+  const body = add(new THREE.SphereGeometry(1, 12, 10), sp.body, 0, 0, 0); body.scale.set(0.9, 0.8, 1.3);
+  add(new THREE.SphereGeometry(0.6, 10, 8), sp.head, 0, 0.6, 1.0);
   add(new THREE.ConeGeometry(0.2, 0.6, 6), 0xffe066, 0, 0.5, 1.6).rotation.x = Math.PI / 2;
   for (const sx of [-1, 1]) { add(new THREE.SphereGeometry(0.14, 8, 6), 0xffffff, sx * 0.28, 0.75, 1.4); add(new THREE.SphereGeometry(0.07, 6, 5), 0x111111, sx * 0.28, 0.77, 1.52); }
   const wings = [];
-  for (const sx of [-1, 1]) { const w = new THREE.Group(); w.position.set(sx * 0.7, 0.2, 0); const f = add(new THREE.BoxGeometry(1.8, 0.12, 0.9), 0xffe066, 0, 0, 0); f.position.set(sx * 0.9, 0, 0); g.remove(f); w.add(f); const f2 = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.1, 0.5), M(0x2ecc71)); f2.position.set(sx * 1.4, -0.02, -0.4); w.add(f2); g.add(w); wings.push({ g: w, sx }); }
-  const tailCols = [0x3b82f6, 0x9b59b6, 0x2ecc71];
-  tailCols.forEach((c, i) => { const t = add(new THREE.BoxGeometry(0.25, 0.08, 1.4), c, (i - 1) * 0.3, 0.1, -1.6); t.rotation.y = (i - 1) * 0.25; });
-  const crest = add(new THREE.ConeGeometry(0.2, 0.6, 6), 0x9b59b6, 0, 1.2, 0.9); crest.rotation.x = -0.5;
+  for (const sx of [-1, 1]) { const w = new THREE.Group(); w.position.set(sx * 0.7, 0.2, 0); const f = add(new THREE.BoxGeometry(1.8, 0.12, 0.9), sp.wing, 0, 0, 0); f.position.set(sx * 0.9, 0, 0); g.remove(f); w.add(f); const f2 = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.1, 0.5), M(sp.wing2)); f2.position.set(sx * 1.4, -0.02, -0.4); w.add(f2); g.add(w); wings.push({ g: w, sx }); }
+  sp.tail.forEach((c, i) => { const t = add(new THREE.BoxGeometry(0.25, 0.08, 1.4), c, (i - 1) * 0.3, 0.1, -1.6); t.rotation.y = (i - 1) * 0.25; });
+  const crest = add(new THREE.ConeGeometry(0.2, 0.6, 6), sp.crest, 0, 1.2, 0.9); crest.rotation.x = -0.5;
+  if (sp.id === 'star') for (let i = 0; i < 6; i++) { const st = add(new THREE.OctahedronGeometry(0.12), 0xffe066, rand(-0.6, 0.6), rand(-0.2, 0.6), rand(-1, 0.8)); st.material = new THREE.MeshBasicMaterial({ color: 0xffe066 }); }
+  if (sp.id === 'ice') for (const sx of [-1, 1]) add(new THREE.ConeGeometry(0.12, 0.5, 5), 0xffffff, sx * 0.4, 1.0, 0.6).rotation.z = -sx * 0.4;
+  if (sp.id === 'thunder') { const b = add(new THREE.BoxGeometry(0.1, 0.9, 0.1), 0xffe066, 0, 1.1, -0.3); b.material = new THREE.MeshBasicMaterial({ color: 0xffe066 }); b.rotation.z = 0.5; }
+  if (sp.id === 'phoenix') { const f = add(new THREE.SphereGeometry(0.5, 8, 6), 0xffeb3b, 0, 0.2, -2.2); f.material = new THREE.MeshBasicMaterial({ color: 0xffc107, transparent: true, opacity: 0.7 }); f.scale.set(0.6, 0.6, 1.4); }
   g.userData.wings = wings; return g;
 }
 function makeAnimal(kind) {
@@ -717,7 +813,7 @@ function makeSprite() {  // the best friend: a little glowing spirit with eyes
 }
 
 // ---------------------------------------------------------------- PLAYER
-const player = { pos: new THREE.Vector3(0, -3, 0), yaw: 0, vy: 0, group: new THREE.Group(), model: null, anchors: {}, hopT: 0, moving: false, inWater: true, flying: false, clothes: {}, sparkles: null };
+const player = { pos: new THREE.Vector3(0, -3, 0), yaw: 0, vy: 0, group: new THREE.Group(), model: null, anchors: {}, hopT: 0, moving: false, inWater: true, flying: false, clothes: {}, sparkles: null, kx: 0, kz: 0, slowMul: 0, frozen: false, stunned: false };
 scene.add(player.group);
 const blob = new THREE.Mesh(new THREE.CircleGeometry(1, 16), M(0x000000, { transparent: true, opacity: 0.22 })); blob.rotation.x = -Math.PI / 2; scene.add(blob);
 function rebuildPlayerModel() {
@@ -752,7 +848,7 @@ function buildNPCs() {
     if (i < 7) { const a = i / 7 * Math.PI * 2 + rand(-0.3, 0.3), r = rand(MAIN.r + 20, 200); p = { x: Math.cos(a) * r, z: Math.sin(a) * r }; if (pondAt(p.x, p.z)) p = randLandPos(10); }
     else p = randLandPos(10);
     const color = new THREE.Color().setHSL(rand(0.18, 0.4), rand(0.5, 0.8), rand(0.3, 0.5)).getHex();
-    const n = { kind: 'toad', name, xp: rand(20, 400), rate: rand(0.15, 0.6), pos: new THREE.Vector3(p.x, H(p.x, p.z), p.z), yaw: rand(0, 6.3), target: null, wait: rand(0, 3), hopT: 0, model: makeToadModel(color), group: new THREE.Group(), line: NPC_LINES[i % NPC_LINES.length], stage: -1, bubble: null, bubbleT: 0, lines: NPC_LINES };
+    const n = { kind: 'toad', name, color, xp: save.npcXp && save.npcXp[i] != null ? save.npcXp[i] : rand(20, 400), rate: rand(0.15, 0.6), pos: new THREE.Vector3(p.x, H(p.x, p.z), p.z), yaw: rand(0, 6.3), target: null, wait: rand(0, 3), hopT: 0, model: makeToadModel(color), group: new THREE.Group(), line: NPC_LINES[i % NPC_LINES.length], stage: -1, bubble: null, bubbleT: 0, lines: NPC_LINES };
     if (i === 1) n.rate = 0.9;
     n.group.add(n.model); n.group.position.copy(n.pos); scene.add(n.group); npcs.push(n);
     const hatIds = ['party-hat', 'top-hat', 'flower-crown', 'wizard-hat', null, 'chef-hat', 'shades', null, 'bow-tie', 'red-cape', 'pirate-hat', 'blue-cape', null, 'star-glasses', 'viking-helmet', 'heart-glasses', 'scarf', 'propeller-hat', 'hero-mask', 'halo', 'tutu', 'wings'];
@@ -768,7 +864,7 @@ function wanderNPC(n, dt, speed, radius, flyer) {
 }
 function updateNPCs(dt, t) {
   for (const n of npcs) {
-    n.xp = Math.min(3500, n.xp + n.rate * dt);
+    n.xp = Math.min(6500, n.xp + n.rate * dt);
     const st = stageFor(n.xp);
     if (st !== n.stage) { n.stage = st; n.model.scale.setScalar(Math.max(0.7, STAGES[st].scale) * 0.95); if (st >= 4) n.model.userData.mat.color.setHex(STAGES[st].color); }
     if (n.talkT > 0) { n.talkT -= dt; n.moving = false; n.yaw = Math.atan2(player.pos.x - n.pos.x, player.pos.z - n.pos.z); }
@@ -838,8 +934,41 @@ function updateFriend(dt, t) {
   friend.pos.y = lerp(friend.pos.y, base + Math.sin(t * 2.5) * 0.3, Math.min(1, dt * 4));
   friend.group.position.copy(friend.pos); friend.group.rotation.y = player.yaw;
 }
-let bird = null;
-function spawnBird() { const g = makeBird(); scene.add(g); bird = { group: g, pos: player.pos.clone().add(v(0, 4, -3)), yaw: 0, bubble: null, kind: 'bird', name: save.bird.name, t: 0 }; }
+let bird = null, trail = null;
+function spawnBird() {
+  if (bird) { scene.remove(bird.group); bird = null; }
+  if (trail) { scene.remove(trail.points); trail = null; }
+  const cb = curBird(); if (!cb) return;
+  const sp = curBirdSpec(), g = makeBird(sp); scene.add(g);
+  bird = { group: g, pos: player.pos.clone().add(v(0, 4, -3)), yaw: 0, bubble: null, kind: 'bird', name: cb.name, t: 0, spec: sp };
+  const N = 150, geo = new THREE.BufferGeometry(), pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  const pts = new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.45, vertexColors: true, transparent: true, opacity: 0.9 })); pts.frustumCulled = false; scene.add(pts);
+  trail = { points: pts, life: new Float32Array(N), vel: new Float32Array(N * 3), i: 0, N };
+  for (let i = 0; i < N; i++) { pos[i * 3 + 1] = -999; }
+}
+function trailColor(kind, c) {
+  if (kind === 'rainbow') c.setHSL(Math.random(), 0.9, 0.6);
+  else if (kind === 'fire') c.setHSL(rand(0, 0.12), 1, rand(0.5, 0.65));
+  else if (kind === 'snow') c.setHSL(0.55, rand(0.3, 0.8), rand(0.85, 1));
+  else if (kind === 'spark') c.setHSL(Math.random() < 0.6 ? 0.14 : 0.75, 1, 0.6);
+  else c.setHSL(Math.random() < 0.7 ? 0.14 : 0, rand(0, 0.9), rand(0.8, 1));
+  return c;
+}
+function updateTrail(dt) {
+  if (!trail) return;
+  const pos = trail.points.geometry.attributes.position.array, col = trail.points.geometry.attributes.color.array, c = new THREE.Color();
+  if (player.flying && bird) {
+    for (let k = 0; k < 3; k++) {
+      const i = trail.i = (trail.i + 1) % trail.N;
+      pos[i * 3] = bird.pos.x + rand(-0.8, 0.8); pos[i * 3 + 1] = bird.pos.y + rand(-0.3, 0.8); pos[i * 3 + 2] = bird.pos.z + rand(-0.8, 0.8);
+      const kind = bird.spec.trail; trail.vel[i * 3] = rand(-1, 1); trail.vel[i * 3 + 1] = kind === 'fire' ? rand(2, 5) : kind === 'snow' ? rand(-3, -1) : rand(-0.5, 0.5); trail.vel[i * 3 + 2] = rand(-1, 1);
+      trailColor(kind, c); col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b; trail.life[i] = 1.2;
+    }
+  }
+  for (let i = 0; i < trail.N; i++) { if (trail.life[i] <= 0) continue; trail.life[i] -= dt; pos[i * 3] += trail.vel[i * 3] * dt; pos[i * 3 + 1] += trail.vel[i * 3 + 1] * dt; pos[i * 3 + 2] += trail.vel[i * 3 + 2] * dt; if (trail.life[i] <= 0) pos[i * 3 + 1] = -999; }
+  trail.points.geometry.attributes.position.needsUpdate = true; trail.points.geometry.attributes.color.needsUpdate = true;
+}
 function updateBird(dt, t) {
   if (!bird) return;
   bird.t += dt;
@@ -852,7 +981,8 @@ function updateBird(dt, t) {
     bird.yaw = lerpAngle(bird.yaw, Math.atan2(tx - bird.pos.x + 0.001, tz - bird.pos.z + 0.001), Math.min(1, dt * 2));
   }
   bird.group.position.copy(bird.pos); bird.group.rotation.y = bird.yaw;
-  const sc = 0.8 + Math.min(1, save.bird.xp / BIRD_READY_XP) * 0.9; bird.group.scale.setScalar(sc);
+  const sc = 0.8 + Math.min(1, curBird().xp / BIRD_READY_XP) * 0.9; bird.group.scale.setScalar(sc);
+  if (bird.spec.id === 'thunder' && Math.random() < 0.02) beep(80, 0.05, 'sawtooth', 0.03);
   for (const w of bird.group.userData.wings) w.g.rotation.z = w.sx * Math.sin(bird.t * 12) * 0.6;
 }
 
@@ -891,14 +1021,14 @@ function updateHUD() {
   if (save.stage === 0) q = save.xp < STAGES[1].xp ? 'Eat snacks under the water to grow! (' + Math.floor(save.xp / XP.snack) + '/' + Math.ceil(STAGES[1].xp / XP.snack) + ')<br>Grab 🌸 petals at the surface and 🪨 stones on the floor.' : '✨ You are ready! Swim to the glowing burrow near the pond edge and press E to enter the ground!';
   else if (next) q = 'Collect 🍄, eat flies, grab 🌸 to grow into a <b>' + next.name + '</b>!<br>XP: ' + Math.floor(save.xp) + ' / ' + next.xp;
   else q = '🌈 You are a RAINBOW TOAD, the most legendary toad ever!';
-  if (save.bird && save.bird.xp < BIRD_READY_XP) q += '<br>🐦 Feed ' + save.bird.name + ' petals (E) to raise it: ' + Math.floor(save.bird.xp) + '/' + BIRD_READY_XP;
+  const cb = curBird(); if (cb && cb.xp < BIRD_READY_XP) q += '<br>🐦 Feed ' + cb.name + ' petals (E) to raise it: ' + Math.floor(cb.xp) + '/' + BIRD_READY_XP;
   $('quest').innerHTML = q;
   $('mush').textContent = save.mush; $('petals').textContent = save.petals; $('peb').textContent = save.pebbles;
   $('shopMush').textContent = save.mush; $('shopPetals').textContent = save.petals; $('buildPeb').textContent = save.pebbles;
   $('rank').textContent = '#' + (1 + npcs.filter(n => n.xp > save.xp).length) + ' of ' + (npcs.length + 1);
   const maxBabies = Math.max(0, save.stage - 1);
   $('babyBtn').style.display = save.stage >= 2 && save.babies.length < maxBabies ? 'block' : 'none';
-  $('birdinfo').innerHTML = save.bird ? '<br>🐦 ' + save.bird.name + ': ' + (save.bird.xp >= BIRD_READY_XP ? 'ready to fly! (E)' : Math.floor(save.bird.xp) + '/' + BIRD_READY_XP) : '';
+  $('birdinfo').innerHTML = cb ? '<br>' + curBirdSpec().em + ' ' + cb.name + ': ' + (cb.xp >= BIRD_READY_XP ? 'ready to fly! (E)' : Math.floor(cb.xp) + '/' + BIRD_READY_XP) : '';
 }
 function gainXP(n) {
   save.xp += n;
@@ -941,12 +1071,12 @@ function renderBoard() {
   const rows = npcs.map(n => ({ name: n.name, xp: n.xp })).concat([{ name: 'YOU', xp: save.xp, me: true }]).sort((a, b) => b.xp - a.xp);
   $('boardTable').innerHTML = rows.map((r, i) => '<tr class="' + (r.me ? 'me' : '') + '"><td>#' + (i + 1) + '</td><td>' + r.name + '</td><td>' + STAGES[stageFor(r.xp)].emoji + ' ' + STAGES[stageFor(r.xp)].name + '</td><td>' + Math.floor(r.xp) + ' XP</td></tr>').join('');
 }
-function anyModalOpen() { return ['shop', 'build', 'board', 'namer'].some(id => $(id).style.display === 'flex'); }
+function anyModalOpen() { return ['shop', 'build', 'board', 'namer', 'birds', 'gamesModal', 'results'].some(id => $(id).style.display === 'flex'); }
 function toggleModal(id, open) {
   const el = $(id); const show = open === undefined ? el.style.display !== 'flex' : open;
   if (show) ['shop', 'build', 'board'].forEach(o => { if (o !== id) $(o).style.display = 'none'; });
   el.style.display = show ? 'flex' : 'none';
-  if (show) { if (id === 'shop') renderShop(); if (id === 'build') renderBuild(); if (id === 'board') renderBoard(); }
+  if (show) { if (id === 'shop') renderShop(); if (id === 'build') renderBuild(); if (id === 'board') renderBoard(); if (id === 'birds') renderBirds(); }
 }
 function askName(title, text, choices, cb) {
   $('namerTitle').textContent = title; $('namerText').innerHTML = text; $('namerInput').value = '';
@@ -960,6 +1090,12 @@ $('buildBtn').onclick = () => toggleModal('build'); $('closeBuild').onclick = ()
 $('boardBtn').onclick = () => toggleModal('board'); $('closeBoard').onclick = () => toggleModal('board', false);
 $('helpBtn').onclick = () => { const h = $('help'); h.style.display = h.style.display === 'none' ? 'block' : 'none'; };
 $('babyBtn').onclick = () => hatchBaby();
+$('birdBtn').onclick = () => toggleModal('birds'); $('closeBirds').onclick = () => toggleModal('birds', false);
+$('hamashBtn').onclick = $('playHamash').onclick = () => { toggleModal('gamesModal', false); startHamash(); };
+$('raceBtn').onclick = $('playRace').onclick = () => { toggleModal('gamesModal', false); startRace(); };
+$('closeGames').onclick = () => toggleModal('gamesModal', false);
+$('quitGame').onclick = () => endGame(null, true);
+$('closeResults').onclick = () => { $('results').style.display = 'none'; leaveGame(); };
 function hatchBaby() {
   if (save.stage < 2 || save.babies.length >= save.stage - 1) return;
   askName('🥚 A baby toad is hatching!', 'What is the baby\'s name? And where should it live?', [{ id: 'follow', label: '🐾 Follows me everywhere' }, { id: 'home', label: '🏠 Lives at my fort' }], (name, mode) => {
@@ -981,7 +1117,8 @@ window.addEventListener('keydown', ev => {
   if (ev.target.tagName === 'INPUT') { if (code === 'Enter' || ev.key === 'Enter') $('namerOk').onclick(); return; }
   keys[code] = true;
   if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(code)) ev.preventDefault();
-  if (code === 'Escape') { ['shop', 'build', 'board'].forEach(id => toggleModal(id, false)); return; }
+  if (code === 'Escape') { ['shop', 'build', 'board', 'birds', 'gamesModal'].forEach(id => toggleModal(id, false)); return; }
+  if (mode === 'race' && race.me.frozenT > 0) { mash(); return; }
   if (anyModalOpen()) return;
   if (code === 'KeyE') interact();
   if (code === 'KeyB') toggleModal('build');
@@ -998,7 +1135,7 @@ window.addEventListener('mousemove', e => { if (dragging) { camYaw -= (e.clientX
 canvas.addEventListener('wheel', e => { camDist = clamp(camDist + e.deltaY * 0.01, 4, 40); }, { passive: true });
 const touchInput = { x: 0, z: 0 };
 if ('ontouchstart' in window) {
-  $('touch').style.display = 'block';
+  $('touch').style.display = 'block'; document.body.classList.add('touch');
   const stick = $('stick'), knob = $('knob'); let sid = null, cx = 0, cy = 0, camTouch = null;
   stick.addEventListener('touchstart', e => { const t = e.changedTouches[0]; sid = t.identifier; const r = stick.getBoundingClientRect(); cx = r.left + r.width / 2; cy = r.top + r.height / 2; e.preventDefault(); }, { passive: false });
   window.addEventListener('touchmove', e => {
@@ -1009,7 +1146,7 @@ if ('ontouchstart' in window) {
   }, { passive: false });
   const endTouch = e => { for (const t of e.changedTouches) { if (t.identifier === sid) { sid = null; touchInput.x = touchInput.z = 0; knob.style.left = knob.style.top = '40px'; } if (t.identifier === camTouch) camTouch = null; } };
   window.addEventListener('touchend', endTouch); window.addEventListener('touchcancel', endTouch);
-  canvas.addEventListener('touchstart', e => { const t = e.changedTouches[0]; camTouch = t.identifier; lastX = t.clientX; }, { passive: true });
+  canvas.addEventListener('touchstart', e => { const t = e.changedTouches[0]; camTouch = t.identifier; lastX = t.clientX; if (mode === 'race' && race.me.frozenT > 0) mash(); }, { passive: true });
   document.querySelectorAll('.tb').forEach(b => {
     const k = b.dataset.k;
     b.addEventListener('touchstart', e => { e.preventDefault(); keys[k] = true; if (k === 'KeyE') interact(); if (k === 'KeyB') toggleModal('build'); }, { passive: false });
@@ -1024,15 +1161,16 @@ function talkTo(n) {
 function nearestInteraction() {
   const p = player.pos, sc = STAGES[save.stage].scale, list = [];
   const near = (x, z, r) => dist2(x, z, p.x, p.z) < r * r;
-  if (player.flying) return { label: 'Press E to land ' + save.bird.name + ' 🐦', fn: () => stopFlying() };
+  if (player.flying) return { label: 'Press E to land ' + curBird().name + ' 🐦', fn: () => stopFlying() };
   if (save.stage === 0) {
     if (save.xp >= STAGES[1].xp && near(BURROW_WATER.x, BURROW_WATER.z, 6)) list.push({ d: 0, label: 'Press E to burrow into the ground! 🕳️', fn: becomeToad });
   } else {
     if (near(SHOP_POS.x, SHOP_POS.z, 22)) list.push({ d: 5, label: 'Press E to open the Mushroom Shop 🍄', fn: () => toggleModal('shop', true) });
-    if (!save.bird && near(CIRCLE_POS.x, CIRCLE_POS.z, 6)) list.push({ d: 1, label: save.stage >= 2 ? 'Press E to adopt the Rainbow Bird egg! 🥚🌈' : 'A rainbow egg... you must be a Toad to adopt it!', fn: () => { if (save.stage >= 2) adoptBird(); } });
+    for (const bs of BIRDS) if (!save.birds[bs.id] && near(bs.egg.x, bs.egg.z, 6) && Math.abs((bs.egg.y || H(bs.egg.x, bs.egg.z)) - p.y) < 5) list.push({ d: 1, label: save.stage >= 2 ? 'Press E to adopt the ' + bs.name + ' egg! 🥚' + bs.em : 'A magic egg... you must be a Toad to adopt it!', fn: () => { if (save.stage >= 2) adoptBird(bs); } });
     if (bird && !player.flying && near(bird.pos.x, bird.pos.z, 5 + sc)) {
-      if (save.bird.xp >= BIRD_READY_XP) list.push({ d: 1, label: 'Press E to ride ' + save.bird.name + ' and FLY! 🐦', fn: startFlying });
-      else list.push({ d: 1, label: 'Press E to feed ' + save.bird.name + ' 5 petals 🌸 (' + Math.floor(save.bird.xp) + '/' + BIRD_READY_XP + ')', fn: feedBird });
+      const cb = curBird();
+      if (cb.xp >= BIRD_READY_XP) list.push({ d: 1, label: 'Press E to ride ' + cb.name + ' and FLY! ' + bird.spec.em, fn: startFlying });
+      else list.push({ d: 1, label: 'Press E to feed ' + cb.name + ' 5 petals 🌸 (' + Math.floor(cb.xp) + '/' + BIRD_READY_XP + ')', fn: feedBird });
     }
     for (const g of giants) if (near(g.x, g.z, 6 * g.s)) list.push({ d: 3, label: 'Press E to bounce on the giant mushroom! 🍄', fn: () => { player.vy = 38; beep(300, 0.3, 'sine'); setTimeout(() => beep(600, 0.3), 100); showMsg('BOING! 🍄', 1200); } });
     for (const f of fortMeshes) if (near(f.mesh.position.x, f.mesh.position.z, 2.5 + sc)) { const it = FURNITURE.find(x => x.id === f.data.type); list.push({ d: 2, label: 'Press E to use the ' + it.name + ' ' + it.em, fn: () => { showMsg(it.em + ' ' + it.use); beep(440, 0.15); } }); }
@@ -1047,7 +1185,7 @@ function nearestInteraction() {
   return list[0] || null;
 }
 let currentInteract = null;
-function interact() { if (!running || anyModalOpen()) return; if (currentInteract) currentInteract.fn(); }
+function interact() { if (!running || anyModalOpen()) return; if (mode === 'hamash') return swingHammer(hamash.me); if (mode === 'race') return usePower(race.me); if (currentInteract) currentInteract.fn(); }
 let spriteMeet = null;
 function buildSpriteMeet() { if (save.bestFriend) return; const g = makeSprite(); const x = BURROW_LAND.x + 14, z = BURROW_LAND.z - 10; g.position.set(x, H(x, z) + 2, z); scene.add(g); spriteMeet = { group: g, pos: { x, z } }; }
 function meetFriend() {
@@ -1056,21 +1194,35 @@ function meetFriend() {
     showMsg('✨ ' + name + ' is your best friend now! They will follow you everywhere.', 5000);
   });
 }
-function adoptBird() {
-  askName('🌈 The rainbow egg is hatching!', 'A tiny rainbow bird looks up at you. What is its name?<br>Feed it 🌸 petals to raise it. When it is big enough, you can FLY it to the sky islands!', null, (name) => {
-    save.bird = { name, xp: 0 }; egg.visible = false; spawnBird(); writeSave(); updateHUD(); jingle([523, 659, 784, 1047, 1319]);
-    showMsg('🐦 ' + name + ' hatched! Feed it petals (press E near it) until it can carry you.', 5000);
+function adoptBird(bs) {
+  askName(bs.em + ' The ' + bs.name + ' egg is hatching!', 'A tiny ' + bs.name.toLowerCase() + ' looks up at you. What is its name?<br>' + bs.power + '<br>Feed it 🌸 petals to raise it. When it is big enough, you can FLY it!', null, (name) => {
+    save.birds[bs.id] = { name, xp: 0 }; if (eggs[bs.id]) eggs[bs.id].visible = false;
+    const first = !save.activeBird; if (first) save.activeBird = bs.id;
+    if (first || save.activeBird === bs.id) spawnBird();
+    writeSave(); updateHUD(); jingle([523, 659, 784, 1047, 1319]);
+    showMsg(bs.em + ' ' + name + ' hatched! ' + (first ? 'Feed it petals (press E near it) until it can carry you.' : 'Open 🐦 Birds to equip it.'), 5000);
   });
 }
 function feedBird() {
-  if (save.petals < 5) { showMsg('You need 5 petals 🌸 to feed ' + save.bird.name + '. Petals float on the lakes!'); beep(150, 0.2, 'sawtooth'); return; }
-  save.petals -= 5; save.bird.xp += 25; beep(700, 0.12); beep(900, 0.12);
-  if (save.bird.xp >= BIRD_READY_XP) { jingle([523, 659, 784, 1047]); showMsg('🌈 ' + save.bird.name + ' is all grown up! Press E near it to RIDE and FLY!', 5000); }
-  else showMsg('🐦 ' + save.bird.name + ' munches the petals happily! (' + save.bird.xp + '/' + BIRD_READY_XP + ')');
+  const cb = curBird();
+  if (save.petals < 5) { showMsg('You need 5 petals 🌸 to feed ' + cb.name + '. Petals float on the lakes!'); beep(150, 0.2, 'sawtooth'); return; }
+  save.petals -= 5; cb.xp += 25; beep(700, 0.12); beep(900, 0.12);
+  if (cb.xp >= BIRD_READY_XP) { jingle([523, 659, 784, 1047]); showMsg(bird.spec.em + ' ' + cb.name + ' is all grown up! Press E near it to RIDE and FLY!', 5000); }
+  else showMsg('🐦 ' + cb.name + ' munches the petals happily! (' + cb.xp + '/' + BIRD_READY_XP + ')');
   writeSave(); updateHUD();
 }
-function startFlying() { player.flying = true; player.inWater = false; player.vy = 0; camManual = 0; jingle([523, 784, 1047]); showMsg('🐦 You are flying on ' + save.bird.name + '! Space = up, Shift = down. Look for the sky islands! ☁️', 5000); }
-function stopFlying() { player.flying = false; player.vy = 0; showMsg('🐦 ' + save.bird.name + ' lands gently.'); }
+function startFlying() { player.flying = true; player.inWater = false; player.vy = 0; camManual = 0; jingle([523, 784, 1047]); showMsg(bird.spec.em + ' You are flying on ' + curBird().name + '! Space = up, Shift = down. Look for the sky islands! ☁️', 5000); }
+function stopFlying() { player.flying = false; player.vy = 0; showMsg('🐦 ' + curBird().name + ' lands gently.'); }
+function renderBirds() {
+  const wrap = $('birdList'); wrap.innerHTML = '';
+  for (const bs of BIRDS) {
+    const b = save.birds[bs.id], d = document.createElement('div'); d.className = 'bird-row' + (save.activeBird === bs.id ? ' active' : '');
+    d.innerHTML = '<div class="em">' + bs.em + '</div><div class="info"><div class="nm">' + bs.name + (b ? ' "' + b.name + '"' : '') + '</div>' + bs.power + '<br>' + (b ? (b.xp >= BIRD_READY_XP ? '✅ Grown up and ready to fly!' : '🌸 Raised: ' + Math.floor(b.xp) + '/' + BIRD_READY_XP) : '🥚 Not found yet. ' + bs.hint) + '</div>';
+    if (b) { const btn = document.createElement('button'); btn.className = 'btn' + (save.activeBird === bs.id ? ' green' : ''); btn.textContent = save.activeBird === bs.id ? 'Equipped' : 'Equip';
+      btn.onclick = () => { if (save.activeBird === bs.id) return; if (player.flying) stopFlying(); save.activeBird = bs.id; spawnBird(); writeSave(); updateHUD(); renderBirds(); beep(700, 0.12); showMsg(bs.em + ' ' + b.name + ' is now your bird!'); }; d.appendChild(btn); }
+    wrap.appendChild(d);
+  }
+}
 
 function becomeToad() {
   running = false;
@@ -1085,6 +1237,334 @@ function becomeToad() {
   }, 900);
 }
 
+// ---------------------------------------------------------------- EGGS, ARENA, TRACK
+function buildEggs() {
+  for (const bs of BIRDS) {
+    const geo = new THREE.SphereGeometry(1.6, 14, 12), cols = [], ep = geo.attributes.position, c = new THREE.Color();
+    for (let i = 0; i < ep.count; i++) { const tt = (ep.getY(i) + 1.6) / 3.2; if (bs.id === 'rainbow') c.setHSL((tt * 0.9) % 1, 0.9, 0.6); else c.setHex(Math.floor(tt * 6) % 2 ? bs.body : bs.wing); cols.push(c.r, c.g, c.b); }
+    geo.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
+    const e = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ vertexColors: true }));
+    const y = bs.egg.y != null ? bs.egg.y : H(bs.egg.x, bs.egg.z);
+    e.userData.baseY = y + 2.2; e.scale.set(1, 1.3, 1); e.position.set(bs.egg.x, y + 2.2, bs.egg.z); e.castShadow = true; scene.add(e); eggs[bs.id] = e;
+    const nest = new THREE.Mesh(new THREE.TorusGeometry(2.2, 0.7, 8, 16), M(0x8b5a2b)); nest.rotation.x = -Math.PI / 2; nest.position.set(bs.egg.x, y + 0.5, bs.egg.z); scene.add(nest);
+  }
+}
+function buildArena() {
+  const g = new THREE.Group();
+  const top = new THREE.Mesh(new THREE.CylinderGeometry(ARENA.r, ARENA.r - 1, 2, 40), M(0xe8c170)); top.position.y = -1; top.receiveShadow = true; g.add(top);
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(ARENA.r - 1, ARENA.r + 5, ARENA.y, 40), M(0x8b6a3a)); base.position.y = -ARENA.y / 2 - 1.5; g.add(base);
+  const ring = new THREE.Mesh(new THREE.RingGeometry(ARENA.r - 3, ARENA.r - 0.2, 40), M(0xe53935, { side: THREE.DoubleSide })); ring.rotation.x = -Math.PI / 2; ring.position.y = 0.03; g.add(ring);
+  const mid = new THREE.Mesh(new THREE.CircleGeometry(6, 24), M(0x3b82f6, { side: THREE.DoubleSide })); mid.rotation.x = -Math.PI / 2; mid.position.y = 0.03; g.add(mid);
+  const ham = new THREE.Mesh(new THREE.BoxGeometry(3, 0.1, 1.2), M(0xffffff)); ham.position.y = 0.08; g.add(ham);
+  for (let i = 0; i < 8; i++) {
+    const a = i / 8 * 6.283, px = Math.cos(a) * (ARENA.r + 2), pz = Math.sin(a) * (ARENA.r + 2);
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 7, 6), M(0x6d4c41)); pole.position.set(px, 2.5, pz); g.add(pole);
+    const flag = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 1.3), M(new THREE.Color().setHSL(i / 8, 0.9, 0.55), { side: THREE.DoubleSide })); flag.position.set(px, 5.3, pz); flag.rotation.y = -a; flag.translateX(1.1); g.add(flag);
+  }
+  const sign = new THREE.Mesh(new THREE.BoxGeometry(7, 2.2, 0.3), M(0xffe066)); sign.position.set(0, 9, -ARENA.r - 2); g.add(sign);
+  const hm = makeHammer(2.2); hm.position.set(0, 10.5, -ARENA.r - 2); hm.rotation.z = 0.6; g.add(hm);
+  g.position.set(ARENA.x, ARENA.y, ARENA.z); scene.add(g);
+}
+function buildTrack() {
+  const y = 0.05, ri = TRACK.r - TRACK.w / 2, ro = TRACK.r + TRACK.w / 2;
+  const road = new THREE.Mesh(new THREE.RingGeometry(ri, ro, 72), M(0x707070, { side: THREE.DoubleSide })); road.rotation.x = -Math.PI / 2; road.position.set(TRACK.x, y, TRACK.z); road.receiveShadow = true; scene.add(road);
+  for (const r of [ri, ro]) { const s = new THREE.Mesh(new THREE.RingGeometry(r - 0.5, r + 0.5, 72), M(0xffffff, { side: THREE.DoubleSide })); s.rotation.x = -Math.PI / 2; s.position.set(TRACK.x, y + 0.02, TRACK.z); scene.add(s); }
+  for (let i = 0; i < 8; i++) { const sq = new THREE.Mesh(new THREE.BoxGeometry(TRACK.w / 8, 0.06, 1.6), M(i % 2 ? 0x111111 : 0xffffff)); sq.position.set(TRACK.x + ri + (i + 0.5) * TRACK.w / 8, y + 0.04, TRACK.z); scene.add(sq); }
+  for (const sx of [ri - 1.5, ro + 1.5]) { const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 9, 6), M(0xffffff)); pole.position.set(TRACK.x + sx, 4.5, TRACK.z); scene.add(pole); }
+  const banner = new THREE.Mesh(new THREE.BoxGeometry(TRACK.w + 3, 1.6, 0.2), M(0xe53935)); banner.position.set(TRACK.x + TRACK.r, 8.5, TRACK.z); scene.add(banner);
+  for (let i = 0; i < 24; i++) { const a = i / 24 * 6.283; for (const r of [ri - 2.5, ro + 2.5]) { const cone = new THREE.Mesh(new THREE.ConeGeometry(0.6, 1.4, 8), M(i % 2 ? 0xff9f43 : 0xffffff)); cone.position.set(TRACK.x + Math.cos(a) * r, 0.7, TRACK.z + Math.sin(a) * r); scene.add(cone); } }
+  const stands = new THREE.Mesh(new THREE.BoxGeometry(18, 3, 4), M(0x9b59b6)); stands.position.set(TRACK.x, 1.5, TRACK.z - ro - 8); scene.add(stands);
+  for (let i = 0; i < 9; i++) { const fan = makeToadModel(new THREE.Color().setHSL(rand(0.15, 0.4), 0.7, 0.45).getHex()); fan.scale.setScalar(0.7); fan.position.set(TRACK.x - 8 + i * 2, 3, TRACK.z - ro - 8); scene.add(fan); }
+}
+function makeHammer(scale) {
+  const g = new THREE.Group();
+  const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.11, 1.7, 6), M(0x8b5a2b)); handle.position.y = 0.85; g.add(handle);
+  const head = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.55, 0.55), M(0x9e9e9e)); head.position.y = 1.7; g.add(head);
+  for (const sx of [-1, 1]) { const cap = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.62, 0.62), M(0xe53935)); cap.position.set(sx * 0.5, 1.7, 0); g.add(cap); }
+  g.scale.setScalar(scale); return g;
+}
+
+// ---------------------------------------------------------------- MINI-GAME CORE
+let mode = 'world', worldReturn = null, hamash = null, race = null;
+const fxList = [];
+const POWERS = { octopus: { em: '🐙', name: 'Octopus' }, bomb: { em: '💣', name: 'Bomb' }, rainbow: { em: '🌈', name: 'Rainbow Rain' }, shield: { em: '🛡️', name: 'Force Field' }, spell: { em: '✨', name: 'Magic Spell' } };
+const POWER_IDS = Object.keys(POWERS);
+function setGameInfo(html) { $('gameinfo').innerHTML = html; }
+function announce(r, text) { showMsg((r.isPlayer ? 'You ' : r.name + ' ') + text, 2200); }
+function setFollowersVisible(vis) { for (const b of babies) b.group.visible = vis; if (friend) friend.group.visible = vis; }
+function enterGame(kind) {
+  worldReturn = { pos: player.pos.clone(), inWater: player.inWater };
+  player.flying = false; player.inWater = false; player.vy = 0; player.kx = player.kz = 0; player.slowMul = 0; player.frozen = false; player.stunned = true;
+  mode = kind; ['shop', 'build', 'board', 'birds', 'gamesModal'].forEach(id => toggleModal(id, false));
+  document.body.classList.add('ingame'); $('games').style.display = 'none'; $('gamehud').style.display = 'block'; $('buttons').style.display = 'none'; $('babyBtn').style.display = 'none';
+  setFollowersVisible(false);
+}
+function pickOpponents(n) {
+  return npcs.slice().sort((a, b) => (Math.abs(a.stage - save.stage) + Math.random() * 2.5) - (Math.abs(b.stage - save.stage) + Math.random() * 2.5)).slice(0, n);
+}
+function makeRival(n, isPlayer) {
+  const r = { name: n.name, stage: n.stage, isPlayer, yaw: 0, hopT: 0, moving: false };
+  if (isPlayer) { r.model = player.model; r.pos = player.pos; }
+  else {
+    r.model = makeToadModel(n.color, STAGES[n.stage].rainbow); r.model.scale.setScalar(Math.max(0.7, STAGES[n.stage].scale) * 0.95);
+    if (n.stage >= 4) r.model.userData.mat.color.setHex(STAGES[n.stage].color);
+    r.group = new THREE.Group(); r.group.add(r.model); scene.add(r.group); r.pos = new THREE.Vector3();
+  }
+  return r;
+}
+function spawnStars(pos, color) {
+  for (let i = 0; i < 7; i++) {
+    const m = new THREE.Mesh(new THREE.OctahedronGeometry(0.35), new THREE.MeshBasicMaterial({ color: color || 0xffe066 }));
+    m.position.set(pos.x, pos.y + 1.5, pos.z); scene.add(m);
+    fxList.push({ mesh: m, vx: rand(-6, 6), vy: rand(4, 10), vz: rand(-6, 6), life: 0.7 });
+  }
+}
+function updateFx(dt) {
+  for (let i = fxList.length - 1; i >= 0; i--) {
+    const f = fxList[i]; f.life -= dt; f.vy -= 20 * dt; f.mesh.position.x += f.vx * dt; f.mesh.position.y += f.vy * dt; f.mesh.position.z += f.vz * dt; f.mesh.rotation.y += 10 * dt;
+    if (f.life <= 0) { scene.remove(f.mesh); fxList.splice(i, 1); }
+  }
+}
+function gameInteraction() {
+  if (mode === 'race' && race && race.me.bomb > 0) return { label: '💣 Press E near a racer to pass the bomb! ' + Math.ceil(race.me.bomb) + 's', fn: () => usePower(race.me) };
+  return null;
+}
+
+// ---------------------------------------------------------------- HAMASH (hammer arena)
+function hammerDmg(stage) { return 1 + Math.floor(stage / 2); }
+function startHamash() {
+  if (save.stage === 0) { showMsg('Tadpoles are too small for Hamash! Become a toad first.'); return; }
+  enterGame('hamash');
+  hamash = { list: [], me: null, t: 0, countdown: 3.5, over: false };
+  const mk = (n, isPlayer) => { const c = makeRival(n, isPlayer); Object.assign(c, { hearts: isPlayer ? 8 : 6, alive: true, cd: 0, swingT: 0, hitT: 0, kx: 0, kz: 0, think: rand(0.3, 1), fallV: 0 }); c.hammer = makeHammer(1); c.hammer.position.set(0.95, 0.7, 0.5); c.hammer.rotation.set(-0.6, 0, -0.3); c.model.add(c.hammer); return c; };
+  hamash.me = mk({ name: 'YOU', stage: save.stage }, true); hamash.list.push(hamash.me);
+  for (const n of pickOpponents(6)) hamash.list.push(mk(n, false));
+  hamash.list.forEach((c, i) => {
+    const a = i / hamash.list.length * Math.PI * 2;
+    c.pos.set(ARENA.x + Math.cos(a) * (ARENA.r - 8), ARENA.y, ARENA.z + Math.sin(a) * (ARENA.r - 8)); c.yaw = Math.atan2(ARENA.x - c.pos.x, ARENA.z - c.pos.z);
+    if (c.isPlayer) { player.yaw = c.yaw; camYaw = c.yaw; camManual = 0; }
+  });
+  camera.position.set(player.pos.x - Math.sin(camYaw) * 10, ARENA.y + 6, player.pos.z - Math.cos(camYaw) * 10);
+  jingle([392, 523, 659]); showMsg('🔨 HAMASH! Press E to swing your hammer. Bonk toads off the edge. Last toad standing wins!', 4000);
+}
+function swingHammer(c) {
+  if (!hamash || hamash.over || !c.alive || c.cd > 0 || hamash.countdown > 0) return;
+  c.cd = 0.8; c.swingT = 0.3; beep(220, 0.08, 'square', 0.05);
+  const reach = 2.6 + c.model.scale.x * 1.7, fx = Math.sin(c.yaw), fz = Math.cos(c.yaw);
+  for (const o of hamash.list) {
+    if (o === c || !o.alive) continue;
+    const dx = o.pos.x - c.pos.x, dz = o.pos.z - c.pos.z, dist = Math.hypot(dx, dz) || 0.001;
+    if (dist < reach + o.model.scale.x && (dx * fx + dz * fz) / dist > 0.15) hitToad(c, o, dx / dist, dz / dist);
+  }
+}
+function hitToad(from, to, nx, nz) {
+  if (to.hitT > 0) return;
+  const dmg = hammerDmg(from.stage), kb = 11 + dmg * 4;
+  to.hearts -= dmg; to.hitT = to.isPlayer ? 1.0 : 0.6; spawnStars(to.pos); beep(110, 0.2, 'sawtooth', 0.1);
+  if (to.isPlayer) { player.kx = nx * kb; player.kz = nz * kb; player.vy = 6; showMsg('💥 ' + from.name + ' bonked you! -' + dmg + ' ❤️', 1200); }
+  else { to.kx = nx * kb; to.kz = nz * kb; if (from.isPlayer) showMsg('🔨 BONK! You hit ' + to.name + ' for ' + dmg + '!', 1000); }
+  if (to.hearts <= 0) knockOut(to, 'ran out of hearts!', from);
+}
+function knockOut(c, why, by) {
+  if (!c.alive || hamash.over) return;
+  c.alive = false;
+  const place = hamash.list.filter(x => x.alive).length + 1;
+  if (c.isPlayer) { endGame({ won: false, place }); return; }
+  c.group.visible = false; beep(300, 0.3, 'triangle');
+  if (by && by.isPlayer) { save.mush += 5; updateHUD(); showMsg('🔨 You knocked out ' + c.name + '! +5 🍄', 2000); } else showMsg(c.name + ' ' + why, 1500);
+}
+function updateHamash(dt, t) {
+  const h = hamash; h.t += dt; updateFx(dt);
+  if (h.countdown > 0) { h.countdown -= dt; player.stunned = true; if (h.countdown <= 0) { player.stunned = false; showMsg('GO! 🔨', 1000); beep(880, 0.3); } }
+  const alive = h.list.filter(c => c.alive);
+  for (const c of h.list) {
+    if (!c.alive) continue;
+    c.cd = Math.max(0, c.cd - dt); c.hitT = Math.max(0, c.hitT - dt);
+    if (c.swingT > 0) { c.swingT -= dt; c.hammer.rotation.x = -1.5 + (1 - c.swingT / 0.3) * 2.4; } else c.hammer.rotation.x = lerp(c.hammer.rotation.x, -0.6, Math.min(1, dt * 8));
+    const d = Math.hypot(c.pos.x - ARENA.x, c.pos.z - ARENA.z);
+    if (c.isPlayer) { if (d > ARENA.r + 0.5 && c.pos.y < ARENA.y - 5) knockOut(c, 'fell off!'); c.yaw = player.yaw; continue; }
+    c.pos.x += c.kx * dt; c.pos.z += c.kz * dt; const kd = Math.max(0, 1 - 4 * dt); c.kx *= kd; c.kz *= kd;
+    c.moving = false;
+    if (d > ARENA.r + 0.5) { c.fallV -= 25 * dt; c.pos.y += c.fallV * dt; if (c.pos.y < ARENA.y - 8) knockOut(c, 'fell off the arena!'); }
+    else if (h.countdown <= 0 && c.hitT <= 0 && !h.over) {
+      c.think -= dt;
+      if (c.think <= 0) { c.think = rand(0.5, 1.5); let best = null, bd = 1e9; for (const o of alive) { if (o === c) continue; const dd = c.pos.distanceToSquared(o.pos) * (o.isPlayer ? 1.6 : 1); if (dd < bd) { bd = dd; best = o; } } if (Math.random() < 0.35) { const others = alive.filter(o => o !== c); best = others[Math.floor(Math.random() * others.length)]; } c.target = best; }
+      const tg = c.target && c.target.alive ? c.target : null;
+      if (tg) {
+        const dx = tg.pos.x - c.pos.x, dz = tg.pos.z - c.pos.z, dist = Math.hypot(dx, dz) || 0.001, reach = 2.2 + c.model.scale.x * 1.5;
+        c.yaw = lerpAngle(c.yaw, Math.atan2(dx, dz), Math.min(1, dt * 6));
+        if (dist > reach) { const sp = 6.5 + c.stage * 0.8; c.pos.x += dx / dist * sp * dt; c.pos.z += dz / dist * sp * dt; c.hopT += dt; c.moving = true; }
+        else if (c.cd <= 0 && Math.random() < 0.06) { swingHammer(c); c.cd = 1.5; }
+      }
+    }
+    c.group.position.set(c.pos.x, c.pos.y + (c.moving ? Math.abs(Math.sin(c.hopT * 9)) * 0.4 : 0), c.pos.z); c.group.rotation.y = c.yaw;
+    c.model.rotation.z = c.hitT > 0 ? Math.sin(t * 40) * 0.2 : 0;
+  }
+  if (!h.over && h.me.alive && alive.length === 1) endGame({ won: true, place: 1 });
+  const me = h.me;
+  setGameInfo('🔨 ' + '❤️'.repeat(Math.max(0, me.hearts)) + '🖤'.repeat(Math.max(0, 8 - me.hearts)) + ' · <b>' + alive.length + '</b> toads left' + (h.countdown > 0 ? ' · Get ready... <b>' + Math.ceil(h.countdown) + '</b>' : ' · <b>E</b> = swing! Your hammer hits for ' + hammerDmg(save.stage)));
+}
+
+// ---------------------------------------------------------------- RUNNY RACE
+function startRace() {
+  if (save.stage === 0) { showMsg('Tadpoles are too small to race! Become a toad first.'); return; }
+  enterGame('race');
+  race = { list: [], me: null, t: 0, countdown: 3.5, over: false, items: [], spawnT: 2, rainbowT: 0, rain: null };
+  const mk = (n, isPlayer, i) => { const r = makeRival(n, isPlayer); Object.assign(r, { lane: (i - 3.5) * 1.5, angle: 0, lastAngle: 0, progress: 0, slowT: 0, frozenT: 0, stunT: 0, boostT: 0, shield: false, item: null, bomb: 0, useT: rand(2, 5), finishT: null, mash: 0, passT: 0, base: 11.5 + n.stage * 1.3 + rand(-1, 1) }); return r; };
+  const opp = pickOpponents(7);
+  opp.forEach((n, i) => race.list.push(mk(n, false, i)));
+  race.me = mk({ name: 'YOU', stage: save.stage }, true, 3); race.list.splice(3, 0, race.me);
+  race.list.forEach((r, i) => {
+    r.angle = -0.06 - Math.floor(i / 2) * 0.045; r.lastAngle = r.angle; r.angle0 = r.angle; const rr = TRACK.r + r.lane;
+    r.pos.set(TRACK.x + Math.cos(r.angle) * rr, 0, TRACK.z + Math.sin(r.angle) * rr); r.yaw = Math.atan2(-Math.sin(r.angle), Math.cos(r.angle));
+    if (r.isPlayer) { player.yaw = r.yaw; camYaw = r.yaw; camManual = 0; }
+  });
+  for (let i = 0; i < 6; i++) spawnItem('box', i / 6 * Math.PI * 2 + 0.5, rand(-4, 4));
+  for (let i = 0; i < 4; i++) spawnItem('boost', rand(0, 6.28), rand(-4, 4));
+  camera.position.set(player.pos.x - Math.sin(camYaw) * 10, 6, player.pos.z - Math.cos(camYaw) * 10);
+  jingle([392, 523, 659]); showMsg('🏁 RUNNY RACE! 6 laps. Grab ⚡ boosters and ❓ boxes. Press E to use a power-up!', 4000);
+}
+function spawnItem(type, angle, lane) {
+  let mesh;
+  if (type === 'box') { mesh = new THREE.Mesh(new THREE.BoxGeometry(1.7, 1.7, 1.7), M(0xffe066)); const q1 = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.5, 0.5), M(0xe53935)), q2 = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 1.8), M(0xe53935)); mesh.add(q1); mesh.add(q2); }
+  else { mesh = new THREE.Group(); for (let i = 0; i < 3; i++) { const ch = new THREE.Mesh(new THREE.ConeGeometry(0.8, 1.3, 4), new THREE.MeshBasicMaterial({ color: 0x00e5ff })); ch.rotation.x = Math.PI / 2; ch.position.z = -i; mesh.add(ch); } }
+  const rr = TRACK.r + lane; mesh.position.set(TRACK.x + Math.cos(angle) * rr, type === 'box' ? 1.3 : 0.35, TRACK.z + Math.sin(angle) * rr);
+  if (type === 'boost') mesh.rotation.y = Math.atan2(-Math.sin(angle), Math.cos(angle));
+  scene.add(mesh); race.items.push({ type, mesh, respawn: 0 });
+}
+function racerMul(r) {
+  let m = 1;
+  if (!r.isPlayer) m *= clamp(1 + (race.me.progress - r.progress) * 0.05, 0.8, 1.3);
+  if (r.frozenT > 0 || r.stunT > 0) m = 0;
+  if (r.slowT > 0) m *= 0.5;
+  if (r.boostT > 0) m *= 1.7;
+  return m;
+}
+function wrapPi(a) { while (a > Math.PI) a -= Math.PI * 2; while (a < -Math.PI) a += Math.PI * 2; return a; }
+function applyEffect(tg, type, from) {
+  if (!tg) return;
+  if (tg.shield) { tg.shield = false; showMsg((tg.isPlayer ? 'Your' : tg.name + "'s") + ' Force Field blocked the ' + POWERS[type].name + ' and shattered! 🛡️💥', 2200); beep(900, 0.3, 'square'); return; }
+  if (type === 'octopus') { tg.slowT = 4; if (tg.isPlayer) { $('ink').style.opacity = 1; showMsg('🐙 ' + from.name + ' sprayed ink on you! So slow...', 2200); } else announce(from, 'inked ' + tg.name + '! 🐙'); }
+  if (type === 'spell') { tg.frozenT = 6; tg.mash = 0; if (tg.isPlayer) { $('frozen').style.display = 'flex'; $('mashbar').textContent = ''; } else announce(from, 'froze ' + tg.name + ' with a magic spell! ✨'); }
+  if (type === 'bomb') { tg.bomb = 5; if (tg.isPlayer) showMsg('💣 ' + from.name + ' passed you the BOMB! Press E near a racer to pass it on!', 3000); else announce(from, 'passed the bomb to ' + tg.name + '! 💣'); }
+}
+function usePower(r) {
+  if (!race || race.over || race.countdown > 0 || r.finishT != null) return;
+  const others = race.list.filter(o => o !== r && o.finishT == null);
+  if (r.bomb > 0) {
+    const near = others.map(o => ({ o, d: o.pos.distanceTo(r.pos) })).filter(x => x.d < 9).sort((a, b) => a.d - b.d)[0];
+    if (near) { r.bomb = 0; applyEffect(near.o, 'bomb', r); beep(500, 0.1); } else if (r.isPlayer) showMsg('No racer close enough to pass the bomb! Run to someone!', 1200);
+    return;
+  }
+  if (!r.item) { if (r.isPlayer) showMsg('You have no power-up. Grab a ❓ box!', 1200); return; }
+  const type = r.item; r.item = null; r.useT = rand(2, 6);
+  const ahead = others.filter(o => o.progress > r.progress).sort((a, b) => a.progress - b.progress)[0];
+  const nearest = others.slice().sort((a, b) => a.pos.distanceToSquared(r.pos) - b.pos.distanceToSquared(r.pos))[0];
+  let target = ahead || nearest;
+  if (!r.isPlayer && race.me.finishT == null && Math.random() < 0.5 && type !== 'bomb') target = race.me;
+  if (type === 'octopus' || type === 'spell') { applyEffect(target, type, r); if (r.isPlayer && target && !target.shield) showMsg((type === 'octopus' ? '🐙 You inked ' : '✨ You froze ') + target.name + '!', 1500); }
+  else if (type === 'bomb') applyEffect(target, 'bomb', r);
+  else if (type === 'shield') { r.shield = true; announce(r, 'raised a Force Field! 🛡️'); }
+  else if (type === 'rainbow') { race.rainbowT = 20; startRain(); announce(r, 'made it RAINBOW RAIN! 🌈 Double boosters, and double prizes for the winner!'); }
+  if (r.isPlayer) beep(600, 0.15);
+}
+function mash() {
+  const me = race.me; if (me.frozenT <= 0) return;
+  me.mash++; beep(400 + me.mash * 60, 0.05); $('mashbar').textContent = '🧊'.repeat(Math.max(0, 8 - me.mash)) + '💥'.repeat(Math.min(8, me.mash));
+  if (me.mash >= 8) { me.frozenT = 0; $('frozen').style.display = 'none'; showMsg('💥 You broke free!', 1200); jingle([660, 880]); }
+}
+function startRain() {
+  if (race.rain) return;
+  const N = 900, geo = new THREE.BufferGeometry(), pos = new Float32Array(N * 3), col = new Float32Array(N * 3), c = new THREE.Color();
+  for (let i = 0; i < N; i++) { pos[i * 3] = TRACK.x + rand(-110, 110); pos[i * 3 + 1] = rand(2, 70); pos[i * 3 + 2] = TRACK.z + rand(-110, 110); c.setHSL(Math.random(), 0.9, 0.6); col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b; }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  race.rain = new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.9, vertexColors: true })); race.rain.frustumCulled = false; scene.add(race.rain);
+}
+function updateRace(dt, t) {
+  const rc = race; rc.t += dt; updateFx(dt);
+  if (rc.countdown > 0) { rc.countdown -= dt; player.stunned = true; if (rc.countdown <= 0) { player.stunned = false; showMsg('GO! 🏁', 1000); beep(880, 0.3); } }
+  if (rc.rainbowT > 0) { rc.rainbowT -= dt; const pos = rc.rain.geometry.attributes.position.array; for (let i = 1; i < pos.length; i += 3) { pos[i] -= 14 * dt; if (pos[i] < 0) pos[i] = 70; } rc.rain.geometry.attributes.position.needsUpdate = true; if (rc.rainbowT <= 0) { scene.remove(rc.rain); rc.rain = null; } }
+  rc.spawnT -= dt;
+  if (rc.spawnT <= 0) { rc.spawnT = rc.rainbowT > 0 ? 2.5 : 5; if (rc.items.filter(i => i.type === 'boost').length < 8) spawnItem('boost', rand(0, 6.28), rand(-4.5, 4.5)); }
+  for (const it of rc.items) { if (it.respawn > 0) { it.respawn -= dt; if (it.respawn <= 0) it.mesh.visible = true; } it.mesh.rotation.y += (it.type === 'box' ? 2 : 0) * dt; }
+  const total = TRACK.laps * Math.PI * 2;
+  for (const r of rc.list) {
+    r.slowT = Math.max(0, r.slowT - dt); r.stunT = Math.max(0, r.stunT - dt); r.boostT = Math.max(0, r.boostT - dt);
+    if (r.frozenT > 0) { r.frozenT -= dt; if (r.frozenT <= 0 && r.isPlayer) $('frozen').style.display = 'none'; }
+    if (r.bomb > 0) {
+      r.bomb -= dt;
+      if (r.bomb <= 0) { r.bomb = 0; r.stunT = 5; spawnStars(r.pos, 0xff3d00); beep(60, 0.5, 'sawtooth', 0.15); showMsg('💥 KABOOM! ' + (r.isPlayer ? 'You are' : r.name + ' is') + ' stunned for 5 seconds!', 2500); }
+      else if (!r.isPlayer) { r.passT -= dt; if (r.passT <= 0) { r.passT = 0.6; if (Math.random() < 0.7) usePower(r); } }
+    }
+    const mul = racerMul(r);
+    if (r.isPlayer) {
+      const st = STAGES[save.stage], p = player.pos, rad = Math.hypot(p.x - TRACK.x, p.z - TRACK.z), onTrack = Math.abs(rad - TRACK.r) < TRACK.w / 2 + 1.5;
+      player.slowMul = (Math.max(st.speed, 16) / st.speed) * 1.1 * mul * (onTrack ? 1 : 0.55);
+      player.frozen = r.frozenT > 0; player.stunned = r.stunT > 0 || rc.countdown > 0;
+      $('ink').style.opacity = r.slowT > 0 ? 1 : 0;
+      const ang = Math.atan2(p.z - TRACK.z, p.x - TRACK.x), d = wrapPi(ang - r.lastAngle); r.lastAngle = ang;
+      if (onTrack && r.finishT == null) r.progress += d;
+    } else {
+      if (r.finishT == null && rc.countdown <= 0) { const sp = r.base * mul; r.angle += sp / (TRACK.r + r.lane) * dt; r.progress = r.angle - r.angle0; r.moving = sp > 0; if (r.moving) r.hopT += dt; }
+      else r.moving = false;
+      const rr = TRACK.r + r.lane; r.pos.set(TRACK.x + Math.cos(r.angle) * rr, 0, TRACK.z + Math.sin(r.angle) * rr); r.yaw = Math.atan2(-Math.sin(r.angle), Math.cos(r.angle));
+      r.group.position.set(r.pos.x, r.moving ? Math.abs(Math.sin(r.hopT * 9)) * 0.45 : 0, r.pos.z); r.group.rotation.y = r.yaw;
+      r.model.rotation.z = r.frozenT > 0 ? 0.3 : r.stunT > 0 ? Math.sin(t * 20) * 0.3 : 0;
+      if (r.item && r.finishT == null) { r.useT -= dt; if (r.useT <= 0) usePower(r); }
+    }
+    for (const it of rc.items) {
+      if (!it.mesh.visible || r.finishT != null) continue;
+      if (dist2(it.mesh.position.x, it.mesh.position.z, r.pos.x, r.pos.z) < 2.6 * 2.6) {
+        if (it.type === 'boost') { r.boostT = 2.5; it.mesh.visible = false; it.respawn = 1e9; if (r.isPlayer) { beep(900, 0.15, 'square'); showMsg('⚡ BOOST!', 700); } }
+        else if (!r.item) { r.item = POWER_IDS[Math.floor(Math.random() * POWER_IDS.length)]; it.mesh.visible = false; it.respawn = 6; if (r.isPlayer) { beep(700, 0.12); showMsg('❓ You got ' + POWERS[r.item].em + ' ' + POWERS[r.item].name + '! Press E to use it.', 2000); } }
+      }
+    }
+    if (r.finishT == null && r.progress >= total) { r.finishT = rc.t; if (r.isPlayer) endGame({}); else if (!rc.over) showMsg('🏁 ' + r.name + ' finished the race!', 1500); }
+  }
+  for (let i = rc.items.length - 1; i >= 0; i--) if (rc.items[i].respawn >= 1e9) { scene.remove(rc.items[i].mesh); rc.items.splice(i, 1); }
+  const me = rc.me, order = rc.list.slice().sort((a, b) => (a.finishT != null ? -1e6 + a.finishT : -b.progress) - (b.finishT != null ? -1e6 + b.finishT : -a.progress));
+  const place = order.indexOf(me) + 1, lap = Math.min(TRACK.laps, Math.floor(Math.max(0, me.progress) / (Math.PI * 2)) + 1);
+  const suf = place === 1 ? 'st' : place === 2 ? 'nd' : place === 3 ? 'rd' : 'th';
+  setGameInfo('🏁 Lap <b>' + lap + '/' + TRACK.laps + '</b> · Position <b>' + place + suf + '</b>' + (me.item ? ' · ' + POWERS[me.item].em + ' ' + POWERS[me.item].name + ' (<b>E</b>)' : '') + (me.bomb > 0 ? ' · 💣 <b>' + Math.ceil(me.bomb) + 's</b> PASS IT!' : '') + (me.shield ? ' · 🛡️' : '') + (rc.rainbowT > 0 ? ' · 🌈 ' + Math.ceil(rc.rainbowT) + 's' : '') + (rc.countdown > 0 ? ' · Ready... <b>' + Math.ceil(rc.countdown) + '</b>' : ''));
+}
+
+// ---------------------------------------------------------------- END / LEAVE
+function endGame(result, quit) {
+  if (mode === 'world') return;
+  const kind = mode;
+  if (kind === 'hamash') hamash.over = true; else race.over = true;
+  player.stunned = true; player.frozen = false; player.slowMul = 0; $('ink').style.opacity = 0; $('frozen').style.display = 'none';
+  let title, body = '', reward = null;
+  if (quit) { title = '🏳️ You left the game'; body = 'No prizes this time. Come back and play again!'; }
+  else if (kind === 'hamash') {
+    if (result.won) { title = '🏆 YOU WIN HAMASH!'; reward = { mush: 40, petals: 15, xp: 80 }; save.wins.hamash++; jingle([523, 659, 784, 1047, 1319]); body = '<div style="font-size:20px">Last toad standing! 🔨</div>'; }
+    else { title = '💥 Knocked out! You placed #' + result.place; reward = result.place <= 3 ? { mush: 15, petals: 5, xp: 30 } : { mush: 5, petals: 0, xp: 10 }; body = '<div>Better luck next time! Bigger toads hit harder.</div>'; }
+  } else {
+    const rows = race.list.slice().sort((a, b) => (a.finishT != null ? a.finishT : 1e9 - a.progress) - (b.finishT != null ? b.finishT : 1e9 - b.progress));
+    const place = rows.indexOf(race.me) + 1, mul = race.rainbowT > 0 && place === 1 ? 2 : 1;
+    if (place === 1) { title = '🏆 YOU WIN THE RUNNY RACE!' + (mul === 2 ? ' 🌈 x2!' : ''); reward = { mush: 40 * mul, petals: 15 * mul, xp: 80 }; save.wins.race++; jingle([523, 659, 784, 1047, 1319]); }
+    else { title = '🏁 You finished #' + place; reward = place <= 3 ? { mush: 15, petals: 5, xp: 30 } : { mush: 5, petals: 0, xp: 10 }; }
+    body = '<table>' + rows.map((r, i) => '<tr class="' + (r.isPlayer ? 'me' : '') + '"><td>#' + (i + 1) + '</td><td>' + r.name + '</td><td>' + STAGES[r.stage].emoji + ' ' + STAGES[r.stage].name + '</td></tr>').join('') + '</table>';
+  }
+  if (reward) { save.mush += reward.mush; save.petals += reward.petals; gainXP(reward.xp); body += '<div style="font-size:20px;margin-top:8px">Prizes: 🍄 ' + reward.mush + ' &nbsp; 🌸 ' + reward.petals + ' &nbsp; ⭐ ' + reward.xp + ' XP</div>'; }
+  writeSave(); updateHUD();
+  $('resultsTitle').textContent = title; $('resultsBody').innerHTML = body;
+  setTimeout(() => { $('results').style.display = 'flex'; }, quit ? 0 : 1500);
+}
+function leaveGame() {
+  if (mode === 'world') return;
+  mode = 'world';
+  if (hamash) { for (const c of hamash.list) { if (c.hammer.parent) c.hammer.parent.remove(c.hammer); if (c.group) scene.remove(c.group); } hamash = null; }
+  if (race) { for (const r of race.list) if (r.group) scene.remove(r.group); for (const it of race.items) scene.remove(it.mesh); if (race.rain) scene.remove(race.rain); race = null; }
+  for (const f of fxList) scene.remove(f.mesh); fxList.length = 0;
+  player.pos.copy(worldReturn.pos); player.inWater = worldReturn.inWater; player.flying = false; player.vy = 0; player.kx = player.kz = 0; player.stunned = false; player.frozen = false; player.slowMul = 0; player.model.rotation.z = 0;
+  if (!player.inWater) player.pos.y = groundY(player.pos.x, player.pos.z, player.pos.y);
+  document.body.classList.remove('ingame'); $('games').style.display = ''; $('gamehud').style.display = 'none'; $('buttons').style.display = ''; $('ink').style.opacity = 0; $('frozen').style.display = 'none';
+  setFollowersVisible(true);
+  camera.position.set(player.pos.x - 8, player.pos.y + 4, player.pos.z - 8);
+  writeSave(); updateHUD();
+}
+
 // ---------------------------------------------------------------- GAME LOOP
 let running = false, lastT = 0, saveT = 0;
 const mapCtx = $('minimap').getContext('2d');
@@ -1094,15 +1574,17 @@ function update(dt, t) {
   const st = STAGES[save.stage], p = player.pos;
   let ix = (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0) + touchInput.x;
   let iz = (keys.KeyW || keys.ArrowUp ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0) + touchInput.z;
-  if (anyModalOpen()) ix = iz = 0;
+  if (anyModalOpen() || player.frozen || player.stunned) ix = iz = 0;
   const len = Math.hypot(ix, iz); if (len > 1) { ix /= len; iz /= len; }
   const moving = len > 0.05;
   const fx = Math.sin(camYaw), fz = Math.cos(camYaw), rx = -Math.cos(camYaw), rz = Math.sin(camYaw);
   const mx = fx * iz + rx * ix, mz = fz * iz + rz * ix;
   const up = keys.Space ? 1 : 0, dn = keys.ShiftLeft || keys.ShiftRight ? 1 : 0;
   let speed = st.speed * (player.inWater && save.stage > 0 ? 0.75 : 1);
-  if (player.flying) speed = 34;
+  if (player.flying) speed = bird ? bird.spec.speed : 34;
+  if (player.slowMul) speed *= player.slowMul;
   if (moving) { p.x += mx * speed * dt; p.z += mz * speed * dt; player.yaw = lerpAngle(player.yaw, Math.atan2(mx, mz), Math.min(1, dt * 10)); player.hopT += dt; }
+  if (player.kx || player.kz) { p.x += player.kx * dt; p.z += player.kz * dt; const kd = Math.max(0, 1 - 4 * dt); player.kx *= kd; player.kz *= kd; if (Math.abs(player.kx) + Math.abs(player.kz) < 0.2) player.kx = player.kz = 0; }
   player.moving = moving;
   p.x = clamp(p.x, -WORLD + 3, WORLD - 3); p.z = clamp(p.z, -WORLD + 3, WORLD - 3);
   const pond = pondAt(p.x, p.z);
@@ -1110,7 +1592,7 @@ function update(dt, t) {
   if (player.flying) {
     p.y += (up - dn) * 22 * dt;
     const floor = (pond ? 0 : H(p.x, p.z)) + 2;
-    p.y = clamp(p.y, floor, 220);
+    p.y = clamp(p.y, floor, bird ? bird.spec.maxY : 220);
     const isl = islandAt(p.x, p.z); if (isl && Math.abs(p.y - isl.y) < 2.5 && dn) { p.y = isl.y; stopFlying(); }
   } else if (player.inWater) {
     const pd = pond || MAIN, floor = H(p.x, p.z);
@@ -1165,7 +1647,7 @@ function update(dt, t) {
       if (Math.abs(fp.x - p.x) < reach && Math.abs(fp.z - p.z) < reach && Math.abs(fp.y - p.y) < reach + 1.5) { resetFly(f); gainXP(XP.fly); beep(660, 0.1, 'square'); }
     }
     const rr = reach * reach;
-    if (!player.flying) for (let i = 0; i < MUSHROOM_COUNT; i++) {
+    if (!player.flying && mode === 'world') for (let i = 0; i < MUSHROOM_COUNT; i++) {
       if (Math.abs(mush.x[i] - p.x) > reach || Math.abs(mush.z[i] - p.z) > reach) continue;
       if (dist2(mush.x[i], mush.z[i], p.x, p.z) < rr && Math.abs(mush.y[i] - p.y) < 4) {
         if (mush.gold[i]) goldenReward(XP.golden); else { save.mush++; gainXP(XP.mushroom); beep(520 + Math.random() * 200, 0.08, 'triangle'); }
@@ -1183,13 +1665,14 @@ function update(dt, t) {
   }
 
   // ---- interaction prompt
-  currentInteract = nearestInteraction();
+  currentInteract = mode === 'world' ? nearestInteraction() : gameInteraction();
   const prompt = $('prompt'); prompt.style.display = currentInteract ? 'block' : 'none'; if (currentInteract) prompt.textContent = currentInteract.label;
   if (save.stage === 0) { const ready = save.xp >= STAGES[1].xp; burrowBeam.visible = ready; burrowBeam.material.opacity = 0.25 + Math.sin(t * 4) * 0.15; } else burrowBeam.visible = false;
-  if (egg && egg.visible) { egg.position.y = H(CIRCLE_POS.x, CIRCLE_POS.z) + 2.2 + Math.sin(t * 2) * 0.2; egg.rotation.y = t * 0.5; }
+  for (const id in eggs) { const e = eggs[id]; if (!e.visible) continue; e.position.y = e.userData.baseY + Math.sin(t * 2 + e.userData.baseY) * 0.2; e.rotation.y = t * 0.5; }
   if (spriteMeet) spriteMeet.group.position.y = H(spriteMeet.pos.x, spriteMeet.pos.z) + 2 + Math.sin(t * 2) * 0.4;
 
-  updateNPCs(dt, t); updateAnimals(dt, t); updateBabies(dt, t); updateFriend(dt, t); updateBird(dt, t); clouds.update(dt);
+  updateNPCs(dt, t); updateAnimals(dt, t); updateBabies(dt, t); updateFriend(dt, t); updateBird(dt, t); updateTrail(dt); clouds.update(dt);
+  if (mode === 'hamash') updateHamash(dt, t); else if (mode === 'race') updateRace(dt, t);
   for (const pd of PONDS) pd.water.material.opacity = 0.5 + Math.sin(t * 1.3 + pd.x) * 0.05;
 
   // ---- camera, sun, sky follow the player
@@ -1251,6 +1734,8 @@ function drawMap() {
   c.fillStyle = 'rgba(255,255,255,.7)'; for (const i of ISLANDS) { c.beginPath(); c.arc((i.x + WORLD) * k, (i.z + WORLD) * k, i.r * k, 0, 6.3); c.fill(); }
   c.fillStyle = '#e53935'; c.fillRect((SHOP_POS.x + WORLD) * k - 2, (SHOP_POS.z + WORLD) * k - 2, 4, 4);
   c.fillStyle = '#9b59b6'; c.fillRect((CIRCLE_POS.x + WORLD) * k - 2, (CIRCLE_POS.z + WORLD) * k - 2, 4, 4);
+  c.fillStyle = '#ff5252'; c.fillRect((ARENA.x + WORLD) * k - 3, (ARENA.z + WORLD) * k - 3, 6, 6);
+  c.fillStyle = '#111'; c.fillRect((TRACK.x + WORLD) * k - 3, (TRACK.z + WORLD) * k - 3, 6, 6); c.fillStyle = '#fff'; c.fillRect((TRACK.x + WORLD) * k - 1, (TRACK.z + WORLD) * k - 1, 2, 2);
   c.fillStyle = '#ff9f43'; for (const n of npcs) c.fillRect((n.pos.x + WORLD) * k - 1.5, (n.pos.z + WORLD) * k - 1.5, 3, 3);
   c.fillStyle = '#fff'; c.strokeStyle = '#000'; c.beginPath(); c.arc((player.pos.x + WORLD) * k, (player.pos.z + WORLD) * k, 4, 0, 6.3); c.fill(); c.stroke();
 }
@@ -1274,16 +1759,16 @@ function startGame() {
   rebuildPlayerModel(); for (const f of save.fort) addFortPiece(f);
   for (const b of save.babies) spawnBaby(b);
   if (save.bestFriend) spawnFriend(); else buildSpriteMeet();
-  if (save.bird) { spawnBird(); egg.visible = false; }
+  spawnBird(); for (const id in eggs) if (save.birds[id]) eggs[id].visible = false;
   camYaw = player.yaw; camera.position.set(player.pos.x - 8, player.pos.y + 4, player.pos.z - 8);
   updateHUD(); running = true;
   showMsg(save.stage === 0 ? '🐟 You are a tiny tadpole! Swim around (WASD) and eat the snacks.' : '🐸 Welcome back, ' + STAGES[save.stage].name + '!', 4000);
 }
-buildSky(); buildGround(); buildIslands(); buildScenery(); buildMushrooms(); buildFood(); buildBurrow(); buildNPCs(); buildAnimals();
 loadSave();
+buildSky(); buildGround(); buildIslands(); buildScenery(); buildMushrooms(); buildFood(); buildBurrow(); buildNPCs(); buildAnimals(); buildArena(); buildTrack(); buildEggs();
 $('playBtn').onclick = () => { $('start').style.display = 'none'; beep(660, 0.1); startGame(); };
 $('resetBtn').onclick = () => { if (confirm('Start a brand new game? Your toad will go back to being a tadpole!')) { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} location.reload(); } };
-window.TA = { player, mush, npcs, animals, babies, get bird() { return bird; }, get save() { return save; }, get camYaw() { return camYaw; }, get running() { return running; }, keys, H, gainXP, adoptBird, hatchBaby, meetFriend, feedBird, startFlying, updateHUD };
+window.TA = { player, mush, npcs, animals, babies, get mode() { return mode; }, get worldReturn() { return worldReturn; }, get hamash() { return hamash; }, get race() { return race; }, startHamash, startRace, endGame, leaveGame, usePower, swingHammer, applyEffect, eggs, BIRDS, get bird() { return bird; }, get save() { return save; }, get camYaw() { return camYaw; }, get running() { return running; }, keys, H, gainXP, adoptBird, hatchBaby, meetFriend, feedBird, startFlying, updateHUD };
 requestAnimationFrame(frame);
 })();
 </script>
