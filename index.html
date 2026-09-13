@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Toad Adventure</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #7ec8ff; font-family: "Chalkboard SE", "Comic Sans MS", "Comic Sans", cursive, sans-serif; touch-action: none; }
+  canvas#game { display: block; width: 100%; height: 100%; }
+  #hud { position: fixed; inset: 0; pointer-events: none; color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.45); }
+  .panel { background: rgba(20, 60, 30, .78); border: 3px solid #b9ff8a; border-radius: 18px; padding: 10px 14px; }
+  #topleft { position: absolute; left: 12px; top: 12px; min-width: 240px; }
+  #stage { font-size: 22px; font-weight: bold; color: #ffe66d; }
+  #xpbar { height: 14px; background: rgba(0,0,0,.4); border-radius: 8px; overflow: hidden; margin: 6px 0; border: 2px solid #fff; }
+  #xpfill { height: 100%; width: 0%; background: linear-gradient(90deg, #7cff5a, #ffe66d); transition: width .3s; }
+  #quest { font-size: 14px; line-height: 1.3; }
+  #topright { position: absolute; right: 12px; top: 12px; text-align: right; font-size: 18px; line-height: 1.5; }
+  #topright b { color: #ffe66d; }
+  #buttons { position: absolute; right: 12px; top: 130px; display: flex; flex-direction: column; gap: 8px; pointer-events: auto; }
+  .btn { background: #ff9f43; color: #3b1d00; border: 3px solid #fff; border-radius: 14px; font: inherit; font-size: 16px; font-weight: bold; padding: 8px 14px; cursor: pointer; text-shadow: none; box-shadow: 0 4px 0 #b86a1a; }
+  .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #b86a1a; }
+  .btn.green { background: #7cff5a; box-shadow: 0 4px 0 #3f9a2a; }
+  .btn.red { background: #ff6b6b; box-shadow: 0 4px 0 #a83232; }
+  #msg { position: absolute; left: 50%; top: 18%; transform: translateX(-50%); font-size: 26px; font-weight: bold; text-align: center; max-width: 80%; opacity: 0; transition: opacity .3s; color: #fff; }
+  #prompt { position: absolute; left: 50%; bottom: 110px; transform: translateX(-50%); font-size: 20px; font-weight: bold; background: rgba(0,0,0,.5); padding: 8px 16px; border-radius: 12px; display: none; }
+  #minimap { position: absolute; left: 12px; bottom: 12px; width: 170px; height: 170px; border: 3px solid #fff; border-radius: 12px; background: #4caf50; }
+  #maplabel { position: absolute; left: 12px; bottom: 186px; font-size: 13px; }
+  #help { position: absolute; right: 12px; bottom: 12px; font-size: 13px; line-height: 1.45; max-width: 260px; }
+  #help b { color: #ffe66d; }
+  .bubble { position: absolute; transform: translate(-50%, -100%); background: #fff; color: #234; border-radius: 14px; padding: 6px 10px; font-size: 14px; max-width: 220px; text-align: center; border: 2px solid #234; white-space: normal; }
+  .bubble b { display: block; color: #d35400; }
+  .bubble:after { content: ""; position: absolute; left: 50%; bottom: -10px; margin-left: -6px; border: 6px solid transparent; border-top-color: #fff; border-bottom: 0; }
+  #overlay { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; transition: opacity .6s; }
+  #start { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 30%, #9be7ff, #2a8f4a 70%); z-index: 10; }
+  #start .card { background: rgba(255,255,255,.92); border-radius: 28px; padding: 30px 40px; text-align: center; max-width: 520px; color: #234; border: 6px solid #7cff5a; }
+  #start h1 { font-size: 46px; margin: 0; color: #2e7d32; }
+  #start h2 { margin: 4px 0 14px; font-size: 18px; color: #d35400; }
+  #start p { font-size: 16px; line-height: 1.4; }
+  #start .btn { font-size: 24px; padding: 12px 34px; margin: 6px; }
+  .modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.45); z-index: 9; pointer-events: auto; }
+  .modal .card { background: #fffbe6; color: #234; border-radius: 24px; padding: 20px 24px; width: min(720px, 94vw); max-height: 90vh; overflow: auto; border: 6px solid #ff9f43; text-shadow: none; }
+  .modal h2 { margin: 0 0 6px; color: #d35400; font-size: 28px; }
+  .items { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 12px; }
+  .item { background: #fff; border: 3px solid #ffd27f; border-radius: 16px; padding: 10px; text-align: center; }
+  .item .em { font-size: 36px; }
+  .item .nm { font-weight: bold; }
+  .item .pr { color: #7a4b00; font-size: 14px; margin: 4px 0; }
+  .item .btn { font-size: 14px; padding: 6px 10px; }
+  .item.equipped { border-color: #7cff5a; background: #f0ffe8; }
+  #board table { width: 100%; border-collapse: collapse; font-size: 18px; }
+  #board td { padding: 4px 8px; border-bottom: 2px solid #ffe0a8; }
+  #board tr.me td { background: #e6ffd8; font-weight: bold; }
+  #touch { position: fixed; inset: 0; pointer-events: none; display: none; }
+  #stick { position: absolute; left: 30px; bottom: 200px; width: 130px; height: 130px; border-radius: 50%; background: rgba(255,255,255,.25); border: 3px solid rgba(255,255,255,.6); pointer-events: auto; }
+  #knob { position: absolute; left: 40px; top: 40px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,.8); }
+  #tbtns { position: absolute; right: 20px; bottom: 200px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; pointer-events: auto; }
+  .tb { width: 70px; height: 70px; border-radius: 50%; background: rgba(255,159,67,.85); border: 3px solid #fff; color: #3b1d00; font: inherit; font-weight: bold; font-size: 14px; }
+  @media (max-width: 700px) {
+    #help, #maplabel { display: none; }
+    #topleft { min-width: 0; width: 52%; padding: 6px 10px; } #quest { font-size: 12px; } #stage { font-size: 17px; }
+    #topright { max-width: 46%; font-size: 13px; padding: 6px 10px; line-height: 1.4; }
+    #buttons { top: auto; bottom: 12px; right: 12px; flex-direction: row; } .btn { font-size: 13px; padding: 6px 10px; }
+    #minimap { width: 100px; height: 100px; } #msg { font-size: 18px; top: 24%; } #prompt { font-size: 15px; bottom: 130px; }
+    #stick { bottom: 130px; left: 20px; } #tbtns { bottom: 70px; right: 14px; gap: 8px; } .tb { width: 58px; height: 58px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<div id="hud">
+  <div id="topleft" class="panel">
+    <div id="stage">Tadpole</div>
+    <div id="xpbar"><div id="xpfill"></div></div>
+    <div id="quest">Eat snacks to grow!</div>
+  </div>
+  <div id="topright" class="panel">
+    🍄 Mushrooms: <b id="mush">0</b><br>
+    🪨 Pebbles: <b id="peb">0</b><br>
+    🏆 Legendary Race: <b id="rank">#?</b><br>
+    <span id="compass">🍄 <span id="carrow" style="display:inline-block">➜</span> <b id="cdist">?</b></span>
+  </div>
+  <div id="buttons">
+    <button class="btn" id="shopBtn">🍄 Shop</button>
+    <button class="btn green" id="boardBtn">🏆 Race</button>
+    <button class="btn" id="helpBtn">❓ Help</button>
+  </div>
+  <div id="msg"></div>
+  <div id="prompt"></div>
+  <div id="bubbles"></div>
+  <div id="maplabel">🗺️ World map (the pond is the tiny blue dot!)</div>
+  <canvas id="minimap" width="170" height="170"></canvas>
+  <div id="help" class="panel">
+    <b>Move:</b> WASD / Arrows<br>
+    <b>Swim up / down:</b> Space / Shift<br>
+    <b>Jump (on land):</b> Space<br>
+    <b>Build fort piece:</b> B (needs a pebble)<br>
+    <b>Interact:</b> E &nbsp; <b>Shop:</b> P<br>
+    <b>Look around:</b> drag mouse &nbsp; <b>Zoom:</b> scroll
+  </div>
+</div>
+
+<div id="touch">
+  <div id="stick"><div id="knob"></div></div>
+  <div id="tbtns">
+    <button class="tb" data-k="Space">UP /<br>JUMP</button>
+    <button class="tb" data-k="ShiftLeft">DIVE</button>
+    <button class="tb" data-k="KeyE">E</button>
+    <button class="tb" data-k="KeyB">BUILD</button>
+  </div>
+</div>
+
+<div id="overlay"></div>
+
+<div id="start">
+  <div class="card">
+    <h1>🐸 Toad Adventure</h1>
+    <h2>A game by Sasha</h2>
+    <p>You start as a teeny tadpole in a pond. Eat snacks, build a fort, and grow!<br>
+    One day you'll burrow into the ground and become a <b>mini toad</b>...<br>
+    Then you'll discover the pond was only <b>1%</b> of a COLOSSAL world.<br>
+    Collect 🍄 mushrooms, buy cool clothes, and become the most <b>LEGENDARY TOAD</b> ever!</p>
+    <button class="btn green" id="playBtn">▶ Play</button>
+    <button class="btn red" id="resetBtn">🔄 New Game</button>
+  </div>
+</div>
+
+<div id="shop" class="modal">
+  <div class="card">
+    <h2>🍄 Mushroom Shop</h2>
+    <div>You have <b id="shopMush">0</b> mushrooms. Golden mushrooms ✨ give free clothes!</div>
+    <div class="items" id="shopItems"></div>
+    <p style="text-align:center"><button class="btn" id="closeShop">Done</button></p>
+  </div>
+</div>
+
+<div id="board" class="modal">
+  <div class="card">
+    <h2>🏆 The Legendary Race</h2>
+    <div>Who will become the most legendary toad?</div>
+    <table id="boardTable"></table>
+    <p style="text-align:center"><button class="btn" id="closeBoard">Close</button></p>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+'use strict';
+
+// ---------------------------------------------------------------- CONSTANTS
+const WORLD = 750;                  // half-size: the world is 1500 x 1500
+const PONDS = [
+  { x: 0, z: 0, r: 85, depth: 8, main: true },    // ~1% of the world's area
+  { x: -430, z: 320, r: 40, depth: 6 },
+  { x: 510, z: -400, r: 50, depth: 7 },
+  { x: 260, z: 560, r: 35, depth: 6 },
+  { x: -560, z: -510, r: 55, depth: 7 },
+];
+const MAIN = PONDS[0];
+const STAGES = [
+  { name: 'Tadpole',        xp: 0,    scale: 1.0, speed: 11, color: 0x5c7a2f, emoji: '🐟' },
+  { name: 'Mini Toad',      xp: 60,   scale: 0.7, speed: 13, color: 0x6db33f, emoji: '🐸' },
+  { name: 'Toad',           xp: 250,  scale: 1.1, speed: 15, color: 0x4f9a2e, emoji: '🐸' },
+  { name: 'Big Toad',       xp: 700,  scale: 1.6, speed: 17, color: 0x3f7f2a, emoji: '🐸' },
+  { name: 'Legendary Toad', xp: 1500, scale: 2.3, speed: 21, color: 0xffd700, emoji: '👑' },
+];
+const MUSHROOM_COUNT = 1000;
+const XP = { snack: 6, fly: 8, mushroom: 3, golden: 25 };
+const SHOP_POS = { x: 130, z: 25 };
+const BURROW_WATER = { x: MAIN.r - 7, z: 0 };
+const BURROW_LAND = { x: MAIN.r + 9, z: 0 };
+
+const CLOTHES = [
+  { id: 'party-hat', name: 'Party Hat', cat: 'hat', price: 15, em: '🎉' },
+  { id: 'flower-crown', name: 'Flower Crown', cat: 'hat', price: 20, em: '🌸' },
+  { id: 'top-hat', name: 'Top Hat', cat: 'hat', price: 30, em: '🎩' },
+  { id: 'wizard-hat', name: 'Wizard Hat', cat: 'hat', price: 50, em: '🧙' },
+  { id: 'crown', name: 'Royal Crown', cat: 'hat', price: 100, em: '👑' },
+  { id: 'shades', name: 'Cool Shades', cat: 'eyes', price: 25, em: '😎' },
+  { id: 'star-glasses', name: 'Star Glasses', cat: 'eyes', price: 35, em: '⭐' },
+  { id: 'bow-tie', name: 'Bow Tie', cat: 'neck', price: 10, em: '🎀' },
+  { id: 'backpack', name: 'Backpack', cat: 'back', price: 35, em: '🎒' },
+  { id: 'red-cape', name: 'Red Cape', cat: 'back', price: 40, em: '🟥' },
+  { id: 'blue-cape', name: 'Blue Cape', cat: 'back', price: 40, em: '🟦' },
+  { id: 'wings', name: 'Fairy Wings', cat: 'back', price: 75, em: '🧚' },
+];
+
+const NPC_NAMES = ['Hoppy', 'Sir Croaksalot', 'Lily', 'Bubbles', 'Wartley', 'Pip', 'Gumbo', 'Ribbert', 'Speckle', 'Mossy', 'Princess Puddle', 'Jumper', 'Boing', 'Toadette'];
+const NPC_LINES = [
+  "Ribbit! I'm going to be the most legendary toad ever!",
+  "Have you seen the golden mushrooms? They give free clothes!",
+  "This world is HUGE. I've hopped for days!",
+  "Eat flies to grow big and strong!",
+  "I built a fort back in the pond. It was awesome.",
+  "Race you to the top of the Legendary Race!",
+  "There's a giant mushroom forest out west!",
+  "I found a stone circle far to the east!",
+  "Nice outfit! Did you get it at the Mushroom Shop?",
+  "Keep hopping, little one! You'll be legendary soon.",
+];
+
+// ---------------------------------------------------------------- HELPERS
+const rand = (a, b) => a + Math.random() * (b - a);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const dist2 = (ax, az, bx, bz) => (ax - bx) * (ax - bx) + (az - bz) * (az - bz);
+function pondAt(x, z) {
+  for (const p of PONDS) if (dist2(x, z, p.x, p.z) < p.r * p.r) return p;
+  return null;
+}
+function randLandPos(margin) {
+  margin = margin || 4;
+  for (let i = 0; i < 50; i++) {
+    const x = rand(-WORLD + 10, WORLD - 10), z = rand(-WORLD + 10, WORLD - 10);
+    let ok = true;
+    for (const p of PONDS) if (dist2(x, z, p.x, p.z) < (p.r + margin) * (p.r + margin)) ok = false;
+    if (dist2(x, z, SHOP_POS.x, SHOP_POS.z) < 20 * 20) ok = false;
+    if (ok) return { x, z };
+  }
+  return { x: 300, z: 300 };
+}
+function randPondPos(p, inset) {
+  const a = rand(0, Math.PI * 2), r = Math.sqrt(Math.random()) * (p.r - (inset || 4));
+  return { x: p.x + Math.cos(a) * r, z: p.z + Math.sin(a) * r };
+}
+function lerpAngle(a, b, t) {
+  let d = b - a;
+  while (d > Math.PI) d -= Math.PI * 2;
+  while (d < -Math.PI) d += Math.PI * 2;
+  return a + d * t;
+}
+function stageFor(xp) {
+  let s = 0;
+  for (let i = 0; i < STAGES.length; i++) if (xp >= STAGES[i].xp) s = i;
+  return s;
+}
+
+// ---------------------------------------------------------------- SOUND
+let audio = null;
+function beep(freq, dur, type, vol) {
+  try {
+    if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
+    const o = audio.createOscillator(), g = audio.createGain();
+    o.type = type || 'sine'; o.frequency.value = freq;
+    g.gain.value = vol || 0.08;
+    g.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime + dur);
+    o.connect(g); g.connect(audio.destination);
+    o.start(); o.stop(audio.currentTime + dur);
+  } catch (e) { /* no sound, no problem */ }
+}
+function jingle(notes) {
+  notes.forEach((n, i) => setTimeout(() => beep(n, 0.25, 'triangle', 0.1), i * 110));
+}
+
+// ---------------------------------------------------------------- SAVE
+const SAVE_KEY = 'toad-adventure-save-v1';
+let save = {
+  xp: 0, stage: 0, mush: 0, pebbles: 0, snacks: 0,
+  owned: [], equipped: {}, fort: [],
+  pos: { x: 0, y: -3, z: 0 },
+};
+function loadSave() {
+  try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (s && typeof s.xp === 'number') save = Object.assign(save, s); } catch (e) {}
+}
+function writeSave() {
+  save.pos = { x: player.pos.x, y: player.pos.y, z: player.pos.z };
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {}
+}
+
+// ---------------------------------------------------------------- THREE SETUP
+const canvas = document.getElementById('game');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+const scene = new THREE.Scene();
+const SKY = new THREE.Color(0x7ec8ff), WATER = new THREE.Color(0x2b86b8);
+const fogAir = new THREE.Fog(SKY, 80, 900), fogWater = new THREE.FogExp2(WATER, 0.035);
+scene.background = SKY; scene.fog = fogAir;
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 3000);
+scene.add(new THREE.HemisphereLight(0xbfe9ff, 0x4a8a3a, 0.9));
+const sun = new THREE.DirectionalLight(0xfff2cc, 0.9); sun.position.set(200, 300, 100); scene.add(sun);
+window.addEventListener('resize', () => {
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
+});
+
+const M = (color, extra) => new THREE.MeshLambertMaterial(Object.assign({ color }, extra || {}));
+
+// ---------------------------------------------------------------- WORLD
+function buildGround() {
+  const shape = new THREE.Shape();
+  shape.moveTo(-WORLD, -WORLD); shape.lineTo(WORLD, -WORLD); shape.lineTo(WORLD, WORLD); shape.lineTo(-WORLD, WORLD); shape.closePath();
+  for (const p of PONDS) { const h = new THREE.Path(); h.absarc(p.x, -p.z, p.r, 0, Math.PI * 2, true); shape.holes.push(h); }
+  const ground = new THREE.Mesh(new THREE.ShapeGeometry(shape, 24), M(0x5cb84a));
+  ground.rotation.x = -Math.PI / 2; scene.add(ground);
+  // far horizon skirt so the edge of the world looks like distant hills
+  const rim = new THREE.Mesh(new THREE.RingGeometry(WORLD * 1.4, WORLD * 4, 32), M(0x3f8f3a));
+  rim.rotation.x = -Math.PI / 2; rim.position.y = -0.5; scene.add(rim);
+  for (const p of PONDS) {
+    const floor = new THREE.Mesh(new THREE.CircleGeometry(p.r + 0.5, 48), M(0xb99a5a));
+    floor.rotation.x = -Math.PI / 2; floor.position.set(p.x, -p.depth, p.z); scene.add(floor);
+    const wall = new THREE.Mesh(new THREE.CylinderGeometry(p.r, p.r, p.depth, 48, 1, true), M(0x8b6a3a, { side: THREE.DoubleSide }));
+    wall.position.set(p.x, -p.depth / 2, p.z); scene.add(wall);
+    const water = new THREE.Mesh(new THREE.CircleGeometry(p.r + 0.3, 48), M(0x3aa0e0, { transparent: true, opacity: 0.55, side: THREE.DoubleSide }));
+    water.rotation.x = -Math.PI / 2; water.position.set(p.x, -0.08, p.z); scene.add(water);
+    // reeds and lily pads
+    for (let i = 0; i < Math.floor(p.r / 6); i++) {
+      const a = rand(0, Math.PI * 2), rr = p.r - rand(2, 6);
+      const reed = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.25, rand(3, 6), 5), M(0x3e8f2e));
+      reed.position.set(p.x + Math.cos(a) * rr, 1.5, p.z + Math.sin(a) * rr); scene.add(reed);
+      const pad = new THREE.Mesh(new THREE.CircleGeometry(rand(1.5, 3), 12), M(0x3d9a3a, { side: THREE.DoubleSide }));
+      const pp = randPondPos(p, 8); pad.rotation.x = -Math.PI / 2; pad.position.set(pp.x, -0.02, pp.z); scene.add(pad);
+    }
+  }
+}
+
+function buildScenery() {
+  // trees
+  const N = 700;
+  const trunks = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.5, 0.8, 6, 6), M(0x8b5a2b), N);
+  const crowns = new THREE.InstancedMesh(new THREE.SphereGeometry(3.4, 8, 7), M(0x2e8b3a), N);
+  const m = new THREE.Matrix4(), c = new THREE.Color();
+  for (let i = 0; i < N; i++) {
+    let p = randLandPos(20);
+    if (dist2(p.x, p.z, 0, 0) < 115 * 115) p = { x: 300 + rand(-80, 80), z: -220 + rand(-80, 80) };
+    const s = rand(0.8, 2.2);
+    m.makeScale(s, s, s); m.setPosition(p.x, 3 * s, p.z); trunks.setMatrixAt(i, m);
+    m.makeScale(s, s * rand(0.9, 1.3), s); m.setPosition(p.x, 7.5 * s, p.z); crowns.setMatrixAt(i, m);
+    crowns.setColorAt(i, c.setHSL(rand(0.25, 0.38), 0.6, rand(0.3, 0.45)));
+  }
+  scene.add(trunks); scene.add(crowns);
+  // flowers
+  const F = 1500;
+  const stems = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.06, 0.06, 0.9, 4), M(0x3e9f2e), F);
+  const heads = new THREE.InstancedMesh(new THREE.SphereGeometry(0.28, 6, 5), M(0xffffff), F);
+  for (let i = 0; i < F; i++) {
+    const p = randLandPos(3);
+    m.makeScale(1, 1, 1); m.setPosition(p.x, 0.45, p.z); stems.setMatrixAt(i, m);
+    m.setPosition(p.x, 0.95, p.z); heads.setMatrixAt(i, m);
+    heads.setColorAt(i, c.setHSL(Math.random(), 0.9, 0.65));
+  }
+  scene.add(stems); scene.add(heads);
+  // rocks
+  const R = 220;
+  const rocks = new THREE.InstancedMesh(new THREE.DodecahedronGeometry(1, 0), M(0x8d8d8d), R);
+  for (let i = 0; i < R; i++) {
+    const p = randLandPos(6), s = rand(0.6, 2.5);
+    m.makeRotationY(rand(0, 6)); m.scale(new THREE.Vector3(s, s * 0.7, s)); m.setPosition(p.x, s * 0.3, p.z); rocks.setMatrixAt(i, m);
+    rocks.setColorAt(i, c.setHSL(0.1, 0.05, rand(0.35, 0.6)));
+  }
+  scene.add(rocks);
+  // giant mushroom forest (west) and stone circle (east) -- places to discover
+  const G = 30;
+  const gstem = new THREE.InstancedMesh(new THREE.CylinderGeometry(1.2, 1.6, 8, 8), M(0xf5e6c8), G);
+  const gcap = new THREE.InstancedMesh(new THREE.SphereGeometry(4.5, 10, 8, 0, Math.PI * 2, 0, Math.PI / 2), M(0xff4d4d), G);
+  for (let i = 0; i < G; i++) {
+    const x = -400 + rand(-90, 90), z = -160 + rand(-90, 90), s = rand(0.8, 1.6);
+    m.makeScale(s, s, s); m.setPosition(x, 4 * s, z); gstem.setMatrixAt(i, m);
+    m.setPosition(x, 8 * s, z); gcap.setMatrixAt(i, m);
+    gcap.setColorAt(i, c.setHSL(rand(0, 0.1), 0.85, 0.5));
+  }
+  scene.add(gstem); scene.add(gcap);
+  for (let i = 0; i < 10; i++) {
+    const a = i / 10 * Math.PI * 2;
+    const stone = new THREE.Mesh(new THREE.BoxGeometry(3, 9, 2), M(0x777));
+    stone.position.set(400 + Math.cos(a) * 25, 4.5, 320 + Math.sin(a) * 25); stone.rotation.y = -a; scene.add(stone);
+  }
+  // Mushroom shop hut
+  const hut = new THREE.Group();
+  const hs = new THREE.Mesh(new THREE.CylinderGeometry(4, 5, 8, 12), M(0xf7ead0)); hs.position.y = 4; hut.add(hs);
+  const hc = new THREE.Mesh(new THREE.SphereGeometry(9, 14, 10, 0, Math.PI * 2, 0, Math.PI / 2), M(0xe53935)); hc.position.y = 8; hut.add(hc);
+  for (let i = 0; i < 7; i++) {
+    const dot = new THREE.Mesh(new THREE.SphereGeometry(1.2, 8, 6), M(0xffffff));
+    const a = rand(0, Math.PI * 2), t = rand(0.3, 1.2);
+    dot.position.set(Math.sin(t) * Math.cos(a) * 8.6, 8 + Math.cos(t) * 8.6, Math.sin(t) * Math.sin(a) * 8.6); hut.add(dot);
+  }
+  const door = new THREE.Mesh(new THREE.BoxGeometry(2.2, 3.5, 0.4), M(0x6d4c41)); door.position.set(0, 1.75, 4.6); hut.add(door);
+  const sign = new THREE.Mesh(new THREE.BoxGeometry(5, 2, 0.3), M(0xffe066)); sign.position.set(0, 10.5, 6); hut.add(sign);
+  hut.position.set(SHOP_POS.x, 0, SHOP_POS.z); hut.rotation.y = Math.PI; scene.add(hut);
+}
+
+// ---------------------------------------------------------------- MUSHROOMS (1000, respawning)
+const mush = { x: new Float32Array(MUSHROOM_COUNT), z: new Float32Array(MUSHROOM_COUNT), gold: new Uint8Array(MUSHROOM_COUNT), stems: null, caps: null };
+const mushPalette = [0xff4d4d, 0xff9f43, 0xa55eea, 0x3b82f6, 0xff6fb5, 0x8d6e63, 0x2ecc71];
+function placeMushroom(i) {
+  const p = randLandPos(4);
+  mush.x[i] = p.x; mush.z[i] = p.z;
+  mush.gold[i] = Math.random() < 0.05 ? 1 : 0;
+  const m = new THREE.Matrix4(), s = rand(1.3, 2.0);
+  m.makeScale(s, s, s); m.setPosition(p.x, 0.35 * s, p.z); mush.stems.setMatrixAt(i, m);
+  m.setPosition(p.x, 0.7 * s, p.z); mush.caps.setMatrixAt(i, m);
+  mush.caps.setColorAt(i, new THREE.Color(mush.gold[i] ? 0xffd700 : mushPalette[Math.floor(Math.random() * mushPalette.length)]));
+}
+function buildMushrooms() {
+  mush.stems = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.18, 0.24, 0.7, 6), M(0xf5ecd7), MUSHROOM_COUNT);
+  mush.caps = new THREE.InstancedMesh(new THREE.SphereGeometry(0.6, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2), M(0xffffff), MUSHROOM_COUNT);
+  for (let i = 0; i < MUSHROOM_COUNT; i++) placeMushroom(i);
+  mush.stems.instanceMatrix.needsUpdate = true; mush.caps.instanceMatrix.needsUpdate = true; mush.caps.instanceColor.needsUpdate = true;
+  scene.add(mush.stems); scene.add(mush.caps);
+}
+function respawnMushroom(i) {
+  placeMushroom(i);
+  mush.stems.instanceMatrix.needsUpdate = true; mush.caps.instanceMatrix.needsUpdate = true; mush.caps.instanceColor.needsUpdate = true;
+}
+
+// ---------------------------------------------------------------- FOOD, FLIES, PEBBLES
+const snacks = [], flies = [], pebbles = [];
+const algaeGeo = new THREE.IcosahedronGeometry(0.8, 0), bugGeo = new THREE.SphereGeometry(0.45, 6, 5), pebGeo = new THREE.DodecahedronGeometry(0.4, 0);
+const algaeMat = M(0x35c94a), bugMat = M(0x33334d), flyMat = M(0x222233), pebMat = M(0x9e9e9e);
+function buildFood() {
+  for (const p of PONDS) {
+    const n = p.main ? 60 : 12;
+    for (let i = 0; i < n; i++) {
+      const bug = Math.random() < 0.4;
+      const mesh = new THREE.Mesh(bug ? bugGeo : algaeGeo, bug ? bugMat : algaeMat);
+      const s = { mesh, pond: p, bug, t: rand(0, 10) }; snacks.push(s); resetSnack(s); scene.add(mesh);
+    }
+  }
+  for (let i = 0; i < 160; i++) {
+    const g = new THREE.Group();
+    g.add(new THREE.Mesh(new THREE.SphereGeometry(0.22, 6, 5), flyMat));
+    const w = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.25), M(0xddeeff, { transparent: true, opacity: 0.7, side: THREE.DoubleSide }));
+    w.rotation.x = -Math.PI / 2; w.position.y = 0.15; g.add(w);
+    const f = { mesh: g, t: rand(0, 10), near: i < 60 }; flies.push(f); resetFly(f); scene.add(g);
+  }
+  for (let i = 0; i < 50; i++) {
+    const mesh = new THREE.Mesh(pebGeo, pebMat);
+    const pb = { mesh, water: i < 25 }; pebbles.push(pb); resetPebble(pb); scene.add(mesh);
+  }
+}
+function resetSnack(s) {
+  const p = randPondPos(s.pond, 3);
+  s.mesh.position.set(p.x, -s.pond.depth + rand(0.7, s.pond.depth - 1.2), p.z);
+  s.base = s.mesh.position.clone();
+}
+function resetFly(f) {
+  let p;
+  if (f.near) { const a = rand(0, 6.3), r = rand(MAIN.r + 8, 200); p = { x: Math.cos(a) * r, z: Math.sin(a) * r }; if (pondAt(p.x, p.z)) p = randLandPos(4); }
+  else p = randLandPos(4);
+  f.base = new THREE.Vector3(p.x, rand(1.2, 2.6), p.z);
+  f.mesh.position.copy(f.base);
+}
+function resetPebble(pb) {
+  if (pb.water) { const p = randPondPos(MAIN, 4); pb.mesh.position.set(p.x, -MAIN.depth + 0.3, p.z); }
+  else { const a = rand(0, 6.3), r = rand(MAIN.r + 6, 160); pb.mesh.position.set(Math.cos(a) * r, 0.3, Math.sin(a) * r); if (pondAt(pb.mesh.position.x, pb.mesh.position.z)) { const q = randLandPos(4); pb.mesh.position.set(q.x, 0.3, q.z); } }
+}
+
+// ---------------------------------------------------------------- BURROW
+let burrowGroup, burrowBeam;
+function buildBurrow() {
+  burrowGroup = new THREE.Group();
+  const hole = new THREE.Mesh(new THREE.CircleGeometry(2.2, 16), M(0x1a0f05)); hole.rotation.x = -Math.PI / 2; hole.position.set(BURROW_WATER.x, -MAIN.depth + 0.05, BURROW_WATER.z); burrowGroup.add(hole);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(2.4, 0.4, 8, 20), M(0x6b4a2a)); ring.rotation.x = -Math.PI / 2; ring.position.copy(hole.position); burrowGroup.add(ring);
+  burrowBeam = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, MAIN.depth + 30, 8, 1, true), M(0xffe066, { transparent: true, opacity: 0.35, side: THREE.DoubleSide }));
+  burrowBeam.position.set(BURROW_WATER.x, -MAIN.depth + (MAIN.depth + 30) / 2, BURROW_WATER.z); burrowGroup.add(burrowBeam);
+  const mound = new THREE.Mesh(new THREE.SphereGeometry(3, 10, 8, 0, Math.PI * 2, 0, Math.PI / 2), M(0x8b5a2b)); mound.position.set(BURROW_LAND.x, 0, BURROW_LAND.z); burrowGroup.add(mound);
+  const mh = new THREE.Mesh(new THREE.CircleGeometry(1.2, 12), M(0x1a0f05)); mh.position.set(BURROW_LAND.x - 2.2, 1.2, BURROW_LAND.z); mh.rotation.y = -Math.PI / 2; burrowGroup.add(mh);
+  scene.add(burrowGroup);
+}
+
+// ---------------------------------------------------------------- MODELS
+function makeToadModel(color) {
+  const g = new THREE.Group();
+  const mat = M(color), belly = M(0xe3f0b5), white = M(0xffffff), black = M(0x111111);
+  const body = new THREE.Mesh(new THREE.SphereGeometry(1, 14, 10), mat); body.scale.set(1.1, 0.75, 1.3); body.position.y = 0.75; g.add(body);
+  const tum = new THREE.Mesh(new THREE.SphereGeometry(0.8, 10, 8), belly); tum.scale.set(1, 0.5, 1); tum.position.set(0, 0.45, 0.35); g.add(tum);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.72, 12, 10), mat); head.position.set(0, 1.15, 0.9); g.add(head);
+  for (const sx of [-1, 1]) {
+    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.3, 10, 8), white); eye.position.set(sx * 0.42, 1.6, 1.15); g.add(eye);
+    const pup = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 6), black); pup.position.set(sx * 0.42, 1.63, 1.4); g.add(pup);
+    const back = new THREE.Mesh(new THREE.SphereGeometry(0.5, 8, 6), mat); back.scale.set(1, 0.7, 1.4); back.position.set(sx * 0.95, 0.35, -0.4); g.add(back);
+    const front = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 6), mat); front.scale.set(1, 0.9, 1.6); front.position.set(sx * 0.7, 0.28, 0.75); g.add(front);
+  }
+  for (let i = 0; i < 4; i++) {
+    const spot = new THREE.Mesh(new THREE.SphereGeometry(0.18, 6, 5), M(0x2f5f1f)); spot.position.set(rand(-0.7, 0.7), 1.35 + rand(-0.1, 0.1), rand(-0.6, 0.4)); g.add(spot);
+  }
+  g.userData.anchors = { hat: v(0, 1.85, 0.9), eyes: v(0, 1.62, 1.35), back: v(0, 1.35, -0.4), neck: v(0, 1.05, 1.45) };
+  return g;
+}
+function makeTadpoleModel(color) {
+  const g = new THREE.Group();
+  const mat = M(color), white = M(0xffffff), black = M(0x111111);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.6, 12, 10), mat); head.scale.set(1, 0.85, 1.15); g.add(head);
+  const tail = new THREE.Group(); tail.position.z = -0.45;
+  const fin = new THREE.Mesh(new THREE.SphereGeometry(0.5, 8, 6), mat); fin.scale.set(0.3, 0.75, 1.5); fin.position.z = -0.7; tail.add(fin);
+  g.add(tail); g.userData.tail = tail;
+  for (const sx of [-1, 1]) {
+    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.16, 8, 6), white); eye.position.set(sx * 0.3, 0.2, 0.45); g.add(eye);
+    const pup = new THREE.Mesh(new THREE.SphereGeometry(0.08, 6, 5), black); pup.position.set(sx * 0.3, 0.22, 0.58); g.add(pup);
+  }
+  g.userData.anchors = { hat: v(0, 0.55, 0), eyes: v(0, 0.22, 0.55), back: v(0, 0.35, -0.3), neck: v(0, -0.1, 0.5) };
+  return g;
+}
+function v(x, y, z) { return new THREE.Vector3(x, y, z); }
+
+function makeClothing(id) {
+  const g = new THREE.Group();
+  const add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x || 0, y || 0, z || 0); g.add(m); return m; };
+  switch (id) {
+    case 'party-hat': { add(new THREE.ConeGeometry(0.45, 1.0, 12), M(0xff6fb5), 0, 0.5, 0); add(new THREE.SphereGeometry(0.15, 8, 6), M(0xffe066), 0, 1.05, 0); add(new THREE.TorusGeometry(0.45, 0.06, 6, 14), M(0x3b82f6), 0, 0.02, 0).rotation.x = Math.PI / 2; break; }
+    case 'flower-crown': { add(new THREE.TorusGeometry(0.55, 0.07, 6, 16), M(0x3e9f2e), 0, 0.05, 0).rotation.x = Math.PI / 2; for (let i = 0; i < 7; i++) { const a = i / 7 * Math.PI * 2; add(new THREE.SphereGeometry(0.14, 6, 5), M(new THREE.Color().setHSL(i / 7, 0.9, 0.65)), Math.cos(a) * 0.55, 0.12, Math.sin(a) * 0.55); } break; }
+    case 'top-hat': { add(new THREE.CylinderGeometry(0.45, 0.45, 0.8, 14), M(0x111111), 0, 0.42, 0); add(new THREE.CylinderGeometry(0.8, 0.8, 0.08, 16), M(0x111111), 0, 0.04, 0); add(new THREE.CylinderGeometry(0.47, 0.47, 0.16, 14), M(0xe53935), 0, 0.16, 0); break; }
+    case 'wizard-hat': { add(new THREE.ConeGeometry(0.55, 1.5, 12), M(0x6a3fbf), 0, 0.75, 0).rotation.z = 0.12; add(new THREE.CylinderGeometry(0.9, 0.9, 0.08, 16), M(0x6a3fbf), 0, 0.04, 0); add(new THREE.OctahedronGeometry(0.16), M(0xffe066), 0.25, 0.8, 0.4); add(new THREE.OctahedronGeometry(0.12), M(0xffe066), -0.2, 1.1, -0.3); break; }
+    case 'crown': { add(new THREE.CylinderGeometry(0.55, 0.5, 0.45, 8, 1, true), M(0xffd700, { side: THREE.DoubleSide }), 0, 0.22, 0); for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2; add(new THREE.ConeGeometry(0.12, 0.35, 4), M(0xffd700), Math.cos(a) * 0.52, 0.6, Math.sin(a) * 0.52); add(new THREE.SphereGeometry(0.07, 6, 5), M(i % 2 ? 0xe53935 : 0x3b82f6), Math.cos(a) * 0.55, 0.25, Math.sin(a) * 0.55); } break; }
+    case 'shades': { const bm = M(0x111111); add(new THREE.BoxGeometry(0.42, 0.24, 0.1), bm, -0.42, 0, 0); add(new THREE.BoxGeometry(0.42, 0.24, 0.1), bm, 0.42, 0, 0); add(new THREE.BoxGeometry(0.4, 0.06, 0.06), bm, 0, 0.05, 0); break; }
+    case 'star-glasses': { const sm = M(0xffe066); add(new THREE.OctahedronGeometry(0.3), sm, -0.42, 0, 0).scale.z = 0.3; add(new THREE.OctahedronGeometry(0.3), sm, 0.42, 0, 0).scale.z = 0.3; add(new THREE.BoxGeometry(0.4, 0.06, 0.06), sm, 0, 0.05, 0); break; }
+    case 'bow-tie': { const rm = M(0xe53935); add(new THREE.ConeGeometry(0.18, 0.35, 4), rm, -0.2, 0, 0).rotation.z = Math.PI / 2; add(new THREE.ConeGeometry(0.18, 0.35, 4), rm, 0.2, 0, 0).rotation.z = -Math.PI / 2; add(new THREE.SphereGeometry(0.09, 6, 5), rm, 0, 0, 0); break; }
+    case 'backpack': { add(new THREE.BoxGeometry(0.8, 0.9, 0.45), M(0x8d5524), 0, -0.2, -0.25); add(new THREE.BoxGeometry(0.6, 0.3, 0.5), M(0xd35400), 0, 0.3, -0.25); break; }
+    case 'red-cape': case 'blue-cape': { const cm = M(id === 'red-cape' ? 0xe53935 : 0x3b82f6, { side: THREE.DoubleSide }); const c = add(new THREE.PlaneGeometry(1.8, 1.9), cm, 0, -0.7, -0.6); c.rotation.x = 0.35; g.userData.cape = c; break; }
+    case 'wings': { const wm = M(0xe8f4ff, { transparent: true, opacity: 0.8, side: THREE.DoubleSide }); for (const sx of [-1, 1]) { const w = add(new THREE.CircleGeometry(0.9, 12), wm, sx * 0.9, 0.2, -0.4); w.scale.set(1, 0.6, 1); w.rotation.y = sx * 0.6; w.rotation.z = sx * 0.5; } break; }
+  }
+  return g;
+}
+
+// ---------------------------------------------------------------- PLAYER
+const player = { pos: new THREE.Vector3(0, -3, 0), yaw: 0, vy: 0, group: new THREE.Group(), model: null, anchors: {}, hopT: 0, moving: false, inWater: true, clothes: {}, sparkles: null };
+scene.add(player.group);
+const blob = new THREE.Mesh(new THREE.CircleGeometry(1, 16), M(0x000000, { transparent: true, opacity: 0.25 })); blob.rotation.x = -Math.PI / 2; scene.add(blob);
+
+function rebuildPlayerModel() {
+  if (player.model) player.group.remove(player.model);
+  const st = STAGES[save.stage];
+  player.model = save.stage === 0 ? makeTadpoleModel(st.color) : makeToadModel(st.color);
+  player.model.scale.setScalar(st.scale);
+  player.group.add(player.model);
+  player.anchors = {};
+  for (const k in player.model.userData.anchors) { const a = new THREE.Object3D(); a.position.copy(player.model.userData.anchors[k]); player.model.add(a); player.anchors[k] = a; }
+  player.clothes = {};
+  for (const cat in save.equipped) if (save.equipped[cat]) equipVisual(save.equipped[cat]);
+  if (player.sparkles) { scene.remove(player.sparkles); player.sparkles = null; }
+  if (save.stage === 4) {
+    const pg = new THREE.BufferGeometry(), arr = new Float32Array(60 * 3);
+    for (let i = 0; i < 60; i++) { arr[i * 3] = rand(-4, 4); arr[i * 3 + 1] = rand(0, 6); arr[i * 3 + 2] = rand(-4, 4); }
+    pg.setAttribute('position', new THREE.BufferAttribute(arr, 3));
+    player.sparkles = new THREE.Points(pg, new THREE.PointsMaterial({ color: 0xffe066, size: 0.5 })); scene.add(player.sparkles);
+  }
+}
+function equipVisual(id) {
+  const item = CLOTHES.find(c => c.id === id); if (!item) return;
+  if (player.clothes[item.cat]) { player.anchors[item.cat].remove(player.clothes[item.cat]); }
+  const mesh = makeClothing(id); player.anchors[item.cat].add(mesh); player.clothes[item.cat] = mesh;
+}
+function unequipVisual(cat) { if (player.clothes[cat]) { player.anchors[cat].remove(player.clothes[cat]); delete player.clothes[cat]; } }
+
+// ---------------------------------------------------------------- NPC TOADS
+const npcs = [];
+function buildNPCs() {
+  NPC_NAMES.forEach((name, i) => {
+    let p;
+    if (i < 6) { const a = i / 6 * Math.PI * 2 + rand(-0.3, 0.3), r = rand(MAIN.r + 20, 200); p = { x: Math.cos(a) * r, z: Math.sin(a) * r }; if (pondAt(p.x, p.z)) p = randLandPos(10); }
+    else p = randLandPos(10);
+    const color = new THREE.Color().setHSL(rand(0.18, 0.4), rand(0.5, 0.8), rand(0.3, 0.5)).getHex();
+    const n = { name, xp: rand(20, 400), rate: rand(0.15, 0.6), pos: new THREE.Vector3(p.x, 0, p.z), yaw: rand(0, 6.3), target: null, wait: rand(0, 3), hopT: 0, model: makeToadModel(color), group: new THREE.Group(), line: NPC_LINES[i % NPC_LINES.length], lineT: 0, stage: -1, bubble: null };
+    if (i === 1) n.rate = 0.9;
+    n.group.add(n.model); n.group.position.copy(n.pos); scene.add(n.group); npcs.push(n);
+    const hatIds = ['party-hat', 'top-hat', 'flower-crown', 'wizard-hat', null, null, 'shades', null, 'bow-tie', 'red-cape', null, 'blue-cape', null, 'star-glasses'];
+    if (hatIds[i]) { const it = CLOTHES.find(c => c.id === hatIds[i]); const a = new THREE.Object3D(); a.position.copy(n.model.userData.anchors[it.cat]); a.add(makeClothing(it.id)); n.model.add(a); }
+  });
+}
+function updateNPCs(dt, t) {
+  for (const n of npcs) {
+    n.xp = Math.min(1650, n.xp + n.rate * dt);
+    const st = stageFor(n.xp);
+    if (st !== n.stage) { n.stage = st; n.model.scale.setScalar(Math.max(0.7, STAGES[st].scale) * 0.95); if (st === 4) n.model.children[0].material = M(0xffd700); }
+    if (n.wait > 0) { n.wait -= dt; n.moving = false; }
+    else {
+      if (!n.target) { let tp; do { tp = { x: n.pos.x + rand(-90, 90), z: n.pos.z + rand(-90, 90) }; tp.x = clamp(tp.x, -WORLD + 10, WORLD - 10); tp.z = clamp(tp.z, -WORLD + 10, WORLD - 10); } while (pondAt(tp.x, tp.z)); n.target = tp; }
+      const dx = n.target.x - n.pos.x, dz = n.target.z - n.pos.z, d = Math.hypot(dx, dz);
+      if (d < 2) { n.target = null; n.wait = rand(1, 5); n.moving = false; }
+      else { const sp = 6 + st * 1.5; n.pos.x += dx / d * sp * dt; n.pos.z += dz / d * sp * dt; n.yaw = Math.atan2(dx, dz); n.hopT += dt; n.moving = true; }
+    }
+    n.group.position.set(n.pos.x, n.moving ? Math.abs(Math.sin(n.hopT * 8)) * 0.6 : 0, n.pos.z);
+    n.group.rotation.y = n.yaw;
+  }
+}
+
+// ---------------------------------------------------------------- FORT
+const fortMeshes = [];
+function addFortPiece(p, silent) {
+  const water = p.y < -0.5;
+  const mesh = new THREE.Mesh(water ? new THREE.DodecahedronGeometry(0.9, 0) : new THREE.BoxGeometry(1.4, 1.0, 1.4), M(water ? 0x8d8d8d : 0xa0703c));
+  mesh.position.set(p.x, p.y + 0.5, p.z); mesh.rotation.y = p.rot || 0; scene.add(mesh); fortMeshes.push(mesh);
+  if (!silent) { beep(300, 0.15, 'square'); showMsg('🧱 Fort piece placed! (' + save.fort.length + ' pieces)'); }
+}
+
+// ---------------------------------------------------------------- HUD
+const $ = id => document.getElementById(id);
+let msgTimer = null;
+function showMsg(text, ms) {
+  const el = $('msg'); el.innerHTML = text; el.style.opacity = 1;
+  clearTimeout(msgTimer); msgTimer = setTimeout(() => el.style.opacity = 0, ms || 2600);
+}
+function updateHUD() {
+  const st = STAGES[save.stage], next = STAGES[save.stage + 1];
+  $('stage').textContent = st.emoji + ' ' + st.name;
+  const pct = next ? clamp((save.xp - st.xp) / (next.xp - st.xp) * 100, 0, 100) : 100;
+  $('xpfill').style.width = pct + '%';
+  let q;
+  if (save.stage === 0) q = save.xp < STAGES[1].xp ? 'Eat snacks under the water to grow! (' + Math.floor(save.xp / XP.snack) + '/' + Math.ceil(STAGES[1].xp / XP.snack) + ')<br>Collect pebbles 🪨 and press B to build a fort.' : '✨ You are ready! Swim to the glowing burrow at the pond edge and press E to enter the ground!';
+  else if (next) q = 'Collect 🍄 and eat flies to grow into a <b>' + next.name + '</b>!<br>XP: ' + Math.floor(save.xp) + ' / ' + next.xp;
+  else q = '👑 You are LEGENDARY! Keep exploring and collecting clothes!';
+  $('quest').innerHTML = q;
+  $('mush').textContent = save.mush; $('peb').textContent = save.pebbles; $('shopMush').textContent = save.mush;
+  const rank = 1 + npcs.filter(n => n.xp > save.xp).length;
+  $('rank').textContent = '#' + rank + ' of ' + (npcs.length + 1);
+}
+function gainXP(n) {
+  save.xp += n;
+  const st = stageFor(save.xp);
+  if (st > save.stage && save.stage >= 1) { save.stage = st; rebuildPlayerModel(); jingle([523, 659, 784, 1047]); showMsg('🎉 You evolved into a <b>' + STAGES[st].name.toUpperCase() + '</b>!', 4000); }
+  updateHUD();
+}
+
+// ---------------------------------------------------------------- SHOP + BOARD
+function renderShop() {
+  const wrap = $('shopItems'); wrap.innerHTML = '';
+  for (const it of CLOTHES) {
+    const owned = save.owned.includes(it.id), eq = save.equipped[it.cat] === it.id;
+    const d = document.createElement('div'); d.className = 'item' + (eq ? ' equipped' : '');
+    d.innerHTML = '<div class="em">' + it.em + '</div><div class="nm">' + it.name + '</div><div class="pr">' + (owned ? (eq ? 'Wearing it!' : 'Owned') : '🍄 ' + it.price) + '</div>';
+    const b = document.createElement('button'); b.className = 'btn' + (owned ? ' green' : '');
+    b.textContent = owned ? (eq ? 'Take off' : 'Wear') : 'Buy';
+    b.onclick = () => {
+      if (!owned) { if (save.mush < it.price) { beep(150, 0.2, 'sawtooth'); showMsg('Not enough mushrooms! Find more 🍄'); return; } save.mush -= it.price; save.owned.push(it.id); save.equipped[it.cat] = it.id; equipVisual(it.id); jingle([660, 880]); }
+      else if (eq) { delete save.equipped[it.cat]; unequipVisual(it.cat); beep(400, 0.1); }
+      else { save.equipped[it.cat] = it.id; equipVisual(it.id); beep(600, 0.1); }
+      writeSave(); updateHUD(); renderShop();
+    };
+    d.appendChild(b); wrap.appendChild(d);
+  }
+  $('shopMush').textContent = save.mush;
+}
+function renderBoard() {
+  const rows = npcs.map(n => ({ name: n.name, xp: n.xp, me: false })).concat([{ name: 'YOU', xp: save.xp, me: true }]).sort((a, b) => b.xp - a.xp);
+  $('boardTable').innerHTML = rows.map((r, i) => '<tr class="' + (r.me ? 'me' : '') + '"><td>#' + (i + 1) + '</td><td>' + r.name + '</td><td>' + STAGES[stageFor(r.xp)].emoji + ' ' + STAGES[stageFor(r.xp)].name + '</td><td>' + Math.floor(r.xp) + ' XP</td></tr>').join('');
+}
+function toggleModal(id, open) { const el = $(id); const show = open === undefined ? el.style.display !== 'flex' : open; el.style.display = show ? 'flex' : 'none'; if (show) { if (id === 'shop') renderShop(); if (id === 'board') renderBoard(); } }
+$('shopBtn').onclick = () => toggleModal('shop'); $('closeShop').onclick = () => toggleModal('shop', false);
+$('boardBtn').onclick = () => toggleModal('board'); $('closeBoard').onclick = () => toggleModal('board', false);
+$('helpBtn').onclick = () => { const h = $('help'); h.style.display = h.style.display === 'none' ? 'block' : 'none'; };
+
+// ---------------------------------------------------------------- INPUT
+const keys = {};
+let camYaw = 0, camDist = 9, camManual = 0, camBoost = 0, dragging = false, lastX = 0;
+const KEYMAP = { w: 'KeyW', a: 'KeyA', s: 'KeyS', d: 'KeyD', e: 'KeyE', b: 'KeyB', p: 'KeyP', l: 'KeyL', h: 'KeyH', ' ': 'Space', shift: 'ShiftLeft', arrowup: 'ArrowUp', arrowdown: 'ArrowDown', arrowleft: 'ArrowLeft', arrowright: 'ArrowRight', escape: 'Escape' };
+const codeOf = e => e.code || KEYMAP[(e.key || '').toLowerCase()] || '';
+window.addEventListener('keydown', ev => {
+  if (ev.target.tagName === 'INPUT') return;
+  const e = { code: codeOf(ev), preventDefault: () => ev.preventDefault() };
+  keys[e.code] = true;
+  if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) e.preventDefault();
+  if (e.code === 'KeyE') interact();
+  if (e.code === 'KeyB') build();
+  if (e.code === 'KeyP') toggleModal('shop');
+  if (e.code === 'KeyL') toggleModal('board');
+  if (e.code === 'KeyH') $('helpBtn').onclick();
+  if (e.code === 'Escape') { toggleModal('shop', false); toggleModal('board', false); }
+});
+window.addEventListener('keyup', e => { keys[codeOf(e)] = false; });
+window.addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
+canvas.addEventListener('mousedown', e => { dragging = true; lastX = e.clientX; });
+window.addEventListener('mouseup', () => dragging = false);
+window.addEventListener('mousemove', e => { if (dragging) { camYaw -= (e.clientX - lastX) * 0.006; lastX = e.clientX; camManual = 2.5; } });
+canvas.addEventListener('wheel', e => { camDist = clamp(camDist + e.deltaY * 0.01, 4, 40); }, { passive: true });
+
+// touch controls
+const touchInput = { x: 0, z: 0 };
+if ('ontouchstart' in window) {
+  $('touch').style.display = 'block';
+  const stick = $('stick'), knob = $('knob'); let sid = null, cx = 0, cy = 0;
+  stick.addEventListener('touchstart', e => { const t = e.changedTouches[0]; sid = t.identifier; const r = stick.getBoundingClientRect(); cx = r.left + r.width / 2; cy = r.top + r.height / 2; e.preventDefault(); }, { passive: false });
+  window.addEventListener('touchmove', e => {
+    for (const t of e.changedTouches) {
+      if (t.identifier === sid) { let dx = t.clientX - cx, dy = t.clientY - cy; const d = Math.hypot(dx, dy), max = 50; if (d > max) { dx *= max / d; dy *= max / d; } knob.style.left = 40 + dx + 'px'; knob.style.top = 40 + dy + 'px'; touchInput.x = dx / max; touchInput.z = -dy / max; }
+      else if (t.identifier === camTouch) { camYaw -= (t.clientX - lastX) * 0.008; lastX = t.clientX; camManual = 2.5; }
+    }
+  }, { passive: false });
+  const endTouch = e => { for (const t of e.changedTouches) { if (t.identifier === sid) { sid = null; touchInput.x = touchInput.z = 0; knob.style.left = knob.style.top = '40px'; } if (t.identifier === camTouch) camTouch = null; } };
+  window.addEventListener('touchend', endTouch); window.addEventListener('touchcancel', endTouch);
+  let camTouch = null;
+  canvas.addEventListener('touchstart', e => { const t = e.changedTouches[0]; camTouch = t.identifier; lastX = t.clientX; }, { passive: true });
+  document.querySelectorAll('.tb').forEach(b => {
+    const k = b.dataset.k;
+    b.addEventListener('touchstart', e => { e.preventDefault(); keys[k] = true; if (k === 'KeyE') interact(); if (k === 'KeyB') build(); }, { passive: false });
+    b.addEventListener('touchend', e => { e.preventDefault(); keys[k] = false; }, { passive: false });
+  });
+}
+
+function interact() {
+  if (!running) return;
+  const p = player.pos;
+  if (save.stage === 0) {
+    if (save.xp >= STAGES[1].xp && dist2(p.x, p.z, BURROW_WATER.x, BURROW_WATER.z) < 36) { becomeToad(); }
+    else if (save.xp < STAGES[1].xp) showMsg('Eat more snacks first! Then find the burrow.');
+    return;
+  }
+  if (dist2(p.x, p.z, SHOP_POS.x, SHOP_POS.z) < 20 * 20) toggleModal('shop', true);
+}
+function build() {
+  if (!running) return;
+  if (save.pebbles <= 0) { showMsg('You need a pebble 🪨 to build! Find them on the ground.'); beep(150, 0.2, 'sawtooth'); return; }
+  save.pebbles--;
+  const f = Math.sin(player.yaw), fz = Math.cos(player.yaw);
+  const piece = { x: Math.round(player.pos.x + f * 2), y: player.inWater ? -pondAt(player.pos.x, player.pos.z).depth : 0, z: Math.round(player.pos.z + fz * 2), rot: 0 };
+  save.fort.push(piece); addFortPiece(piece); writeSave(); updateHUD();
+}
+function becomeToad() {
+  running = false;
+  const ov = $('overlay'); ov.style.opacity = 1; beep(200, 0.6, 'triangle');
+  setTimeout(() => {
+    save.stage = 1; save.xp = Math.max(save.xp, STAGES[1].xp);
+    player.pos.set(BURROW_LAND.x + 6, 0, BURROW_LAND.z + 2); player.inWater = false; player.vy = 0; player.yaw = Math.PI / 2; camYaw = player.yaw;
+    rebuildPlayerModel(); camBoost = 1; writeSave(); updateHUD();
+    ov.style.opacity = 0; running = true;
+    jingle([392, 523, 659, 784, 1047]);
+    showMsg('🐸 You dug through the ground and became a <b>MINI TOAD</b>!<br>Whoa... the pond was TINY. The world is <b>COLOSSAL</b>!', 6000);
+    setTimeout(() => showMsg('Collect 🍄 mushrooms (1000 of them!) and visit the Mushroom Shop for clothes.', 5000), 6500);
+  }, 900);
+}
+
+// ---------------------------------------------------------------- GAME LOOP
+let running = false, lastT = 0, saveT = 0;
+const mapCtx = $('minimap').getContext('2d');
+const tmpV = new THREE.Vector3();
+
+function update(dt, t) {
+  const st = STAGES[save.stage], p = player.pos;
+  // input
+  let ix = (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0) + touchInput.x;
+  let iz = (keys.KeyW || keys.ArrowUp ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0) + touchInput.z;
+  const len = Math.hypot(ix, iz); if (len > 1) { ix /= len; iz /= len; }
+  const moving = len > 0.05;
+  const fx = Math.sin(camYaw), fz = Math.cos(camYaw), rx = -Math.cos(camYaw), rz = Math.sin(camYaw);
+  const mx = fx * iz + rx * ix, mz = fz * iz + rz * ix;
+  const speed = st.speed * (player.inWater && save.stage > 0 ? 0.75 : 1);
+  if (moving) { p.x += mx * speed * dt; p.z += mz * speed * dt; player.yaw = lerpAngle(player.yaw, Math.atan2(mx, mz), Math.min(1, dt * 10)); player.hopT += dt; }
+  player.moving = moving;
+  const pond = pondAt(p.x, p.z);
+
+  if (player.inWater) {
+    const pd = pond || MAIN;
+    const up = keys.Space ? 1 : 0, dn = keys.ShiftLeft || keys.ShiftRight ? 1 : 0;
+    p.y += (up - dn) * speed * 0.7 * dt;
+    if (!moving && !up && !dn) p.y += Math.sin(t * 2) * 0.002;
+    p.y = clamp(p.y, -pd.depth + 0.6, -0.3);
+    const d = Math.hypot(p.x - pd.x, p.z - pd.z);
+    if (d > pd.r - 1.2) {
+      if (save.stage === 0 || p.y < -1.5) { const k = (pd.r - 1.2) / d; p.x = pd.x + (p.x - pd.x) * k; p.z = pd.z + (p.z - pd.z) * k; if (save.stage === 0 && moving) hintWall(); }
+      else { player.inWater = false; p.y = 0; player.vy = 4; beep(500, 0.1); }
+    }
+  } else {
+    if (pond) { player.inWater = true; p.y = -0.3; player.vy = 0; beep(350, 0.15, 'sine'); }
+    else {
+      if (keys.Space && p.y <= 0.01) { player.vy = 9 + st.scale * 2; beep(700, 0.08); }
+      player.vy -= 25 * dt; p.y += player.vy * dt; if (p.y < 0) { p.y = 0; player.vy = 0; }
+    }
+  }
+  p.x = clamp(p.x, -WORLD + 3, WORLD - 3); p.z = clamp(p.z, -WORLD + 3, WORLD - 3);
+
+  // player visuals
+  const hop = !player.inWater && moving && p.y <= 0.01 ? Math.abs(Math.sin(player.hopT * 9)) * 0.5 * st.scale : 0;
+  player.group.position.set(p.x, p.y + hop, p.z); player.group.rotation.y = player.yaw;
+  if (player.model.userData.tail) { player.model.userData.tail.rotation.y = Math.sin(t * (moving ? 14 : 5)) * 0.5; player.model.rotation.x = player.inWater ? (keys.Space ? -0.4 : (keys.ShiftLeft ? 0.4 : 0)) : 0; }
+  if (player.clothes.back && player.clothes.back.userData.cape) player.clothes.back.userData.cape.rotation.x = 0.35 + (moving ? 0.5 + Math.sin(t * 10) * 0.15 : 0);
+  blob.position.set(p.x, player.inWater ? -pondAt(p.x, p.z).depth + 0.02 : 0.02, p.z); blob.scale.setScalar(st.scale * (save.stage === 0 ? 0.8 : 1.4));
+  if (player.sparkles) { player.sparkles.position.set(p.x, p.y, p.z); player.sparkles.rotation.y = t; }
+
+  // collect stuff
+  const reach = 1.2 + st.scale * 1.2;
+  if (player.inWater) {
+    for (const s of snacks) {
+      if (s.pond !== pond) continue;
+      s.mesh.position.y = s.base.y + Math.sin(t * 2 + s.t) * 0.3; if (s.bug) { s.mesh.position.x = s.base.x + Math.sin(t * 3 + s.t) * 1.5; s.mesh.position.z = s.base.z + Math.cos(t * 2.3 + s.t) * 1.5; }
+      if (s.mesh.position.distanceToSquared(p) < reach * reach) { resetSnack(s); save.snacks++; gainXP(XP.snack); beep(880, 0.12); if (save.stage === 0 && save.xp >= STAGES[1].xp && save.xp - XP.snack < STAGES[1].xp) { showMsg('✨ You are big enough! Find the glowing burrow at the edge of the pond and press E!', 5000); jingle([523, 659, 784]); } }
+    }
+  } else {
+    for (const f of flies) {
+      const fp = f.mesh.position; fp.x = f.base.x + Math.sin(t * 2.5 + f.t) * 2; fp.z = f.base.z + Math.cos(t * 1.7 + f.t) * 2; fp.y = f.base.y + Math.sin(t * 6 + f.t) * 0.3;
+      if (Math.abs(fp.x - p.x) < reach && Math.abs(fp.z - p.z) < reach && fp.y - p.y < reach + 1) { resetFly(f); gainXP(XP.fly); beep(660, 0.1, 'square'); }
+    }
+    const rr = reach * reach;
+    for (let i = 0; i < MUSHROOM_COUNT; i++) {
+      if (Math.abs(mush.x[i] - p.x) > reach || Math.abs(mush.z[i] - p.z) > reach) continue;
+      if (dist2(mush.x[i], mush.z[i], p.x, p.z) < rr) {
+        if (mush.gold[i]) {
+          const unowned = CLOTHES.filter(c => !save.owned.includes(c.id));
+          if (unowned.length) { const it = unowned[Math.floor(Math.random() * unowned.length)]; save.owned.push(it.id); save.equipped[it.cat] = it.id; equipVisual(it.id); showMsg('✨ GOLDEN MUSHROOM! You found a <b>' + it.name + '</b> ' + it.em + '!', 4000); }
+          else { save.mush += 50; showMsg('✨ GOLDEN MUSHROOM! +50 mushrooms!', 3000); }
+          jingle([784, 988, 1175, 1568]); gainXP(XP.golden);
+        } else { save.mush++; gainXP(XP.mushroom); beep(520 + Math.random() * 200, 0.08, 'triangle'); }
+        respawnMushroom(i); // another one spawns somewhere random in the world
+      }
+    }
+  }
+  for (const pb of pebbles) {
+    if (Math.abs(pb.mesh.position.x - p.x) < reach && Math.abs(pb.mesh.position.z - p.z) < reach && Math.abs(pb.mesh.position.y - p.y) < reach + 1) { resetPebble(pb); save.pebbles++; updateHUD(); beep(300, 0.1, 'triangle'); }
+    pb.mesh.rotation.y = t;
+  }
+
+  // burrow prompt / shop prompt
+  const prompt = $('prompt'); let ptxt = '';
+  if (save.stage === 0) {
+    const ready = save.xp >= STAGES[1].xp; burrowBeam.visible = ready; burrowBeam.material.opacity = 0.25 + Math.sin(t * 4) * 0.15;
+    if (ready && dist2(p.x, p.z, BURROW_WATER.x, BURROW_WATER.z) < 36) ptxt = 'Press E to burrow into the ground! 🕳️';
+  } else { burrowBeam.visible = false; if (dist2(p.x, p.z, SHOP_POS.x, SHOP_POS.z) < 400) ptxt = 'Press E to open the Mushroom Shop 🍄'; }
+  prompt.style.display = ptxt ? 'block' : 'none'; prompt.textContent = ptxt;
+
+  updateNPCs(dt, t);
+
+  // camera
+  if (camManual > 0) camManual -= dt; else if (moving) camYaw = lerpAngle(camYaw, player.yaw, Math.min(1, dt * 1.5));
+  if (camBoost > 0) camBoost = Math.max(0, camBoost - dt * 0.18);
+  const under = player.inWater && p.y < -1.4;
+  const baseD = camDist * (save.stage === 0 ? 0.7 : 0.6 + st.scale * 0.45) + camBoost * 90;
+  const h = baseD * (save.stage === 0 ? 0.32 : 0.45) + camBoost * 60;
+  tmpV.set(p.x - Math.sin(camYaw) * baseD, p.y + h, p.z - Math.cos(camYaw) * baseD);
+  if (under) tmpV.y = Math.min(tmpV.y, -0.7); else if (!player.inWater) tmpV.y = Math.max(tmpV.y, 1.2);
+  camera.position.lerp(tmpV, Math.min(1, dt * 6));
+  camera.lookAt(p.x, p.y + st.scale * 1.2, p.z);
+  const camUnder = camera.position.y < -0.1 && pondAt(camera.position.x, camera.position.z);
+  scene.fog = camUnder ? fogWater : fogAir; scene.background = camUnder ? WATER : SKY;
+
+  drawBubbles(); drawMap(); updateCompass(t);
+  saveT += dt; if (saveT > 5) { saveT = 0; writeSave(); }
+}
+let compassT = 0, compassI = -1;
+function updateCompass(t) {
+  const el = $('compass'); if (save.stage === 0) { el.style.display = 'none'; return; } el.style.display = '';
+  if (t - compassT > 0.5 || compassI < 0) { compassT = t; let best = 1e12; for (let i = 0; i < MUSHROOM_COUNT; i++) { const d = dist2(mush.x[i], mush.z[i], player.pos.x, player.pos.z); if (d < best) { best = d; compassI = i; } } }
+  const dx = mush.x[compassI] - player.pos.x, dz = mush.z[compassI] - player.pos.z;
+  const ang = Math.atan2(dx, dz) - camYaw;   // angle relative to the camera's forward
+  $('carrow').style.transform = 'rotate(' + (ang * 180 / Math.PI - 90) + 'deg)';
+  $('cdist').textContent = Math.round(Math.hypot(dx, dz)) + ' hops';
+}
+let wallHintT = 0;
+function hintWall() { if (performance.now() - wallHintT > 8000) { wallHintT = performance.now(); showMsg("Tadpoles can't leave the pond... yet! Keep eating to grow.", 3000); } }
+
+function drawBubbles() {
+  const wrap = $('bubbles'); const W = window.innerWidth, H = window.innerHeight;
+  for (const n of npcs) {
+    const d2 = n.pos.distanceToSquared(player.pos);
+    if (d2 < 30 * 30 && !player.inWater) {
+      if (!n.bubble) { n.bubble = document.createElement('div'); n.bubble.className = 'bubble'; wrap.appendChild(n.bubble); n.lineT = 0; }
+      n.lineT += 1; if (n.lineT % 600 === 1) { n.line = NPC_LINES[Math.floor(Math.random() * NPC_LINES.length)]; }
+      n.bubble.innerHTML = '<b>' + n.name + ' (' + STAGES[n.stage].name + ')</b>' + n.line;
+      tmpV.copy(n.pos); tmpV.y += 2.4 * n.model.scale.x; tmpV.project(camera);
+      const vis = tmpV.z < 1; n.bubble.style.display = vis ? 'block' : 'none';
+      if (vis) { n.bubble.style.left = (tmpV.x * 0.5 + 0.5) * W + 'px'; n.bubble.style.top = (-tmpV.y * 0.5 + 0.5) * H + 'px'; }
+    } else if (n.bubble) { wrap.removeChild(n.bubble); n.bubble = null; }
+  }
+}
+function drawMap() {
+  const c = mapCtx, S = 170, k = S / (WORLD * 2);
+  c.fillStyle = '#4caf50'; c.fillRect(0, 0, S, S);
+  c.fillStyle = '#2b86b8'; for (const p of PONDS) { c.beginPath(); c.arc((p.x + WORLD) * k, (p.z + WORLD) * k, Math.max(1.5, p.r * k), 0, 6.3); c.fill(); }
+  c.fillStyle = '#e53935'; c.fillRect((SHOP_POS.x + WORLD) * k - 2, (SHOP_POS.z + WORLD) * k - 2, 4, 4);
+  c.fillStyle = '#ff9f43'; for (const n of npcs) c.fillRect((n.pos.x + WORLD) * k - 1.5, (n.pos.z + WORLD) * k - 1.5, 3, 3);
+  c.fillStyle = '#fff'; c.strokeStyle = '#000'; c.beginPath(); c.arc((player.pos.x + WORLD) * k, (player.pos.z + WORLD) * k, 4, 0, 6.3); c.fill(); c.stroke();
+}
+
+function frame(now) {
+  requestAnimationFrame(frame);
+  if (canvas.width !== Math.floor(window.innerWidth * renderer.getPixelRatio()) || canvas.height !== Math.floor(window.innerHeight * renderer.getPixelRatio())) {
+    renderer.setSize(window.innerWidth, window.innerHeight); camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
+  }
+  const t = now / 1000; let dt = Math.min(0.05, t - lastT); lastT = t;
+  if (running) update(dt, t);
+  renderer.render(scene, camera);
+}
+
+// ---------------------------------------------------------------- START
+function startGame() {
+  player.pos.set(save.pos.x, save.pos.y, save.pos.z);
+  player.inWater = !!pondAt(player.pos.x, player.pos.z) && (save.stage === 0 || save.pos.y < -0.1);
+  if (save.stage === 0 && !player.inWater) { player.pos.set(0, -3, 0); player.inWater = true; }
+  if (!player.inWater) player.pos.y = 0;
+  rebuildPlayerModel(); for (const f of save.fort) addFortPiece(f, true);
+  camYaw = player.yaw; camera.position.set(player.pos.x - 8, player.pos.y + 4, player.pos.z - 8);
+  updateHUD(); running = true;
+  showMsg(save.stage === 0 ? '🐟 You are a tiny tadpole! Swim around (WASD) and eat the snacks.' : '🐸 Welcome back, ' + STAGES[save.stage].name + '!', 4000);
+}
+buildGround(); buildScenery(); buildMushrooms(); buildFood(); buildBurrow(); buildNPCs();
+loadSave();
+$('playBtn').onclick = () => { $('start').style.display = 'none'; beep(660, 0.1); startGame(); };
+$('resetBtn').onclick = () => { if (confirm('Start a brand new game? Your toad will go back to being a tadpole!')) { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} location.reload(); } };
+window.TA = { player, mush, npcs, get save() { return save; }, get camYaw() { return camYaw; }, get running() { return running; }, get lastT() { return lastT; }, keys };
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
