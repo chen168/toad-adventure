@@ -94,6 +94,18 @@
   .bird-row .em { font-size: 36px; }
   .bird-row .info { flex: 1; font-size: 14px; }
   .bird-row .nm { font-weight: bold; font-size: 18px; }
+  #seasonTag { display: block; font-size: 13px; color: #b9ff8a; margin-top: -2px; }
+  #photoUI { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); display: none; pointer-events: auto; text-align: center; background: rgba(0,0,0,.55); border-color: #fff; }
+  #photoUI .btn { margin: 4px; }
+  #photoUI .pose.sel { outline: 4px solid #7cff5a; }
+  #photoFrame { position: fixed; inset: 0; pointer-events: none; display: none; box-shadow: inset 0 0 0 14px #fffbe6, inset 0 0 0 18px #d35400; }
+  body.photo #photoFrame { display: block; }
+  body.photo #hud > *:not(#photoUI):not(#msg) { visibility: hidden; }
+  body.photo #touch { display: none !important; }
+  #photoImg { max-width: 100%; border-radius: 12px; border: 3px solid #ffd27f; }
+  .note { min-width: 54px; }
+  .note small { font-size: 11px; }
+  #noteRow, #instRow { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 10px 0; }
   .upd { background: #fff; border: 3px solid #ffd27f; border-radius: 16px; padding: 6px 14px; margin: 10px 0; }
   .upd h3 { margin: 6px 0; color: #2e7d32; }
   .upd ul { margin: 4px 0 8px; padding-left: 20px; font-size: 14px; line-height: 1.4; }
@@ -119,7 +131,7 @@
 
 <div id="hud">
   <div id="topleft" class="panel">
-    <div id="stage">Tadpole</div>
+    <div id="stage">Tadpole</div><span id="seasonTag"></span>
     <div id="xpbar"><div id="xpfill"></div></div>
     <div id="quest">Eat snacks to grow!</div>
   </div>
@@ -138,6 +150,8 @@
     <button class="btn" id="birdBtn">🐦 Birds</button>
     <button class="btn green" id="trophyBtn">🏆 Trophies</button>
     <button class="btn blue" id="updatesBtn">📋 Updates</button>
+    <button class="btn" id="photoBtn">📸 Photo</button>
+    <button class="btn pink" id="musicBtn">🎵 Music</button>
     <button class="btn" id="helpBtn">❓ Help</button>
   </div>
   <div id="games" class="panel">
@@ -145,6 +159,11 @@
     <div class="title" style="margin:6px 0 0">6 games inside!</div>
   </div>
   <div id="gamehud" class="panel"><div id="gameinfo"></div><button class="btn red" id="quitGame">🏳️ Quit game</button></div>
+  <div id="photoUI" class="panel">
+    <div style="margin-bottom:4px">📸 Drag to look around · scroll to zoom · pick a pose</div>
+    <button class="btn pose" data-pose="happy">😊 Happy</button><button class="btn pose" data-pose="dance">🕺 Dance</button><button class="btn pose" data-pose="wave">👋 Wave</button><br>
+    <button class="btn green" id="snapBtn">📸 Snap!</button><button class="btn red" id="photoDone">Done</button>
+  </div>
   <div id="msg"></div>
   <div id="prompt"></div>
   <div id="bubbles"></div>
@@ -170,6 +189,7 @@
   </div>
 </div>
 
+<div id="photoFrame"></div>
 <div id="ink"></div>
 <div id="frozen"><div>🧊 FROZEN! 🧊<small>MASH ANY KEY (or tap the screen) to break free!</small><span id="mashbar"></span></div></div>
 <div id="overlay"></div>
@@ -223,6 +243,7 @@
     <div class="gcard"><div class="em">👅</div><div style="flex:1"><div class="nm">Fly Catch</div><p>60 seconds to eat more flies than 4 toad friends. Run into flies, or press <b>E</b> to shoot your tongue at far ones!</p></div><button class="btn green" id="playFly">Play</button></div>
     <div class="gcard"><div class="em">🪷</div><div style="flex:1"><div class="nm">Lily Pad Hop</div><p>Hop across wobbly, moving lily pads all the way across the pond to the golden pad. Fall in and you start over!</p></div><button class="btn pink" id="playLily">Play</button></div>
     <div class="gcard"><div class="em">☁️</div><div style="flex:1"><div class="nm">Sky Ring Race</div><p>Ride your grown-up magic bird through 12 rings in the sky before the other toads on their birds. Needs a bird that can fly.</p></div><button class="btn" id="playSky">Play</button></div>
+    <div class="gcard"><div class="em">🐌</div><div style="flex:1"><div class="nm">Snail Race</div><p>Your pet snail races 3 other snails. Very. Slowly. Mash <b>E</b> to cheer and make it crawl faster! (The first time, you adopt and name your snail.)</p></div><button class="btn green" id="playSnail">Play</button></div>
     <div class="gcard"><div class="em">🙈</div><div style="flex:1"><div class="nm">Hide and Seek</div><p>6 toad friends hide around the world. Follow the hot-and-cold arrow and find them all in 2 minutes!</p></div><button class="btn red" id="playHide">Play</button></div>
     <p style="text-align:center"><button class="btn" id="closeGames">Close</button></p>
   </div>
@@ -249,7 +270,15 @@
   <div class="card">
     <h2>📋 Update Log</h2>
     <div>Everything new in Toad Adventure, newest first. Ideas by Sasha!</div>
-    <div class="upd"><h3>🆕 Update 4 · September 13, 2026</h3><ul>
+    <div class="upd"><h3>🆕 Update 5 · September 13, 2026</h3><ul>
+      <li>🍂 <b>Seasons!</b> Spring, summer, autumn, and winter change every day. Leaves fall in autumn. In winter it snows and the ponds freeze: walk on the ice, slide around, and press Space to twirl (⛸️ coins for fancy twirls).</li>
+      <li>🐌 <b>Pet snail:</b> adopt and name a snail in the Snail Race. It follows you, very slowly. Mash E to cheer it on in the race.</li>
+      <li>📸 <b>Photo mode:</b> pick a pose, look around, and snap a framed picture of your toad you can save.</li>
+      <li>🕳️ <b>Secret cave:</b> dive into the purple hole on the pond floor. Crystals, glow mushrooms worth petals, and a treasure chest that refills every day.</li>
+      <li>🎵 <b>Toad Music:</b> buy a drum, flute, bells, or guitar with coins and play with keys 1 to 8. Nearby toads dance!</li>
+      <li>🏆 6 new trophies.</li>
+    </ul></div>
+    <div class="upd"><h3>Update 4 · September 13, 2026</h3><ul>
       <li>🪙 <b>Coins!</b> A new currency you win in mini-games, quests, and by catching fireflies.</li>
       <li>🎮 <b>4 new mini-games:</b> Fly Catch, Lily Pad Hop, Sky Ring Race, and Hide and Seek. Press the pink Play Your Games button.</li>
       <li>🛼 <b>Race gear in the shop:</b> Roller Skates, a Go-Kart, and a Toad Car for the Runny Race, bought with coins.</li>
@@ -280,6 +309,24 @@
       <li>🐟 Toad Adventure is born! Tadpole, pond, burrow, a colossal world, 1000 mushrooms, the Mushroom Shop, and the Legendary Race.</li>
     </ul></div>
     <p style="text-align:center"><button class="btn" id="closeUpdates">Close</button></p>
+  </div>
+</div>
+
+<div id="photoModal" class="modal">
+  <div class="card" style="text-align:center">
+    <h2>📸 Your photo!</h2>
+    <img id="photoImg" alt="Your toad photo">
+    <p><a class="btn green" id="photoSave" href="#" style="text-decoration:none;display:inline-block">💾 Save photo</a> <button class="btn" id="photoClose">Take another</button></p>
+  </div>
+</div>
+
+<div id="music" class="modal">
+  <div class="card" style="text-align:center">
+    <h2>🎵 Toad Music</h2>
+    <div id="musicHint"></div>
+    <div id="instRow"></div>
+    <div id="noteRow"></div>
+    <p><button class="btn" id="closeMusic">Done</button></p>
   </div>
 </div>
 
@@ -467,6 +514,7 @@ function H(x, z) {
   return h * flat + (1 - flat) * 0;
 }
 function groundY(x, z, y) {           // where the toad stands: terrain, or a sky island if it is up there
+  if (player.inCave) return CAVE.floorY;
   const isl = islandAt(x, z);
   if (isl && y > isl.y - 3) return isl.y;
   for (const pf of PLATFORMS) if (dist2(x, z, pf.x, pf.z) < pf.r * pf.r && y > pf.y - 3) return pf.y;
@@ -525,12 +573,13 @@ function loadSave() {
   if (save.quest === undefined) save.quest = null; if (!save.questsDone) save.questsDone = 0;
   if (typeof save.dayT !== 'number') save.dayT = 20;
   if (!save.seenVersion) save.seenVersion = 0;
+  if (save.snail === undefined) save.snail = null; if (!save.instruments) save.instruments = []; if (save.instrument === undefined) save.instrument = null; if (save.caveDay === undefined) save.caveDay = -1;
 }
-const GAME_VERSION = 4;
+const GAME_VERSION = 5;
 function curBird() { return save.activeBird ? save.birds[save.activeBird] : null; }
 function curBirdSpec() { return BIRDS.find(b => b.id === save.activeBird) || BIRDS[0]; }
 function writeSave() {
-  save.pos = mode === 'world' ? { x: player.pos.x, y: player.pos.y, z: player.pos.z } : worldReturn.pos;
+  save.pos = mode !== 'world' ? worldReturn.pos : player.inCave ? { x: CAVE.entrance.x, y: -3, z: CAVE.entrance.z } : { x: player.pos.x, y: player.pos.y, z: player.pos.z };
   if (npcs.length) save.npcXp = npcs.map(n => Math.floor(n.xp));   // remember every toad's progress in the Legendary Race
   try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {}
 }
@@ -543,7 +592,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 const scene = new THREE.Scene();
 const SKY = new THREE.Color(0x8fd3ff), WATER = new THREE.Color(0x2b86b8);
-const fogAir = new THREE.Fog(SKY, 120, 1100), fogWater = new THREE.FogExp2(WATER, 0.035);
+const fogAir = new THREE.Fog(SKY, 120, 1100), fogWater = new THREE.FogExp2(WATER, 0.035), CAVE_BG = new THREE.Color(0x0a0814), fogCave = new THREE.FogExp2(0x0a0814, 0.02);
 scene.background = SKY; scene.fog = fogAir;
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 4000);
 const hemi = new THREE.HemisphereLight(0xcfe9ff, 0x4a8a3a, 0.75); scene.add(hemi);
@@ -602,7 +651,7 @@ function buildGround() {
     cols.push(c.r, c.g, c.b);
   }
   geo.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3)); geo.computeVertexNormals();
-  const ground = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ map: grassTexture(), vertexColors: true })); ground.receiveShadow = true; scene.add(ground);
+  const ground = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ map: grassTexture(), vertexColors: true })); ground.receiveShadow = true; scene.add(ground); ground.userData.orig = Float32Array.from(cols); groundMesh = ground;
   const rim = new THREE.Mesh(new THREE.RingGeometry(WORLD * 1.35, WORLD * 5, 32), M(0x3f8f3a)); rim.rotation.x = -Math.PI / 2; rim.position.y = -1; scene.add(rim);
   for (const p of PONDS) {
     const water = new THREE.Mesh(new THREE.CircleGeometry(p.r + 1.5, 48), M(0x3aa0e0, { transparent: true, opacity: 0.55, side: THREE.DoubleSide }));
@@ -615,7 +664,7 @@ function buildGround() {
     }
   }
 }
-const lilyPads = [];
+const lilyPads = []; let groundMesh = null, treeCrowns = null;
 
 // ---------------------------------------------------------------- SKY ISLANDS
 function buildIslands() {
@@ -656,7 +705,7 @@ function buildScenery() {
     m.makeScale(s, s * rand(0.9, 1.3), s); m.setPosition(p.x, h + 7.5 * s, p.z); crowns.setMatrixAt(i, m);
     crowns.setColorAt(i, c.setHSL(rand(0.25, 0.38), 0.6, rand(0.3, 0.45)));
   }
-  scene.add(trunks); scene.add(crowns);
+  scene.add(trunks); scene.add(crowns); treeCrowns = crowns; crowns.userData.orig = Float32Array.from(crowns.instanceColor.array);
   const F = 1500;
   const stems = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.06, 0.06, 0.9, 4), M(0x3e9f2e), F);
   const heads = new THREE.InstancedMesh(new THREE.SphereGeometry(0.28, 6, 5), M(0xffffff), F);
@@ -906,7 +955,7 @@ function makeSprite() {  // the best friend: a little glowing spirit with eyes
 }
 
 // ---------------------------------------------------------------- PLAYER
-const player = { pos: new THREE.Vector3(0, -3, 0), yaw: 0, vy: 0, group: new THREE.Group(), model: null, anchors: {}, hopT: 0, moving: false, inWater: true, flying: false, clothes: {}, sparkles: null, kx: 0, kz: 0, slowMul: 0, frozen: false, stunned: false };
+const player = { pos: new THREE.Vector3(0, -3, 0), yaw: 0, vy: 0, group: new THREE.Group(), model: null, anchors: {}, hopT: 0, moving: false, inWater: true, flying: false, clothes: {}, sparkles: null, kx: 0, kz: 0, slowMul: 0, frozen: false, stunned: false, inCave: false, pose: null, poseT: 0, spinT: 0, onIce: false, svx: 0, svz: 0 };
 scene.add(player.group);
 const blob = new THREE.Mesh(new THREE.CircleGeometry(1, 16), M(0x000000, { transparent: true, opacity: 0.22 })); blob.rotation.x = -Math.PI / 2; scene.add(blob);
 function rebuildPlayerModel() {
@@ -964,7 +1013,8 @@ function updateNPCs(dt, t) {
     if (n.talkT > 0) { n.talkT -= dt; n.moving = false; n.yaw = Math.atan2(player.pos.x - n.pos.x, player.pos.z - n.pos.z); }
     else wanderNPC(n, dt, 6 + st * 1.2, 90);
     n.pos.y = H(n.pos.x, n.pos.z);
-    n.group.position.set(n.pos.x, n.pos.y + (n.moving ? Math.abs(Math.sin(n.hopT * 8)) * 0.6 : 0), n.pos.z);
+    if (n.danceT > 0) { n.danceT -= dt; n.hopT += dt; }
+    n.group.position.set(n.pos.x, n.pos.y + (n.moving || n.danceT > 0 ? Math.abs(Math.sin(n.hopT * 8)) * 0.6 : 0), n.pos.z);
     n.group.rotation.y = n.yaw;
     if (n.birdMesh) updateNpcBird(n, t);
   }
@@ -1120,7 +1170,7 @@ function updateHUD() {
   const cb = curBird(); if (cb && cb.xp < BIRD_READY_XP) q += '<br>🐦 Feed ' + cb.name + ' petals (E) to raise it: ' + Math.floor(cb.xp) + '/' + BIRD_READY_XP;
   if (save.quest) q += '<br>' + questText();
   $('quest').innerHTML = q;
-  $('coins').textContent = save.coins;
+  $('coins').textContent = save.coins; $('seasonTag').textContent = season >= 0 ? SEASONS[season].em + ' ' + SEASONS[season].name : '';
   $('mush').textContent = save.mush; $('petals').textContent = save.petals; $('peb').textContent = save.pebbles;
   $('shopMush').textContent = save.mush; $('shopPetals').textContent = save.petals; $('buildPeb').textContent = save.pebbles;
   $('rank').textContent = '#' + (1 + npcs.filter(n => n.xp > save.xp).length) + ' of ' + (npcs.length + 1);
@@ -1170,12 +1220,12 @@ function renderBoard() {
   const rows = npcs.map(n => ({ name: n.name, xp: n.xp })).concat([{ name: 'YOU', xp: save.xp, me: true }]).sort((a, b) => b.xp - a.xp);
   $('boardTable').innerHTML = rows.map((r, i) => '<tr class="' + (r.me ? 'me' : '') + '"><td>#' + (i + 1) + '</td><td>' + r.name + '</td><td>' + STAGES[stageFor(r.xp)].emoji + ' ' + STAGES[stageFor(r.xp)].name + '</td><td>' + Math.floor(r.xp) + ' XP</td></tr>').join('');
 }
-function anyModalOpen() { return ['shop', 'build', 'board', 'namer', 'birds', 'gamesModal', 'results', 'trophies', 'updates'].some(id => $(id).style.display === 'flex'); }
+function anyModalOpen() { return ['shop', 'build', 'board', 'namer', 'birds', 'gamesModal', 'results', 'trophies', 'updates', 'music', 'photoModal'].some(id => $(id).style.display === 'flex'); }
 function toggleModal(id, open) {
   const el = $(id); const show = open === undefined ? el.style.display !== 'flex' : open;
   if (show) ['shop', 'build', 'board'].forEach(o => { if (o !== id) $(o).style.display = 'none'; });
   el.style.display = show ? 'flex' : 'none';
-  if (show) { if (id === 'shop') renderShop(); if (id === 'build') renderBuild(); if (id === 'board') renderBoard(); if (id === 'birds') renderBirds(); if (id === 'trophies') renderTrophies(); }
+  if (show) { if (id === 'shop') renderShop(); if (id === 'build') renderBuild(); if (id === 'board') renderBoard(); if (id === 'birds') renderBirds(); if (id === 'trophies') renderTrophies(); if (id === 'music') renderMusic(); }
 }
 function askName(title, text, choices, cb) {
   $('namerTitle').textContent = title; $('namerText').innerHTML = text; $('namerInput').value = '';
@@ -1199,6 +1249,10 @@ $('playFly').onclick = () => { toggleModal('gamesModal', false); startFlyCatch()
 $('playLily').onclick = () => { toggleModal('gamesModal', false); startLily(); };
 $('playSky').onclick = () => { toggleModal('gamesModal', false); startSky(); };
 $('playHide').onclick = () => { toggleModal('gamesModal', false); startHide(); };
+$('playSnail').onclick = () => { toggleModal('gamesModal', false); startSnailRace(); };
+$('photoBtn').onclick = () => togglePhoto(true); $('photoDone').onclick = () => togglePhoto(false); $('snapBtn').onclick = snapPhoto; $('photoClose').onclick = () => { $('photoModal').style.display = 'none'; };
+document.querySelectorAll('#photoUI .pose').forEach(b => b.onclick = () => setPose(b.dataset.pose));
+$('musicBtn').onclick = () => toggleModal('music'); $('closeMusic').onclick = () => toggleModal('music', false);
 $('updatesBtn').onclick = () => toggleModal('updates'); $('closeUpdates').onclick = () => toggleModal('updates', false);
 $('trophyBtn').onclick = () => toggleModal('trophies'); $('closeTrophies').onclick = () => toggleModal('trophies', false);
 $('closeResults').onclick = () => { $('results').style.display = 'none'; leaveGame(); };
@@ -1223,8 +1277,9 @@ window.addEventListener('keydown', ev => {
   if (ev.target.tagName === 'INPUT') { if (code === 'Enter' || ev.key === 'Enter') $('namerOk').onclick(); return; }
   keys[code] = true;
   if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(code)) ev.preventDefault();
-  if (code === 'Escape') { ['shop', 'build', 'board', 'birds', 'gamesModal', 'trophies', 'updates'].forEach(id => toggleModal(id, false)); return; }
+  if (code === 'Escape') { ['shop', 'build', 'board', 'birds', 'gamesModal', 'trophies', 'updates', 'music'].forEach(id => toggleModal(id, false)); return; }
   if (mode === 'race' && race.me.frozenT > 0) { mash(); return; }
+  if (/^Digit[1-8]$/.test(code) && save.instruments.length && mode === 'world') { playNote(+code[5] - 1); return; }
   if (anyModalOpen()) return;
   if (code === 'KeyE') interact();
   if (code === 'KeyB') toggleModal('build');
@@ -1283,6 +1338,8 @@ function nearestInteraction() {
     for (const f of fortMeshes) if (near(f.mesh.position.x, f.mesh.position.z, 2.5 + sc)) { const it = FURNITURE.find(x => x.id === f.data.type); list.push({ d: 2, label: 'Press E to use the ' + it.name + ' ' + it.em, fn: () => { showMsg(it.em + ' ' + it.use); beep(440, 0.15); } }); }
     if (!player.inWater) for (const pad of lilyPads) if (near(pad.position.x, pad.position.z, 3)) list.push({ d: 3, label: 'Press E to sit on the lily pad 🪷', fn: () => showMsg('🪷 You sit on the lily pad and watch the ripples. So peaceful.') });
   }
+  if (player.inCave) { if (near(CAVE.x + 10, CAVE.z - 8, 4.5)) list.push({ d: 0, label: 'Press E to open the treasure chest! 🧰', fn: openCaveChest }); if (near(CAVE.x, CAVE.z + 18, 3.5)) list.push({ d: 0, label: 'Press E to swim back up to the pond 💦', fn: exitCave }); return list.sort((a, b) => a.d - b.d)[0] || null; }
+  if (player.inWater && p.y < -3.5 && near(CAVE.entrance.x, CAVE.entrance.z, 4.5)) list.push({ d: 0, label: 'Press E to dive into the secret cave! 🕳️', fn: enterCave });
   for (const n of npcs) if (near(n.pos.x, n.pos.z, 5 + sc)) { const qq = n.quest || (save.quest && save.quest.npc === n.idx); list.push({ d: qq ? 0 : 2, label: qq ? 'Press E: ' + n.name + ' has a quest! 📜' : 'Press E to talk to ' + n.name + ' 💬', fn: () => talkTo(n) }); }
   for (const a of animals) if (near(a.pos.x, a.pos.z, 4 + sc)) list.push({ d: 2, label: 'Press E to talk to ' + a.name + ' the ' + a.kind + ' 💬', fn: () => { talkTo(a); if (a.kind === 'duck' && Math.random() < 0.3) { save.petals++; updateHUD(); showMsg('🌸 ' + a.name + ' gave you a petal!'); } } });
   for (const b of babies) if (near(b.pos.x, b.pos.z, 3 + sc)) list.push({ d: 1, label: b.gift ? 'Press E: ' + b.name + ' dug up a treasure! 🎁' : 'Press E to pet ' + b.name + ' 💕', fn: () => { if (b.gift) { babyGift(b); return; } b.line = ['Ribbit! 💕', 'I love you!', '*happy wiggle*', 'Can we play?'][Math.floor(Math.random() * 4)]; b.lines = [b.line]; b.bubbleT = 4; b.talkT = 3; jingle([880, 1100]); showMsg('💕 ' + b.name + ' loves you!'); } });
@@ -1292,7 +1349,7 @@ function nearestInteraction() {
   return list[0] || null;
 }
 let currentInteract = null;
-function interact() { if (!running || anyModalOpen()) return; if (mode === 'hamash') return swingHammer(hamash.me); if (mode === 'race') return usePower(race.me); if (mode === 'fly') return flyTongue(); if (mode === 'lily' || mode === 'sky' || mode === 'hide') return; if (currentInteract) currentInteract.fn(); }
+function interact() { if (!running || anyModalOpen()) return; if (mode === 'hamash') return swingHammer(hamash.me); if (mode === 'race') return usePower(race.me); if (mode === 'fly') return flyTongue(); if (mode === 'snail') return snailCheer(); if (mode === 'lily' || mode === 'sky' || mode === 'hide') return; if (currentInteract) currentInteract.fn(); }
 let spriteMeet = null;
 function buildSpriteMeet() { if (save.bestFriend) return; const g = makeSprite(); const x = BURROW_LAND.x + 14, z = BURROW_LAND.z - 10; g.position.set(x, H(x, z) + 2, z); scene.add(g); spriteMeet = { group: g, pos: { x, z } }; }
 function meetFriend() {
@@ -1779,7 +1836,8 @@ function updateBabies(dt, t) {
     } else { if (b.talkT > 0) { b.talkT -= dt; } else { wanderNPC(b, dt, 4, 12); moving = b.moving; } if (dist2(b.pos.x, b.pos.z, b.data.home.x, b.data.home.z) > 20 * 20) b.target = { x: b.data.home.x, z: b.data.home.z }; }
     const inW = pondAt(b.pos.x, b.pos.z);
     b.pos.y = inW ? -0.3 : groundY(b.pos.x, b.pos.z, b.pos.y);
-    b.group.position.set(b.pos.x, b.pos.y + (moving && !inW ? Math.abs(Math.sin(b.hopT * 10)) * 0.4 : 0), b.pos.z); b.group.rotation.y = b.yaw;
+    if (b.danceT > 0) { b.danceT -= dt; b.hopT += dt; }
+    b.group.position.set(b.pos.x, b.pos.y + ((moving || b.danceT > 0) && !inW ? Math.abs(Math.sin(b.hopT * 10)) * 0.4 : 0), b.pos.z); b.group.rotation.y = b.yaw;
   });
 }
 
@@ -1844,7 +1902,7 @@ function updateNight(dt, t) {
     if (!s.alive) { pos[i * 3 + 1] = -999; return; }
     const x = ud.cx + s.x + Math.sin(t * 0.7 + s.p) * 3, z = ud.cz + s.z + Math.cos(t * 0.5 + s.p) * 3, y = (pondAt(x, z) ? 0 : H(x, z)) + s.y + Math.sin(t * 1.3 + s.p) * 0.5;
     pos[i * 3] = x; pos[i * 3 + 1] = y; pos[i * 3 + 2] = z;
-    if (nf > 0.3 && mode === 'world' && !player.inWater && Math.abs(x - player.pos.x) < reach && Math.abs(z - player.pos.z) < reach && Math.abs(y - player.pos.y) < reach + 1.5) { s.alive = false; save.coins++; stat('fireflies'); beep(1500, 0.08, 'triangle'); showMsg('✨ Caught a firefly! +1 🪙', 700); updateHUD(); }
+    if (nf > 0.3 && mode === 'world' && !player.inWater && !player.inCave && Math.abs(x - player.pos.x) < reach && Math.abs(z - player.pos.z) < reach && Math.abs(y - player.pos.y) < reach + 1.5) { s.alive = false; save.coins++; stat('fireflies'); beep(1500, 0.08, 'triangle'); showMsg('✨ Caught a firefly! +1 🪙', 700); updateHUD(); }
   });
   ff.geometry.attributes.position.needsUpdate = true;
   songT -= dt; if (songT <= 0) { songT = rand(6, 12); if (nf > 0.5 && mode === 'world') { const base = 180 + Math.random() * 120; beep(base, 0.25, 'triangle', 0.04); setTimeout(() => beep(base * 0.8, 0.3, 'triangle', 0.04), 260); } }
@@ -1877,7 +1935,7 @@ function playerHidden() {
 }
 function updateHeron(dt, t) {
   if (!heron) {
-    if (mode !== 'world' || save.stage === 0 || player.flying || anyModalOpen()) return;
+    if (mode !== 'world' || save.stage === 0 || player.flying || player.inCave || photoMode || anyModalOpen()) return;
     heronT -= dt; if (heronT > 0) return;
     heron = { group: makeHeron(), phase: 'warn', t: 0, pos: new THREE.Vector3(player.pos.x - 180, player.pos.y + 70, player.pos.z - 180) };
     heron.shadow = new THREE.Mesh(new THREE.CircleGeometry(6, 16), M(0x000000, { transparent: true, opacity: 0.35 })); heron.shadow.rotation.x = -Math.PI / 2; scene.add(heron.shadow);
@@ -1915,7 +1973,7 @@ const LANDMARKS = [{ id: 'circle', name: 'the stone circle', x: CIRCLE_POS.x, z:
 let questOfferT = 25, lostItem = null;
 function makeMarker() { const g = new THREE.Group(); const b = new THREE.Mesh(new THREE.BoxGeometry(0.35, 1.1, 0.35), new THREE.MeshBasicMaterial({ color: 0xffe066 })); b.position.y = 0.9; g.add(b); const d = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 6), new THREE.MeshBasicMaterial({ color: 0xffe066 })); d.position.y = 0; g.add(d); return g; }
 function offerQuests(dt) {
-  if (save.quest || mode !== 'world' || save.stage === 0) return;
+  if (save.quest || mode !== 'world' || save.stage === 0 || player.inCave) return;
   questOfferT -= dt; if (questOfferT > 0) return; questOfferT = rand(40, 70);
   const near = npcs.filter(n => !n.quest && dist2(n.pos.x, n.pos.z, player.pos.x, player.pos.z) < 160 * 160);
   const n = near.length ? near[Math.floor(Math.random() * near.length)] : npcs[Math.floor(Math.random() * npcs.length)];
@@ -1987,6 +2045,12 @@ const BADGES = [
   { id: 'firefly', em: '💡', name: 'Firefly Friend', desc: 'Caught 20 fireflies at night', test: () => (save.stats.fireflies || 0) >= 20 },
   { id: 'gear', em: '🏎️', name: 'Need for Speed', desc: 'Bought race gear', test: () => save.gear.length >= 1 },
   { id: 'heron', em: '🦩', name: 'Heron Dodger', desc: 'Escaped the heron', test: () => (save.stats.heronEscapes || 0) >= 1 },
+  { id: 'seasons', em: '🍂', name: 'All Seasons', desc: 'Saw spring, summer, autumn, and winter', test: () => (save.stats.seasons || []).length >= 4 },
+  { id: 'skater', em: '⛸️', name: 'Ice Dancer', desc: 'Did 10 twirls on the ice', test: () => (save.stats.twirls || 0) >= 10 },
+  { id: 'snail', em: '🐌', name: 'Snail Trainer', desc: 'Your pet snail won a race', test: () => !!save.snail && save.snail.wins >= 1 },
+  { id: 'photo', em: '📸', name: 'Say Cheese', desc: 'Took a photo in Photo mode', test: () => (save.stats.photos || 0) >= 1 },
+  { id: 'cave', em: '🕳️', name: 'Cave Explorer', desc: 'Found the secret cave', test: () => (save.stats.cave || 0) >= 1 },
+  { id: 'music', em: '🎵', name: 'Toad Musician', desc: 'Played 50 notes', test: () => (save.stats.notes || 0) >= 50 },
 ];
 function earnedBadges() { return BADGES.filter(b => { try { return b.test(); } catch (e) { return false; } }); }
 function checkBadges() {
@@ -2019,6 +2083,7 @@ function finishGame(res) {
 }
 function endGame(result, quit) {
   if (mode === 'world') return;
+  if (photoMode) togglePhoto(false);
   if (curGame) return finishGame(quit ? { title: '🏳️ You left the game', body: 'No prizes this time. Come back and play again!', quit: true } : result);
   endGameClassic(result, quit);
 }
@@ -2086,6 +2151,7 @@ function updateFlyCatch(dt, t) {
 // ---- Lily Pad Hop: hop across moving pads, do not fall in!
 function startLily() {
   if (needToad()) return;
+  if (isWinter()) { showMsg('❄️ The pond is frozen solid! Go ice skating instead, and hop again in spring. ⛸️'); return; }
   enterGame('lily');
   const g = curGame = { t: 0, pads: [], falls: 0, over: false, started: false, cleanup() { for (const p of g.pads) scene.remove(p.mesh); scene.remove(g.flag); PLATFORMS.length = 1; } };
   const n = 18, x0 = MAIN.x - MAIN.r + 6, x1 = MAIN.x + MAIN.r - 6;
@@ -2187,8 +2253,239 @@ function updateHide(dt, t) {
     finishGame({ win: all, title: all ? '🏆 YOU FOUND EVERYONE!' : "⏰ Time's up! You found " + g.found + ' of 6', body: '<div style="font-size:20px">' + (all ? 'Found all 6 in ' + Math.floor(g.t) + ' seconds!' : 'The others were hiding really well.') + '</div>', reward: all ? { mush: 30, petals: 12, coins: 20, xp: 70 } : { mush: g.found * 4, coins: g.found * 2, xp: g.found * 8 } });
   }
 }
-const EXTRA_GAMES = { fly: updateFlyCatch, lily: updateLily, sky: updateSky, hide: updateHide };
+const EXTRA_GAMES = { fly: updateFlyCatch, lily: updateLily, sky: updateSky, hide: updateHide, snail: updateSnailRace };
 function overPlatform(x, z, y) { for (const pf of PLATFORMS) if (dist2(x, z, pf.x, pf.z) < pf.r * pf.r && y > pf.y - 3) return true; return false; }
+
+// ================================================================ UPDATE 5: seasons, pet snail, camera, cave, music
+// ---------------------------------------------------------------- SEASONS
+const SEASONS = [
+  { id: 'spring', name: 'Spring', em: '🌸', ground: null, crown: null },
+  { id: 'summer', name: 'Summer', em: '☀️', ground: [0x9be04a, 0.25], crown: [0x2f9e3a, 0.3] },
+  { id: 'autumn', name: 'Autumn', em: '🍂', ground: [0xd9a441, 0.4], crown: 'autumn' },
+  { id: 'winter', name: 'Winter', em: '❄️', ground: [0xf4f8ff, 0.88], crown: [0xe8f4ff, 0.75] },
+];
+let season = -1, weather = null, icePlatforms = [];
+function currentSeason() { return save.stage === 0 ? 0 : Math.floor(save.dayT / 300) % 4; }
+function isWinter() { return season === 3; }
+function applySeason(idx) {
+  season = idx; const sp = SEASONS[idx];
+  if (!save.stats.seasons) save.stats.seasons = []; if (!save.stats.seasons.includes(sp.id)) { save.stats.seasons.push(sp.id); }
+  // ground colors
+  const g = groundMesh, orig = g.userData.orig, col = g.geometry.attributes.color.array, tint = new THREE.Color(), c = new THREE.Color();
+  if (sp.ground) tint.setHex(sp.ground[0]);
+  for (let i = 0; i < col.length; i += 3) {
+    if (!sp.ground) { col[i] = orig[i]; col[i + 1] = orig[i + 1]; col[i + 2] = orig[i + 2]; continue; }
+    c.setRGB(orig[i], orig[i + 1], orig[i + 2]); if (orig[i + 1] > 0.55 || sp.id === 'winter') c.lerp(tint, sp.ground[1]); col[i] = c.r; col[i + 1] = c.g; col[i + 2] = c.b;
+  }
+  g.geometry.attributes.color.needsUpdate = true;
+  // tree crowns
+  const tc = treeCrowns, oc = tc.userData.orig, ic = tc.instanceColor.array;
+  for (let i = 0; i < ic.length; i += 3) {
+    c.setRGB(oc[i], oc[i + 1], oc[i + 2]);
+    if (sp.crown === 'autumn') c.setHSL(rand(0.0, 0.11), 0.85, rand(0.4, 0.55)); else if (sp.crown) c.lerp(tint.setHex(sp.crown[0]), sp.crown[1]);
+    ic[i] = c.r; ic[i + 1] = c.g; ic[i + 2] = c.b;
+  }
+  tc.instanceColor.needsUpdate = true;
+  // frozen ponds
+  for (const pf of icePlatforms) { const k = PLATFORMS.indexOf(pf); if (k >= 0) PLATFORMS.splice(k, 1); } icePlatforms = [];
+  for (const pd of PONDS) {
+    if (sp.id === 'winter') { pd.water.material.color.setHex(0xdff6ff); pd.water.material.opacity = 0.96; const pf = { x: pd.x, z: pd.z, r: pd.r + 1, y: 0.12, ice: true }; icePlatforms.push(pf); PLATFORMS.push(pf); }
+    else { pd.water.material.color.setHex(0x3aa0e0); pd.water.material.opacity = 0.55; }
+  }
+  // weather particles
+  if (weather) { scene.remove(weather); weather = null; }
+  if (sp.id === 'winter' || sp.id === 'autumn') {
+    const N = sp.id === 'winter' ? 700 : 260, geo = new THREE.BufferGeometry(), pos = new Float32Array(N * 3), colA = new Float32Array(N * 3);
+    for (let i = 0; i < N; i++) { pos[i * 3] = rand(-60, 60); pos[i * 3 + 1] = rand(0, 40); pos[i * 3 + 2] = rand(-60, 60); if (sp.id === 'winter') { colA[i * 3] = colA[i * 3 + 1] = colA[i * 3 + 2] = 1; } else { c.setHSL(rand(0, 0.1), 0.9, rand(0.45, 0.6)); colA[i * 3] = c.r; colA[i * 3 + 1] = c.g; colA[i * 3 + 2] = c.b; } }
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('color', new THREE.BufferAttribute(colA, 3));
+    weather = new THREE.Points(geo, new THREE.PointsMaterial({ size: sp.id === 'winter' ? 0.5 : 0.7, vertexColors: true, transparent: true, opacity: 0.9 })); weather.frustumCulled = false; weather.userData.kind = sp.id; scene.add(weather);
+  }
+  if (player.inWater && sp.id === 'winter' && save.stage > 0) { player.inWater = false; player.pos.y = 0.12; }
+  updateHUD();
+}
+function updateSeason(dt, t) {
+  const idx = currentSeason();
+  if (idx !== season) { const first = season === -1; applySeason(idx); if (!first) { showMsg(SEASONS[idx].em + ' ' + SEASONS[idx].name + ' has arrived!' + (idx === 3 ? ' The ponds are frozen. Go ice skating!' : idx === 2 ? ' The leaves are falling.' : ''), 4500); jingle([523, 659, 784]); checkBadges(); } }
+  if (weather) {
+    const pos = weather.geometry.attributes.position.array, snow = weather.userData.kind === 'winter';
+    weather.position.set(player.pos.x, player.pos.y, player.pos.z);
+    for (let i = 0; i < pos.length; i += 3) { pos[i + 1] -= (snow ? 6 : 3) * dt; pos[i] += Math.sin(t * 1.5 + i) * (snow ? 0.6 : 1.5) * dt; if (pos[i + 1] < -2) { pos[i + 1] = 40; pos[i] = rand(-60, 60); pos[i + 2] = rand(-60, 60); } }
+    weather.geometry.attributes.position.needsUpdate = true;
+  }
+  // ice skating tricks
+  if (player.spinT > 0) player.spinT -= dt;
+  if (player.onIce && player.twirlKey !== !!keys.Space) { player.twirlKey = !!keys.Space; if (keys.Space && player.spinT <= 0 && mode === 'world') { player.spinT = 0.8; stat('twirls'); beep(880, 0.15, 'triangle'); beep(1100, 0.15, 'triangle'); spawnStars(player.pos, 0xbfe9ff); if ((save.stats.twirls % 5) === 0) { save.coins += 2; showMsg('⛸️ Fancy twirl! +2 🪙', 1200); updateHUD(); } } }
+  if (skatesMesh) skatesMesh.visible = player.onIce && !player.inWater && !player.flying && mode === 'world';
+}
+let skatesMesh = null;
+function onIce(x, z) { for (const pf of icePlatforms) if (dist2(x, z, pf.x, pf.z) < pf.r * pf.r) return true; return false; }
+
+// ---------------------------------------------------------------- PET SNAIL
+let petSnail = null;
+function spawnPetSnail() {
+  if (!save.snail || petSnail) return;
+  const m = makeAnimal('snail'); m.scale.setScalar(1.15); m.children[1].material = M(save.snail.color || 0xff6fb5);
+  const g = new THREE.Group(); g.add(m); scene.add(g);
+  petSnail = { group: g, model: m, pos: player.pos.clone().add(v(2, 0, -2)), yaw: 0, name: save.snail.name, kind: 'snail', bubble: null, lines: ['Sloooowly...', 'I am the fastest snail! Sort of.', 'Race day is my favorite day.', "Don't wait for me!"] };
+}
+function updatePetSnail(dt, t) {
+  if (!petSnail) return;
+  const s = petSnail, tx = player.pos.x + Math.cos(player.yaw) * 2.2, tz = player.pos.z - Math.sin(player.yaw) * 2.2, dx = tx - s.pos.x, dz = tz - s.pos.z, d = Math.hypot(dx, dz);
+  if (d > 40 || player.flying || mode !== 'world') { s.pos.x = tx; s.pos.z = tz; }
+  else if (d > 1.2) { const sp = Math.min(2.2 + d * 0.15, 6); s.pos.x += dx / d * sp * dt; s.pos.z += dz / d * sp * dt; s.yaw = Math.atan2(dx, dz); }
+  const inW = pondAt(s.pos.x, s.pos.z) && !onIce(s.pos.x, s.pos.z);
+  s.pos.y = inW ? -0.2 : groundY(s.pos.x, s.pos.z, s.pos.y);
+  s.group.position.copy(s.pos); s.group.rotation.y = s.yaw; s.group.visible = mode === 'world' || mode === 'snail';
+}
+const SNAIL_LANE = { x0: FIELD.x - 13, x1: FIELD.x + 13, z: FIELD.z - 9 };
+function startSnailRace() {
+  if (needToad()) return;
+  if (!save.snail) {
+    askName('🐌 A snail wants to be your pet!', 'A little snail with a shiny shell crawls up to you. It wants to race! What is its name?', null, (name) => { save.snail = { name, color: new THREE.Color().setHSL(Math.random(), 0.85, 0.6).getHex(), wins: 0 }; spawnPetSnail(); writeSave(); jingle([660, 880, 1100]); showMsg('🐌 ' + name + ' is your pet snail! It follows you (slowly). Open Play Your Games for the Snail Race!', 5000); checkBadges(); });
+    return;
+  }
+  enterGame('snail');
+  const g = curGame = { t: 0, countdown: 3.5, over: false, snails: [], boost: 0, cheers: 0, deco: [], cleanup() { for (const s of g.snails) if (!s.mine) scene.remove(s.group); for (const m of g.deco) scene.remove(m); } };
+  const names = ['Slowmo', 'Shelly', 'Gary', 'Mossball', 'Turbo', 'Zoomer'].sort(() => Math.random() - 0.5).slice(0, 3);
+  const mk = (name, mine, lane) => { let group, model; if (mine) { group = petSnail.group; model = petSnail.model; } else { model = makeAnimal('snail'); model.scale.setScalar(1.15); model.children[1].material = M(new THREE.Color().setHSL(Math.random(), 0.8, 0.55).getHex()); group = new THREE.Group(); group.add(model); scene.add(group); } const s = { name, mine, lane, group, model, x: SNAIL_LANE.x0, base: mine ? 1.0 : rand(1.0, 1.35), burst: 0, burstT: rand(1, 4), finishT: null }; group.position.set(s.x, 0, SNAIL_LANE.z + lane * 4); group.rotation.y = Math.PI / 2; return s; };
+  g.snails.push(mk(save.snail.name, true, 0)); names.forEach((n, i) => g.snails.push(mk(n, false, i + 1)));
+  for (let i = 0; i < 4; i++) { const line = new THREE.Mesh(new THREE.BoxGeometry(SNAIL_LANE.x1 - SNAIL_LANE.x0 + 2, 0.05, 0.15), M(0xffffff)); line.position.set(FIELD.x, 0.06, SNAIL_LANE.z + i * 4 - 2); scene.add(line); g.deco.push(line); }
+  for (const x of [SNAIL_LANE.x0, SNAIL_LANE.x1]) { const b = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.06, 16), M(x === SNAIL_LANE.x1 ? 0xffd700 : 0x111111)); b.position.set(x, 0.07, SNAIL_LANE.z + 5); scene.add(b); g.deco.push(b); }
+  player.pos.set(FIELD.x, 0, SNAIL_LANE.z - 6); player.yaw = 0; camYaw = 0; camManual = 0; petSnail.pos.set(SNAIL_LANE.x0, 0, SNAIL_LANE.z);
+  camera.position.set(player.pos.x, 8, player.pos.z - 12);
+  jingle([392, 523, 659]); showMsg('🐌 SNAIL RACE! Mash E to cheer for ' + save.snail.name + ' and make it crawl faster!', 4500);
+}
+function snailCheer() { const g = curGame; if (!g || g.over || g.countdown > 0) return; g.boost = Math.min(2.2, g.boost + 0.45); g.cheers++; beep(500 + Math.random() * 400, 0.06, 'triangle', 0.05); }
+function updateSnailRace(dt, t) {
+  const g = curGame; g.t += dt; updateFx(dt); player.stunned = true;
+  if (g.countdown > 0) { g.countdown -= dt; if (g.countdown <= 0) { showMsg('GO! 🐌', 1000); beep(880, 0.3); } }
+  g.boost = Math.max(0, g.boost - dt * 0.9);
+  for (const s of g.snails) {
+    if (g.countdown <= 0 && s.finishT == null) {
+      let sp = s.base;
+      if (s.mine) sp += g.boost; else { s.burstT -= dt; if (s.burstT <= 0) { s.burstT = rand(1.5, 4); s.burst = rand(0.8, 1.6); } s.burst = Math.max(0, s.burst - dt * 0.6); sp += s.burst; sp *= clamp(1 + (g.snails[0].x - s.x) * 0.02, 0.85, 1.2); }
+      s.x += sp * dt; if (s.x >= SNAIL_LANE.x1) { s.x = SNAIL_LANE.x1; s.finishT = g.t; if (s.mine) { spawnStars(s.group.position, 0xffd700); } }
+    }
+    if (s.mine) { petSnail.pos.set(s.x, 0, SNAIL_LANE.z); petSnail.yaw = Math.PI / 2; } else s.group.position.set(s.x, 0, SNAIL_LANE.z + s.lane * 4);
+    s.model.rotation.z = Math.sin(t * 6 + s.lane) * 0.05;
+  }
+  const order = g.snails.slice().sort((a, b) => (a.finishT != null ? a.finishT - 1000 : -a.x) - (b.finishT != null ? b.finishT - 1000 : -b.x));
+  const mine = g.snails[0], pl = order.indexOf(mine) + 1;
+  setGameInfo('🐌 ' + mine.name + ' is <b>' + pl + (pl === 1 ? 'st' : pl === 2 ? 'nd' : pl === 3 ? 'rd' : 'th') + '</b> · Cheer power ' + '⭐'.repeat(Math.round(g.boost * 2)) + (g.countdown > 0 ? ' · Ready... <b>' + Math.ceil(g.countdown) + '</b>' : ' · <b>MASH E</b> to cheer!'));
+  if (mine.finishT != null && !g.over) {
+    for (const s of g.snails) s.scoreText = s.finishT != null ? Math.floor(s.finishT) + 's' : 'still crawling';
+    if (pl === 1) save.snail.wins++;
+    finishGame({ win: pl === 1, title: pl === 1 ? '🏆 ' + mine.name + ' WINS THE SNAIL RACE!' : '🐌 ' + mine.name + ' finished #' + pl, body: '<div>You cheered ' + g.cheers + ' times!</div>' + rivalsTable(order, mine), reward: pl === 1 ? { mush: 20, petals: 8, coins: 15, xp: 50 } : { mush: 6, coins: 4, xp: 15 } });
+  }
+}
+
+// ---------------------------------------------------------------- CAMERA MODE
+let photoMode = false;
+function togglePhoto(on) {
+  photoMode = on; document.body.classList.toggle('photo', on);
+  player.stunned = on; if (!on) { player.pose = null; player.model.rotation.z = 0; }
+  $('photoUI').style.display = on ? 'block' : 'none';
+  if (on) { camManual = 1e9; showMsg('📸 Photo mode! Drag to look around, scroll to zoom, pick a pose, then press Snap!', 3500); } else camManual = 0;
+}
+function setPose(p) { player.pose = player.pose === p ? null : p; beep(600, 0.08); document.querySelectorAll('#photoUI .pose').forEach(b => b.classList.toggle('sel', b.dataset.pose === player.pose)); }
+function snapPhoto() {
+  renderer.render(scene, camera);
+  const src = renderer.domElement, W = 900, Hh = Math.round(W * src.height / src.width);
+  const c = document.createElement('canvas'); c.width = W; c.height = Hh + 120; const g = c.getContext('2d');
+  g.fillStyle = '#fffbe6'; g.fillRect(0, 0, c.width, c.height);
+  g.drawImage(src, 20, 20, W - 40, Hh - 20);
+  g.fillStyle = '#d35400'; g.font = 'bold 34px "Chalkboard SE", "Comic Sans MS", sans-serif'; g.textAlign = 'center';
+  g.fillText('🐸 Toad Adventure', W / 2, Hh + 40);
+  g.fillStyle = '#234'; g.font = '22px "Chalkboard SE", "Comic Sans MS", sans-serif';
+  g.fillText(STAGES[save.stage].name + ' · ' + SEASONS[Math.max(0, season)].em + ' ' + SEASONS[Math.max(0, season)].name + ' · ' + new Date().toLocaleDateString(), W / 2, Hh + 78);
+  const url = c.toDataURL('image/png');
+  $('photoImg').src = url; $('photoSave').href = url; $('photoSave').download = 'toad-adventure-' + Date.now() + '.png';
+  $('photoModal').style.display = 'flex'; stat('photos'); beep(1200, 0.05, 'square'); setTimeout(() => beep(900, 0.1, 'square'), 80); checkBadges(); writeSave();
+}
+
+// ---------------------------------------------------------------- SECRET CAVE
+const CAVE = { x: 0, z: 0, floorY: -60, r: 26, entrance: { x: -34, z: 24 } };
+let caveGroup = null, caveChest = null, caveGlows = [], caveExit = null;
+function buildCave() {
+  caveGroup = new THREE.Group();
+  const dome = new THREE.Mesh(new THREE.SphereGeometry(30, 24, 16), new THREE.MeshLambertMaterial({ color: 0x2b2340, side: THREE.BackSide })); dome.position.set(CAVE.x, CAVE.floorY + 8, CAVE.z); caveGroup.add(dome);
+  const floor = new THREE.Mesh(new THREE.CircleGeometry(CAVE.r + 4, 32), M(0x3d3454)); floor.rotation.x = -Math.PI / 2; floor.position.set(CAVE.x, CAVE.floorY, CAVE.z); floor.receiveShadow = true; caveGroup.add(floor);
+  const pool = new THREE.Mesh(new THREE.CircleGeometry(6, 20), M(0x3aa0e0, { transparent: true, opacity: 0.7 })); pool.rotation.x = -Math.PI / 2; pool.position.set(CAVE.x - 12, CAVE.floorY + 0.05, CAVE.z + 10); caveGroup.add(pool);
+  for (let i = 0; i < 26; i++) {
+    const a = rand(0, 6.283), r = rand(6, CAVE.r - 2), col = new THREE.Color().setHSL(rand(0.45, 0.85), 0.9, 0.6);
+    const cr = new THREE.Mesh(new THREE.ConeGeometry(rand(0.4, 1.2), rand(2, 6), 5), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.85 }));
+    cr.position.set(CAVE.x + Math.cos(a) * r, CAVE.floorY + cr.geometry.parameters.height / 2, CAVE.z + Math.sin(a) * r); cr.rotation.z = rand(-0.3, 0.3); caveGroup.add(cr);
+    if (i % 4 === 0) { const l = new THREE.PointLight(col.getHex(), 0.8, 18); l.position.copy(cr.position); l.position.y += 2; caveGroup.add(l); }
+  }
+  for (let i = 0; i < 8; i++) { const a = i / 8 * 6.283, r = rand(8, 18); const st = new THREE.Mesh(new THREE.ConeGeometry(0.8, rand(4, 9), 6), M(0x4a4060)); st.position.set(CAVE.x + Math.cos(a) * r, CAVE.floorY + 22, CAVE.z + Math.sin(a) * r); st.rotation.x = Math.PI; caveGroup.add(st); }
+  caveChest = makeFurniture('chest'); caveChest.scale.setScalar(1.8); caveChest.position.set(CAVE.x + 10, CAVE.floorY, CAVE.z - 8); caveChest.rotation.y = -0.8; caveGroup.add(caveChest);
+  const glowL = new THREE.PointLight(0xffd700, 1.2, 14); glowL.position.set(CAVE.x + 10, CAVE.floorY + 3, CAVE.z - 8); caveGroup.add(glowL);
+  caveExit = new THREE.Mesh(new THREE.TorusGeometry(2.2, 0.4, 8, 20), new THREE.MeshBasicMaterial({ color: 0x74b9ff })); caveExit.rotation.x = -Math.PI / 2; caveExit.position.set(CAVE.x, CAVE.floorY + 0.3, CAVE.z + 18); caveGroup.add(caveExit);
+  const exitHole = new THREE.Mesh(new THREE.CircleGeometry(2, 16), M(0x1a2a4a)); exitHole.rotation.x = -Math.PI / 2; exitHole.position.set(CAVE.x, CAVE.floorY + 0.06, CAVE.z + 18); caveGroup.add(exitHole);
+  scene.add(caveGroup);
+  // entrance hole on the pond floor
+  const ey = H(CAVE.entrance.x, CAVE.entrance.z);
+  const hole = new THREE.Mesh(new THREE.CircleGeometry(2.6, 16), M(0x0a0814)); hole.rotation.x = -Math.PI / 2; hole.position.set(CAVE.entrance.x, ey + 0.08, CAVE.entrance.z); scene.add(hole);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(2.8, 0.45, 8, 20), M(0x6b5a8a)); ring.rotation.x = -Math.PI / 2; ring.position.copy(hole.position); scene.add(ring);
+  for (let i = 0; i < 5; i++) { const a = i / 5 * 6.283; const cr = new THREE.Mesh(new THREE.ConeGeometry(0.3, 1.2, 5), new THREE.MeshBasicMaterial({ color: 0xa55eea })); cr.position.set(CAVE.entrance.x + Math.cos(a) * 3.2, ey + 0.6, CAVE.entrance.z + Math.sin(a) * 3.2); scene.add(cr); }
+  resetCaveGlows();
+}
+function resetCaveGlows() {
+  for (const g of caveGlows) caveGroup.remove(g.mesh); caveGlows = [];
+  for (let i = 0; i < 7; i++) { const a = rand(0, 6.283), r = rand(4, CAVE.r - 4); const m = new THREE.Group(); const st = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.28, 0.9, 6), M(0xf5ecd7)); st.position.y = 0.45; m.add(st); const cap = new THREE.Mesh(new THREE.SphereGeometry(0.8, 8, 6, 0, 6.283, 0, 1.57), new THREE.MeshBasicMaterial({ color: 0x5affff })); cap.position.y = 0.9; m.add(cap); m.position.set(CAVE.x + Math.cos(a) * r, CAVE.floorY, CAVE.z + Math.sin(a) * r); caveGroup.add(m); caveGlows.push({ mesh: m, x: m.position.x, z: m.position.z, taken: false }); }
+}
+function enterCave() {
+  if (save.stage === 0) { showMsg('You need legs to explore the cave! Become a toad first.'); return; }
+  player.inCave = true; player.inWater = false; player.flying = false; player.vy = 0; player.pos.set(CAVE.x, CAVE.floorY, CAVE.z + 14); player.yaw = Math.PI; camYaw = Math.PI; camManual = 0;
+  camera.position.set(player.pos.x, CAVE.floorY + 5, player.pos.z + 8); resetCaveGlows();
+  if (!save.stats.cave) { stat('cave'); jingle([392, 523, 659, 784]); showMsg('🕳️ You found the SECRET CAVE! Glowing crystals... a treasure chest... and glow mushrooms worth petals!', 6000); checkBadges(); } else showMsg('🕳️ Welcome back to the secret cave.', 2500);
+  beep(200, 0.4, 'sine');
+}
+function exitCave() { player.inCave = false; player.inWater = true; player.pos.set(CAVE.entrance.x, H(CAVE.entrance.x, CAVE.entrance.z) + 2, CAVE.entrance.z); camera.position.set(player.pos.x - 6, player.pos.y + 3, player.pos.z - 6); showMsg('💦 You swim back up into the pond.', 2000); beep(400, 0.2); }
+function openCaveChest() {
+  const day = Math.floor(save.dayT / 300);
+  if (save.caveDay === day) { showMsg('🧰 The chest is empty. It fills up again tomorrow!', 2500); beep(200, 0.2); return; }
+  save.caveDay = day; const r = { coins: 30, petals: 10, xp: 50 }; applyReward(r); spawnStars(caveChest.position, 0xffd700); jingle([523, 659, 784, 1047, 1319]);
+  if (Math.random() < 0.5 && CLOTHES.some(c => !save.owned.includes(c.id))) goldenReward(0);
+  showMsg('🧰 TREASURE! +30 🪙 +10 🌸 +50 XP', 4000); writeSave(); updateHUD();
+}
+function updateCave(dt, t) {
+  if (!player.inCave) return;
+  const p = player.pos, d = Math.hypot(p.x - CAVE.x, p.z - CAVE.z); if (d > CAVE.r) { const k = CAVE.r / d; p.x = CAVE.x + (p.x - CAVE.x) * k; p.z = CAVE.z + (p.z - CAVE.z) * k; }
+  for (const g of caveGlows) { if (g.taken) continue; g.mesh.children[1].material.opacity = 1; g.mesh.rotation.y = t; if (dist2(g.x, g.z, p.x, p.z) < 4) { g.taken = true; g.mesh.visible = false; save.petals += 3; stat('petalsTotal', 3); gainXP(8); beep(1300, 0.1, 'triangle'); showMsg('✨ Glow mushroom! +3 🌸', 900); } }
+  caveExit.rotation.z = t;
+}
+
+// ---------------------------------------------------------------- TOAD MUSIC
+const INSTRUMENTS = [
+  { id: 'drum', name: 'Drum', em: '🥁', coins: 15, type: 'sawtooth', dur: 0.12, mul: 0.25 },
+  { id: 'flute', name: 'Flute', em: '🪈', coins: 20, type: 'sine', dur: 0.5, mul: 2 },
+  { id: 'bell', name: 'Bells', em: '🔔', coins: 25, type: 'triangle', dur: 1.2, mul: 4 },
+  { id: 'guitar', name: 'Guitar', em: '🎸', coins: 30, type: 'square', dur: 0.35, mul: 1 },
+];
+const NOTES = [261.6, 293.7, 329.6, 349.2, 392.0, 440.0, 493.9, 523.3];
+const NOTE_NAMES = ['Do', 'Re', 'Mi', 'Fa', 'Sol', 'La', 'Ti', 'Do'];
+function playNote(i) {
+  const ins = INSTRUMENTS.find(x => x.id === save.instrument) || INSTRUMENTS[1];
+  beep(NOTES[i] * ins.mul, ins.dur, ins.type, ins.id === 'drum' ? 0.15 : 0.1);
+  stat('notes'); save.songT = (save.songT || 0);
+  for (const n of npcs) if (dist2(n.pos.x, n.pos.z, player.pos.x, player.pos.z) < 40 * 40) n.danceT = 5;
+  for (const b of babies) b.danceT = 5;
+  const el = document.querySelector('#noteRow button[data-n="' + i + '"]'); if (el) { el.classList.add('sel'); setTimeout(() => el.classList.remove('sel'), 150); }
+  player.pose = 'dance'; player.poseT = 2; if ((save.stats.notes % 50) === 0) checkBadges();
+}
+function renderMusic() {
+  const wrap = $('instRow'); wrap.innerHTML = '';
+  for (const ins of INSTRUMENTS) {
+    const owned = save.instruments.includes(ins.id), b = document.createElement('button'); b.className = 'btn' + (save.instrument === ins.id ? ' green' : owned ? '' : ' blue');
+    b.textContent = ins.em + ' ' + ins.name + (owned ? '' : ' · 🪙 ' + ins.coins);
+    b.onclick = () => { if (!owned) { if (save.coins < ins.coins) { beep(150, 0.2, 'sawtooth'); showMsg('Not enough coins for the ' + ins.name + '! 🪙'); return; } save.coins -= ins.coins; save.instruments.push(ins.id); jingle([660, 880]); } save.instrument = ins.id; writeSave(); updateHUD(); renderMusic(); playNote(0); };
+    wrap.appendChild(b);
+  }
+  const nr = $('noteRow'); nr.innerHTML = '';
+  NOTES.forEach((f, i) => { const b = document.createElement('button'); b.className = 'btn note'; b.dataset.n = i; b.innerHTML = (i + 1) + '<br><small>' + NOTE_NAMES[i] + '</small>'; b.onclick = () => playNote(i); nr.appendChild(b); });
+  $('musicHint').textContent = save.instruments.length ? 'Press keys 1 to 8 (or the buttons) to play. Nearby toads dance along! Notes played: ' + (save.stats.notes || 0) : 'Buy an instrument with coins to start playing!';
+}
 
 // ---------------------------------------------------------------- GAME LOOP
 let running = false, lastT = 0, saveT = 0;
@@ -2208,11 +2505,15 @@ function update(dt, t) {
   let speed = st.speed * (player.inWater && save.stage > 0 ? 0.75 : 1);
   if (player.flying) speed = bird ? bird.spec.speed : 34;
   if (player.slowMul) speed *= player.slowMul;
-  if (moving) { p.x += mx * speed * dt; p.z += mz * speed * dt; player.yaw = lerpAngle(player.yaw, Math.atan2(mx, mz), Math.min(1, dt * 10)); player.hopT += dt; }
+  player.onIce = !player.inCave && !player.flying && isWinter() && onIce(p.x, p.z);
+  if (player.onIce && !player.stunned && !player.frozen) {
+    const tvx = moving ? mx * speed : 0, tvz = moving ? mz * speed : 0; player.svx = lerp(player.svx, tvx, Math.min(1, dt * 1.3)); player.svz = lerp(player.svz, tvz, Math.min(1, dt * 1.3));
+    p.x += player.svx * dt; p.z += player.svz * dt; if (Math.hypot(player.svx, player.svz) > 0.5) { player.yaw = lerpAngle(player.yaw, Math.atan2(player.svx, player.svz), Math.min(1, dt * 6)); player.hopT += dt * 0.3; }
+  } else { player.svx = player.svz = 0; if (moving) { p.x += mx * speed * dt; p.z += mz * speed * dt; player.yaw = lerpAngle(player.yaw, Math.atan2(mx, mz), Math.min(1, dt * 10)); player.hopT += dt; } }
   if (player.kx || player.kz) { p.x += player.kx * dt; p.z += player.kz * dt; const kd = Math.max(0, 1 - 4 * dt); player.kx *= kd; player.kz *= kd; if (Math.abs(player.kx) + Math.abs(player.kz) < 0.2) player.kx = player.kz = 0; }
   player.moving = moving;
   p.x = clamp(p.x, -WORLD + 3, WORLD - 3); p.z = clamp(p.z, -WORLD + 3, WORLD - 3);
-  const pond = pondAt(p.x, p.z);
+  const pond = player.inCave ? null : pondAt(p.x, p.z);
 
   if (player.flying) {
     p.y += (up - dn) * 22 * dt;
@@ -2240,8 +2541,11 @@ function update(dt, t) {
     }
   }
   const onGround = !player.inWater && !player.flying && p.y <= groundY(p.x, p.z, p.y) + 0.05;
-  const hop = onGround && moving ? Math.abs(Math.sin(player.hopT * 9)) * 0.5 * st.scale : 0;
-  player.group.position.set(p.x, p.y + hop + (player.flying ? 1.2 : 0), p.z); player.group.rotation.y = player.yaw;
+  let hop = onGround && moving && !player.onIce ? Math.abs(Math.sin(player.hopT * 9)) * 0.5 * st.scale : 0;
+  if (player.pose) { if (player.poseT > 0) player.poseT -= dt; else if (!photoMode) player.pose = null; }
+  if (player.pose === 'happy') hop += Math.abs(Math.sin(t * 6)) * 0.8 * st.scale;
+  player.model.rotation.z = player.pose === 'wave' ? Math.sin(t * 8) * 0.15 : (mode === 'world' ? 0 : player.model.rotation.z);
+  player.group.position.set(p.x, p.y + hop + (player.flying ? 1.2 : 0), p.z); player.group.rotation.y = player.yaw + (player.pose === 'dance' ? t * 4 : 0) + (player.spinT > 0 ? (0.8 - player.spinT) / 0.8 * Math.PI * 2 : 0);
   if (player.model.userData.tail) { player.model.userData.tail.rotation.y = Math.sin(t * (moving ? 14 : 5)) * 0.5; player.model.rotation.x = player.inWater ? (keys.Space ? -0.4 : (keys.ShiftLeft ? 0.4 : 0)) : 0; }
   else player.model.rotation.x = player.flying ? (up ? -0.3 : dn ? 0.3 : 0) : 0;
   if (player.model.userData.mouth) player.model.userData.mouth.scale.y = 1 + Math.max(0, Math.sin(t * 6)) * (moving ? 0.5 : 0.1);
@@ -2298,7 +2602,7 @@ function update(dt, t) {
 
   updateNPCs(dt, t); updateAnimals(dt, t); updateBabies(dt, t); updateFriend(dt, t); updateBird(dt, t); updateTrail(dt); clouds.update(dt);
   if (mode === 'hamash') updateHamash(dt, t); else if (mode === 'race') updateRace(dt, t); else if (EXTRA_GAMES[mode] && curGame) EXTRA_GAMES[mode](dt, t);
-  updateNight(dt, t); updateHeron(dt, t); updateQuest(dt, t);
+  updateNight(dt, t); updateHeron(dt, t); updateQuest(dt, t); updateSeason(dt, t); updatePetSnail(dt, t); updateCave(dt, t);
   for (const pd of PONDS) pd.water.material.opacity = 0.5 + Math.sin(t * 1.3 + pd.x) * 0.05;
 
   // ---- camera, sun, sky follow the player
@@ -2312,7 +2616,7 @@ function update(dt, t) {
   camera.position.lerp(tmpV, Math.min(1, dt * 6));
   camera.lookAt(p.x, p.y + st.scale * 1.2, p.z);
   const camUnder = camera.position.y < -0.1 && pondAt(camera.position.x, camera.position.z);
-  scene.fog = camUnder ? fogWater : fogAir; scene.background = camUnder ? WATER : SKY; skyGroup.visible = !camUnder;
+  scene.fog = player.inCave ? fogCave : camUnder ? fogWater : fogAir; scene.background = player.inCave ? CAVE_BG : camUnder ? WATER : SKY; skyGroup.visible = !camUnder && !player.inCave;
   skyGroup.position.set(p.x, 0, p.z);
   sun.position.set(p.x + 120, p.y + 200, p.z + 80); sun.target.position.set(p.x, p.y, p.z);
 
@@ -2392,15 +2696,16 @@ function startGame() {
   if (save.bestFriend) spawnFriend(); else buildSpriteMeet();
   spawnBird(); for (const id in eggs) if (save.birds[id]) eggs[id].visible = false;
   camYaw = player.yaw; camera.position.set(player.pos.x - 8, player.pos.y + 4, player.pos.z - 8);
+  spawnPetSnail(); skatesMesh = makeGear('skates'); skatesMesh.scale.setScalar(0.55 + STAGES[save.stage].scale * 0.4); skatesMesh.visible = false; player.group.add(skatesMesh);
   updateHUD(); running = true;
   if (save.seenVersion < GAME_VERSION && save.xp > 0) { save.seenVersion = GAME_VERSION; writeSave(); setTimeout(() => toggleModal('updates', true), 1200); } else if (save.seenVersion < GAME_VERSION) { save.seenVersion = GAME_VERSION; }
   showMsg(save.stage === 0 ? '🐟 You are a tiny tadpole! Swim around (WASD) and eat the snacks.' : '🐸 Welcome back, ' + STAGES[save.stage].name + '!', 4000);
 }
 loadSave();
-buildSky(); buildGround(); buildIslands(); buildScenery(); buildMushrooms(); buildFood(); buildBurrow(); buildNPCs(); buildAnimals(); buildArena(); buildTrack(); buildEggs(); buildNight();
+buildSky(); buildGround(); buildIslands(); buildScenery(); buildMushrooms(); buildFood(); buildBurrow(); buildNPCs(); buildAnimals(); buildArena(); buildTrack(); buildEggs(); buildNight(); buildCave();
 $('playBtn').onclick = () => { $('start').style.display = 'none'; beep(660, 0.1); startGame(); };
 $('resetBtn').onclick = () => { if (confirm('Start a brand new game? Your toad will go back to being a tadpole!')) { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} location.reload(); } };
-window.TA = { player, mush, npcs, animals, babies, makeClothing, CLOTHES, equipVisual, get curGame() { return curGame; }, get heron() { return heron; }, get friend() { return friend; }, startFlyCatch, startLily, startSky, startHide, finishGame, questTalk, offerQuests, babyGift, checkBadges, earnedBadges, applyReward, GEAR, BADGES, dayFactor, set heronT(v) { heronT = v; }, set questOfferT(v) { questOfferT = v; }, get mode() { return mode; }, get worldReturn() { return worldReturn; }, get hamash() { return hamash; }, get race() { return race; }, startHamash, startRace, endGame, leaveGame, usePower, swingHammer, applyEffect, eggs, BIRDS, get bird() { return bird; }, get save() { return save; }, get camYaw() { return camYaw; }, set camYaw(v) { camYaw = v; camManual = 5; }, get running() { return running; }, keys, H, gainXP, adoptBird, hatchBaby, meetFriend, feedBird, startFlying, updateHUD };
+window.TA = { player, mush, npcs, animals, babies, makeClothing, CLOTHES, equipVisual, startSnailRace, snailCheer, togglePhoto, snapPhoto, setPose, enterCave, exitCave, openCaveChest, playNote, applySeason, get season() { return season; }, get petSnail() { return petSnail; }, CAVE, SEASONS, get photoMode() { return photoMode; }, get curGame() { return curGame; }, get heron() { return heron; }, get friend() { return friend; }, startFlyCatch, startLily, startSky, startHide, finishGame, questTalk, offerQuests, babyGift, checkBadges, earnedBadges, applyReward, GEAR, BADGES, dayFactor, set heronT(v) { heronT = v; }, set questOfferT(v) { questOfferT = v; }, get mode() { return mode; }, get worldReturn() { return worldReturn; }, get hamash() { return hamash; }, get race() { return race; }, startHamash, startRace, endGame, leaveGame, usePower, swingHammer, applyEffect, eggs, BIRDS, get bird() { return bird; }, get save() { return save; }, get camYaw() { return camYaw; }, set camYaw(v) { camYaw = v; camManual = 5; }, get running() { return running; }, keys, H, gainXP, adoptBird, hatchBaby, meetFriend, feedBird, startFlying, updateHUD };
 requestAnimationFrame(frame);
 })();
 </script>

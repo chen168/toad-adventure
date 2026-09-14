@@ -32,6 +32,11 @@ Out in the world you'll find:
 - 🌙 **Day and night**: sunsets, stars, a moon, singing toads, and fireflies worth coins.
 - 🏆 **Trophies**: 23 badges, and a Trophy Shelf you can build in your fort.
 - 🐸 **Baby toads** fetch nearby mushrooms and dig up treasures. ✨ **The spirit friend** senses eggs and golden mushrooms, glows at night, and blocks one hit per mini-game.
+- 🍂 **Seasons** change every in-game day: autumn leaves, and in winter the ponds freeze so you can ice skate (press Space on the ice to twirl).
+- 🐌 A **pet snail** you adopt in the Snail Race. Mash E to cheer it on.
+- 📸 **Photo mode**: strike a pose and save a framed picture of your toad.
+- 🕳️ A **secret cave** under the pond with crystals, glow mushrooms, and a treasure chest that refills daily.
+- 🎵 **Toad Music**: buy instruments with coins and play with keys 1 to 8. Nearby toads dance.
 - 📋 An in-game **Update Log** with everything that's new.
 - 🌲 A giant mushroom forest (press E on a giant mushroom to bounce!), a stone circle, four lakes, and four floating sky islands.
 
@@ -46,7 +51,8 @@ Add it to your phone or tablet home screen and it opens like a real app with its
 | Swim up / down | Space / Shift |
 | Jump (on land) | Space |
 | Build menu / pick up a piece | B / X |
-| Talk, pet, feed, sit, ride, use, hatch | E |
+| Talk, pet, feed, sit, ride, use, hatch, cheer | E |
+| Play music notes | 1 to 8 |
 | Fly up / down (on the bird) | Space / Shift |
 | Shop / Race board / Help | P / L / H |
 | Look around / zoom | Drag the mouse / scroll |
