@@ -19,9 +19,20 @@ Out in the world you'll find:
 - ✨ A glowing sprite near the pond who becomes your **best friend** and follows you everywhere.
 - 🐸 **Toad friends**, snails, butterflies, ducks, and dragonflies to talk to (press E). The toads are racing you to become the most legendary toad. Check the 🏆 Race board.
 - 🐦 **Five magic birds**: the Rainbow Bird, Fire Phoenix, Ice Bird, Thunder Bird, and Star Bird. Each egg is hidden somewhere different. Feed a bird petals, and once it's grown, press E to ride it and fly up to the **sky islands**. Only one bird is equipped at a time (🐦 Birds button).
-- 🎮 **Play Your Games** (panel on the right): two games against the toad friends.
+- 🎮 **Play Your Games** (pink button on the right): six games against the toad friends. Winning earns 🪙 coins.
   - 🔨 **Hamash**: a hammer arena. Press E to swing, bonk toads off the edge or knock out their hearts. Bigger toads hit harder. Last toad standing wins.
   - 🏁 **Runny Race**: 6 laps around the track with ⚡ boosters and ❓ power-ups: 🐙 Octopus ink (slows a racer), 💣 Bomb (pass it or get stunned), 🌈 Rainbow Rain (double boosters and double prizes), 🛡️ Force Field (blocks one attack), ✨ Magic Spell (freezes a racer; mash keys to break free).
+  - 👅 **Fly Catch**: 60 seconds to eat the most flies. Press E to shoot your tongue.
+  - 🪷 **Lily Pad Hop**: hop across moving lily pads to the golden pad without falling in.
+  - ☁️ **Sky Ring Race**: fly your grown-up bird through 12 rings before the other toads.
+  - 🙈 **Hide and Seek**: find 6 hidden toads in 2 minutes with a hot-and-cold arrow.
+- 🪙 **Coins** buy race gear in the shop (Roller Skates, Go-Kart, Toad Car) and a few special clothes. Earn them in mini-games, quests, and by catching fireflies at night.
+- 📜 **Quests**: toad friends ask for petals, mushrooms, a lost hat, or a visit to a landmark. Look for ⭐ on the map.
+- 🦩 **The Heron** flies over now and then. Hide under a lily pad, a leaf roof, a giant mushroom, or in the shop, or it carries you back to the pond.
+- 🌙 **Day and night**: sunsets, stars, a moon, singing toads, and fireflies worth coins.
+- 🏆 **Trophies**: 23 badges, and a Trophy Shelf you can build in your fort.
+- 🐸 **Baby toads** fetch nearby mushrooms and dig up treasures. ✨ **The spirit friend** senses eggs and golden mushrooms, glows at night, and blocks one hit per mini-game.
+- 📋 An in-game **Update Log** with everything that's new.
 - 🌲 A giant mushroom forest (press E on a giant mushroom to bounce!), a stone circle, four lakes, and four floating sky islands.
 
 Evolution: Tadpole → Mini Toad → Toad → Big Toad → 👑 Legendary Toad → 💜 Mega Toad → 🔮 Mythic Toad → 🌈 Rainbow Toad.
