@@ -252,7 +252,7 @@
     <div class="gcard"><div class="em">👅</div><div style="flex:1"><div class="nm">Fly Catch</div><p>60 seconds to eat more flies than 4 toad friends. Run into flies, or press <b>E</b> to shoot your tongue at far ones!</p></div><button class="btn green" id="playFly">Play</button></div>
     <div class="gcard"><div class="em">🪷</div><div style="flex:1"><div class="nm">Lily Pad Hop</div><p>Hop across wobbly, moving lily pads all the way across the pond to the golden pad. Fall in and you start over!</p></div><button class="btn pink" id="playLily">Play</button></div>
     <div class="gcard"><div class="em">☁️</div><div style="flex:1"><div class="nm">Sky Ring Race</div><p>Ride your grown-up magic bird through 12 rings in the sky before the other toads on their birds. Needs a bird that can fly.</p></div><button class="btn" id="playSky">Play</button></div>
-    <div class="gcard"><div class="em">🏷️</div><div style="flex:1"><div class="nm">Tag</div><p>9 toads in the field. Whoever is IT has <b>30 seconds</b> to tag somebody (press <b>E</b> next to them) or they are OUT. Last toad standing wins. Faster toads have the edge!</p></div><button class="btn red" id="playTag">Play</button></div>
+    <div class="gcard"><div class="em">🏷️</div><div style="flex:1"><div class="nm">Tag</div><p>9 toads in a huge fenced meadow. One 30-second clock keeps ticking. Whoever is IT when it hits zero is OUT, then a new round starts. Tag with <b>E</b>, and no tagging back the toad who just tagged you. Last toad standing wins!</p></div><button class="btn red" id="playTag">Play</button></div>
     <div class="gcard"><div class="em">🐌</div><div style="flex:1"><div class="nm">Snail Race</div><p>Your pet snail races 3 other snails. Very. Slowly. Mash <b>E</b> to cheer and make it crawl faster! (The first time, you adopt and name your snail.)</p></div><button class="btn green" id="playSnail">Play</button></div>
     <div class="gcard"><div class="em">🙈</div><div style="flex:1"><div class="nm">Hide and Seek</div><p>6 toad friends hide around the world. Follow the hot-and-cold arrow and find them all in 2 minutes!</p></div><button class="btn red" id="playHide">Play</button></div>
     <p style="text-align:center"><button class="btn" id="closeGames">Close</button></p>
@@ -284,7 +284,7 @@
       <li>🪺 <b>Your own Pet Nest:</b> build it anywhere from the Build menu (2 stones). You need one to hatch or steal pets. Your pets sit on it.</li>
       <li>🥷 <b>Carry the loot:</b> after you grab a pet you carry it on your back and must run it home to your nest while the owner chases you. A bonk makes you drop it.</li>
       <li>😱 <b>Toad thieves:</b> other toads sometimes sneak to your nest to steal a pet. You get a warning. Run there and press E to bonk them, and they drop it!</li>
-      <li>🏷️ <b>Tag:</b> a new game. Whoever is IT has 30 seconds to tag someone or they are out. Last toad standing wins.</li>
+      <li>🏷️ <b>Tag:</b> a new game in a huge meadow. One 30-second clock keeps ticking, whoever is IT when it hits zero is out, and no tag-backs. Last toad standing wins.</li>
       <li>🐦 You can <b>unequip</b> your bird in the Birds menu, so it stops offering rides when you want to press E on something else.</li>
     </ul></div>
     <div class="upd"><h3>Update 6 · September 16, 2026</h3><ul>
@@ -578,7 +578,7 @@ function H(x, z) {
   const ds = Math.sqrt(dist2(x, z, SHOP_POS.x, SHOP_POS.z)); if (ds < 60) flat = Math.min(flat, Math.max(0, (ds - 25) / 35));
   const dc = Math.sqrt(dist2(x, z, CIRCLE_POS.x, CIRCLE_POS.z)); if (dc < 70) flat = Math.min(flat, Math.max(0, (dc - 35) / 35));
   const da = Math.sqrt(dist2(x, z, ARENA.x, ARENA.z)); if (da < ARENA.r + 45) flat = Math.min(flat, Math.max(0, (da - ARENA.r - 8) / 37));
-  const df = Math.sqrt(dist2(x, z, FIELD.x, FIELD.z)); if (df < FIELD.r + 40) flat = Math.min(flat, Math.max(0, (df - FIELD.r - 6) / 34));
+  const df = Math.sqrt(dist2(x, z, FIELD.x, FIELD.z)); if (df < 118) flat = Math.min(flat, Math.max(0, (df - 84) / 34));
   const dk = Math.sqrt(dist2(x, z, TRACK.x, TRACK.z)); if (dk < TRACK.r + 55) flat = Math.min(flat, Math.max(0, (dk - TRACK.r - 18) / 37));
   const h = hills(x, z);
   flat = flat * flat * (3 - 2 * flat);
@@ -602,7 +602,7 @@ function randLandPos(margin) {
     if (dist2(x, z, CIRCLE_POS.x, CIRCLE_POS.z) < 30 * 30) ok = false;
     if (dist2(x, z, ARENA.x, ARENA.z) < (ARENA.r + 12) * (ARENA.r + 12)) ok = false;
     if (dist2(x, z, TRACK.x, TRACK.z) < (TRACK.r + 22) * (TRACK.r + 22)) ok = false;
-    if (dist2(x, z, FIELD.x, FIELD.z) < (FIELD.r + 8) * (FIELD.r + 8)) ok = false;
+    if (dist2(x, z, FIELD.x, FIELD.z) < 86 * 86) ok = false;
     if (ok) return { x, z };
   }
   return { x: 300, z: 300 };
@@ -2992,34 +2992,34 @@ function startTag() {
   if (needToad()) return;
   enterGame('tag');
   const g = curGame = { t: 0, countdown: 3.5, over: false, players: [], timer: 30, cleanup() { for (const r of g.players) if (r.group) scene.remove(r.group); for (const m of g.deco) scene.remove(m); if (g.me.marker) player.group.remove(g.me.marker); player.slowMul = 0; } };
-  g.deco = []; for (let i = 0; i < 20; i++) { const a = i / 20 * 6.283; const post = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 1.4, 6), M(0xffffff)); post.position.set(FIELD.x + Math.cos(a) * FIELD.r, 0.7, FIELD.z + Math.sin(a) * FIELD.r); scene.add(post); g.deco.push(post); }
+  g.r = 80; g.deco = []; for (let i = 0; i < 48; i++) { const a = i / 48 * 6.283; const post = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 2, 6), M(i % 2 ? 0xff3d00 : 0xffffff)); post.position.set(FIELD.x + Math.cos(a) * g.r, 1, FIELD.z + Math.sin(a) * g.r); scene.add(post); g.deco.push(post); }
   g.me = { name: 'YOU', stage: save.stage, isPlayer: true, pos: player.pos, alive: true, yaw: 0, hopT: 0 };
   g.players = [g.me].concat(pickOpponents(8).map(n => { const r = makeRival(n, false); r.alive = true; r.think = 0; r.dir = rand(0, 6.283); return r; }));
-  g.players.forEach((r, i) => { const a = i / g.players.length * 6.283; r.pos.set(FIELD.x + Math.cos(a) * 16, 0, FIELD.z + Math.sin(a) * 16); if (r.isPlayer) { player.yaw = a + Math.PI; camYaw = player.yaw; camManual = 0; } });
+  g.players.forEach((r, i) => { const a = i / g.players.length * 6.283; r.pos.set(FIELD.x + Math.cos(a) * 45, 0, FIELD.z + Math.sin(a) * 45); if (r.isPlayer) { player.yaw = a + Math.PI; camYaw = player.yaw; camManual = 0; } });
   g.tagger = g.players[1 + Math.floor(Math.random() * (g.players.length - 1))]; g.tagger.cd = 1.5;
   camera.position.set(player.pos.x - Math.sin(camYaw) * 10, 6, player.pos.z - Math.cos(camYaw) * 10);
-  jingle([392, 523, 659]); showMsg('🏷️ TAG! ' + g.tagger.name + ' is IT! Run away! If you get tagged, press E near a toad to tag them back within 30 seconds, or you are out!', 6000);
+  jingle([392, 523, 659]); showMsg('🏷️ TAG! ' + g.tagger.name + ' is IT! Run away! Whoever is IT when the 30-second clock hits zero is OUT. No tagging back the toad who just tagged you!', 6000);
 }
 function tagMarker(r) { if (!r.marker) { r.marker = makeMarker(); r.marker.children[0].material.color.setHex(0xff3d00); r.marker.children[1].material.color.setHex(0xff3d00); } return r.marker; }
 function setTagger(g, r, by) {
   if (g.tagger && g.tagger.marker) { g.tagger.marker.visible = false; }
-  g.tagger = r; g.timer = 30; r.cd = 1.0; if (by) by.cd = 0;
+  g.tagger = r; if (!by) g.timer = 30; r.cd = 0.8; r.immuneFrom = by || null; r.immuneT = 2.5; if (by) by.cd = 0;
   const mk = tagMarker(r); mk.visible = true; if (r.isPlayer) { player.group.add(mk); mk.position.set(0, 2.6 * STAGES[save.stage].scale + 0.5, 0); } else { r.group.add(mk); mk.position.set(0, 2.6 * r.model.scale.x, 0); }
   beep(700, 0.15, 'square'); showMsg(r.isPlayer ? '🏷️ YOU ARE IT! Tag someone (E) in 30 seconds!' : '🏷️ ' + r.name + ' is IT!' + (by && by.isPlayer ? ' Nice tag!' : ''), 2500);
 }
 function tagAction() {
   const g = curGame; if (!g || g.over || g.countdown > 0 || g.tagger !== g.me || g.me.cd > 0) return;
   const reach = 2.4 + STAGES[save.stage].scale * 1.4; let best = null, bd = 1e9;
-  for (const r of g.players) { if (r === g.me || !r.alive) continue; const d = r.pos.distanceToSquared(player.pos); if (d < reach * reach && d < bd) { bd = d; best = r; } }
+  for (const r of g.players) { if (r === g.me || !r.alive) continue; if (g.me.immuneT > 0 && r === g.me.immuneFrom) continue; const d = r.pos.distanceToSquared(player.pos); if (d < reach * reach && d < bd) { bd = d; best = r; } }
   player.pose = 'wave'; player.poseT = 0.4;
-  if (best) { setTagger(g, best, g.me); spawnStars(best.pos, 0xff3d00); } else beep(300, 0.08);
+  if (best) { setTagger(g, best, g.me); spawnStars(best.pos, 0xff3d00); } else { beep(300, 0.08); if (g.me.immuneT > 0 && g.me.immuneFrom && g.me.immuneFrom.pos.distanceTo(player.pos) < reach) showMsg('No tag-backs! Wait a moment or find someone else.', 1000); }
 }
 function updateTag(dt, t) {
   const g = curGame; g.t += dt; updateFx(dt);
   if (g.countdown > 0) { g.countdown -= dt; player.stunned = true; if (g.countdown <= 0) { player.stunned = false; setTagger(g, g.tagger); showMsg('GO! 🏷️', 1000); beep(880, 0.3); } }
   const alive = g.players.filter(r => r.alive), tg = g.tagger;
   if (g.countdown <= 0 && !g.over) {
-    g.timer -= dt; if (tg) tg.cd = Math.max(0, (tg.cd || 0) - dt);
+    g.timer -= dt; if (tg) { tg.cd = Math.max(0, (tg.cd || 0) - dt); tg.immuneT = Math.max(0, (tg.immuneT || 0) - dt); }
     if (g.timer <= 0) {
       tg.alive = false; if (tg.marker) tg.marker.visible = false; if (tg.group) tg.group.visible = false;
       if (tg.isPlayer) { const place = alive.length; finishGame({ title: '⏰ Time ran out! You placed #' + place, body: '<div>You were IT when the 30 seconds ended.</div>', reward: place <= 3 ? { mush: 10, coins: 5, xp: 25 } : { mush: 4, coins: 2, xp: 10 } }); return; }
@@ -3036,19 +3036,19 @@ function updateTag(dt, t) {
     if (g.countdown <= 0 && !g.over) {
       let tx, tz;
       if (r === tg) {
-        let best = null, bd = 1e9; for (const o of alive) { if (o === r) continue; const d = o.pos.distanceToSquared(r.pos) * (o.isPlayer ? 0.8 : 1); if (d < bd) { bd = d; best = o; } }
+        let best = null, bd = 1e9; for (const o of alive) { if (o === r) continue; if (r.immuneT > 0 && o === r.immuneFrom) continue; const d = o.pos.distanceToSquared(r.pos) * (o.isPlayer ? 0.8 : 1); if (d < bd) { bd = d; best = o; } }
         if (best) { tx = best.pos.x; tz = best.pos.z; const dd = Math.sqrt(bd / (best.isPlayer ? 0.8 : 1)); if (dd < 1.9 + r.model.scale.x && r.cd <= 0) { setTagger(g, best, r); spawnStars(best.pos, 0xff3d00); continue; } }
       } else if (tg) {
-        r.think -= dt; if (r.think <= 0) { r.think = rand(0.3, 0.8); const ax = r.pos.x - tg.pos.x, az = r.pos.z - tg.pos.z, ad = Math.hypot(ax, az) || 1; r.dir = Math.atan2(ax, az) + rand(-0.6, 0.6); if (ad > 22) r.dir = rand(0, 6.283); }
+        r.think -= dt; if (r.think <= 0) { r.think = rand(0.3, 0.8); const ax = r.pos.x - tg.pos.x, az = r.pos.z - tg.pos.z, ad = Math.hypot(ax, az) || 1; r.dir = Math.atan2(ax, az) + rand(-0.6, 0.6); if (ad > 45) r.dir = rand(0, 6.283); }
         tx = r.pos.x + Math.sin(r.dir) * 10; tz = r.pos.z + Math.cos(r.dir) * 10;
-        const cd = Math.hypot(tx - FIELD.x, tz - FIELD.z); if (cd > FIELD.r - 3) { const a = Math.atan2(FIELD.z - r.pos.z, FIELD.x - r.pos.x); r.dir = Math.atan2(Math.cos(a), Math.sin(a)) + rand(-0.8, 0.8); tx = r.pos.x + Math.sin(r.dir) * 10; tz = r.pos.z + Math.cos(r.dir) * 10; }
+        const cd = Math.hypot(tx - FIELD.x, tz - FIELD.z); if (cd > g.r - 3) { const a = Math.atan2(FIELD.z - r.pos.z, FIELD.x - r.pos.x); r.dir = Math.atan2(Math.cos(a), Math.sin(a)) + rand(-0.8, 0.8); tx = r.pos.x + Math.sin(r.dir) * 10; tz = r.pos.z + Math.cos(r.dir) * 10; }
       }
       if (tx != null) { const dx = tx - r.pos.x, dz = tz - r.pos.z, d = Math.hypot(dx, dz) || 1; const sp = (7 + r.stage * 1.1) * (r === tg ? 1.15 : 1); r.pos.x += dx / d * sp * dt; r.pos.z += dz / d * sp * dt; r.yaw = Math.atan2(dx, dz); r.hopT += dt; moving = true; }
-      const fd = Math.hypot(r.pos.x - FIELD.x, r.pos.z - FIELD.z); if (fd > FIELD.r - 1) { const k = (FIELD.r - 1) / fd; r.pos.x = FIELD.x + (r.pos.x - FIELD.x) * k; r.pos.z = FIELD.z + (r.pos.z - FIELD.z) * k; }
+      const fd = Math.hypot(r.pos.x - FIELD.x, r.pos.z - FIELD.z); if (fd > g.r - 1) { const k = (g.r - 1) / fd; r.pos.x = FIELD.x + (r.pos.x - FIELD.x) * k; r.pos.z = FIELD.z + (r.pos.z - FIELD.z) * k; }
     }
     r.group.position.set(r.pos.x, moving ? Math.abs(Math.sin(r.hopT * 9)) * 0.4 : 0, r.pos.z); r.group.rotation.y = r.yaw;
   }
-  const pd = Math.hypot(player.pos.x - FIELD.x, player.pos.z - FIELD.z); if (pd > FIELD.r - 1) { const k = (FIELD.r - 1) / pd; player.pos.x = FIELD.x + (player.pos.x - FIELD.x) * k; player.pos.z = FIELD.z + (player.pos.z - FIELD.z) * k; }
+  const pd = Math.hypot(player.pos.x - FIELD.x, player.pos.z - FIELD.z); if (pd > g.r - 1) { const k = (g.r - 1) / pd; player.pos.x = FIELD.x + (player.pos.x - FIELD.x) * k; player.pos.z = FIELD.z + (player.pos.z - FIELD.z) * k; }
   if (tg && tg.marker) tg.marker.rotation.y = t * 3;
   const left = g.players.filter(r => r.alive).length;
   setGameInfo((tg === g.me ? '🏷️ <b>YOU ARE IT!</b> Tag someone with <b>E</b> · ' : '🏷️ ' + (tg ? tg.name : '?') + ' is IT · run! · ') + '⏱️ <b>' + Math.max(0, Math.ceil(g.timer)) + 's</b> · <b>' + left + '</b> toads left' + (g.countdown > 0 ? ' · Ready... <b>' + Math.ceil(g.countdown) + '</b>' : ''));

@@ -38,7 +38,7 @@ Out in the world you'll find:
 - 🕳️ A **secret cave** under the pond with crystals, glow mushrooms, and a treasure chest that refills daily.
 - 🎵 **Toad Music**: buy instruments with coins and play with keys 1 to 8. Nearby toads dance.
 - 🐾 **Collect Pet**: build a 🪺 Pet Nest, earn ⭐ stars (win games, discover landmarks, help toads), and hatch random pets of rarity 1 to 10. Every toad friend keeps a pet on a nest: hold E there to grab it, then carry it home to your nest while the owner chases you with a hammer. Toads can steal from your nest too, so run over and bonk them.
-- 🏷️ **Tag**: whoever is IT has 30 seconds to tag someone or they're out. Last toad standing wins.
+- 🏷️ **Tag**: a huge fenced meadow, one running 30-second clock, whoever is IT when it hits zero is out, and no tag-backs. Last toad standing wins.
 - 🔨 **Four Hamash arenas**: Classic, Watery, Survive Life, and Starry Zoom, with 9 opponents.
 - 👑 **Boss Race** against the top toad on the Legendary Race board.
 - 🏠 A **Toad House** to build and walk inside, with your choice of wallpaper.
