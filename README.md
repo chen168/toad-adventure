@@ -37,6 +37,11 @@ Out in the world you'll find:
 - 📸 **Photo mode**: strike a pose and save a framed picture of your toad.
 - 🕳️ A **secret cave** under the pond with crystals, glow mushrooms, and a treasure chest that refills daily.
 - 🎵 **Toad Music**: buy instruments with coins and play with keys 1 to 8. Nearby toads dance.
+- 🐾 **Collect Pet**: earn ⭐ stars (win games, discover landmarks, help toads) and hatch random pets of rarity 1 to 10 for your pet shelf. Every toad friend keeps a pet on a nest, and you can try to steal it by holding E while the owner runs over with a hammer.
+- 🔨 **Four Hamash arenas**: Classic, Watery, Survive Life, and Starry Zoom, with 9 opponents.
+- 👑 **Boss Race** against the top toad on the Legendary Race board.
+- 🏠 A **Toad House** to build and walk inside, with your choice of wallpaper.
+- 🌧️ Rain with petal puddles and rainbows, 🚕 a dragonfly taxi to any landmark, and 🎣 fishing from any shore.
 - 📋 An in-game **Update Log** with everything that's new.
 - 🌲 A giant mushroom forest (press E on a giant mushroom to bounce!), a stone circle, four lakes, and four floating sky islands.
 

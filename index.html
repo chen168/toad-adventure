@@ -23,7 +23,11 @@
   #quest { font-size: 14px; line-height: 1.3; }
   #topright { position: absolute; right: 12px; top: 12px; text-align: right; font-size: 17px; line-height: 1.45; }
   #topright b { color: #ffe66d; }
-  #buttons { position: absolute; right: 12px; top: 150px; display: flex; flex-direction: column; gap: 8px; pointer-events: auto; align-items: flex-end; }
+  #buttons { position: absolute; right: 12px; top: 150px; display: flex; flex-direction: column; flex-wrap: wrap; max-height: calc(100vh - 190px); gap: 8px; pointer-events: auto; align-items: flex-end; align-content: flex-end; }
+  body.touch #help { display: none; }
+  body.touch #buttons { top: 178px; right: 12px; left: 200px; flex-direction: row; flex-wrap: wrap; justify-content: flex-end; max-height: none; align-content: flex-start; gap: 6px; }
+  body.touch #buttons .btn { font-size: 14px; padding: 6px 10px; }
+  body.touch #msg { top: 32%; }
   .btn { background: #ff9f43; color: #3b1d00; border: 3px solid #fff; border-radius: 14px; font: inherit; font-size: 16px; font-weight: bold; padding: 8px 14px; cursor: pointer; text-shadow: none; box-shadow: 0 4px 0 #b86a1a; }
   .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #b86a1a; }
   .btn.green { background: #7cff5a; box-shadow: 0 4px 0 #3f9a2a; }
@@ -68,7 +72,7 @@
   #knob { position: absolute; left: 40px; top: 40px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,.8); }
   #tbtns { position: absolute; right: 20px; bottom: 200px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; pointer-events: auto; }
   .tb { width: 70px; height: 70px; border-radius: 50%; background: rgba(255,159,67,.85); border: 3px solid #fff; color: #3b1d00; font: inherit; font-weight: bold; font-size: 14px; }
-  #games { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: auto; text-align: center; background: rgba(60, 20, 90, .8); border-color: #ff9ff3; }
+  #games { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); pointer-events: auto; text-align: center; background: rgba(60, 20, 90, .8); border-color: #ff9ff3; }
   #games .title { font-size: 15px; font-weight: bold; color: #ff9ff3; margin-bottom: 6px; }
   #games .btn { display: block; width: 100%; margin: 4px 0; font-size: 17px; line-height: 1.15; }
   #gamehud { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); font-size: 18px; font-weight: bold; text-align: center; display: none; background: rgba(60, 20, 90, .85); border-color: #ff9ff3; pointer-events: auto; min-width: 320px; }
@@ -104,6 +108,7 @@
   body.photo #touch { display: none !important; }
   #photoImg { max-width: 100%; border-radius: 12px; border: 3px solid #ffd27f; }
   .note { min-width: 54px; }
+  #stealBar { height: 14px; background: rgba(0,0,0,.4); border-radius: 8px; border: 2px solid #fff; overflow: hidden; margin-top: 4px; } #stealBar div { height: 100%; background: #ff6b6b; width: 0; }
   .note small { font-size: 11px; }
   #noteRow, #instRow { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 10px 0; }
   .upd { background: #fff; border: 3px solid #ffd27f; border-radius: 16px; padding: 6px 14px; margin: 10px 0; }
@@ -115,11 +120,12 @@
     #topright { max-width: 46%; font-size: 13px; padding: 6px 10px; line-height: 1.4; }
     #buttons { top: auto; bottom: 12px; right: 12px; left: 122px; flex-direction: row; flex-wrap: wrap; justify-content: flex-end; } .btn { font-size: 13px; padding: 6px 10px; }
     #games { top: 42%; left: 12px; right: auto; padding: 6px 8px; } #games .title { font-size: 12px; } #games .btn { font-size: 12px; }
+    #buttons { max-height: none; }
     #gamehud { font-size: 14px; min-width: 0; max-width: 60%; top: 100px; }
     body.touch #buttons { left: 8px; right: 8px; bottom: 6px; justify-content: center; gap: 5px; }
     body.touch #minimap { top: 140px; bottom: auto; left: 12px; }
     body.touch #stick { bottom: 160px; } body.touch #tbtns { bottom: 100px; }
-    body.touch #prompt { bottom: 320px; } body.touch #games { top: auto; bottom: 330px; }
+    body.touch #prompt { bottom: 320px; } body.touch #games { top: 250px; bottom: auto; transform: none; }
     .gcard { flex-direction: column; text-align: center; } .gcard .em { font-size: 36px; }
     #minimap { width: 100px; height: 100px; } #msg { font-size: 18px; top: 24%; } #prompt { font-size: 15px; bottom: 130px; white-space: normal; max-width: 90%; text-align: center; }
     #stick { bottom: 130px; left: 20px; } #tbtns { bottom: 70px; right: 14px; gap: 8px; } .tb { width: 58px; height: 58px; font-size: 12px; }
@@ -137,7 +143,7 @@
   </div>
   <div id="topright" class="panel">
     🍄 Mushrooms: <b id="mush">0</b> &nbsp; 🌸 Petals: <b id="petals">0</b><br>
-    🪨 Stones: <b id="peb">0</b> &nbsp; 🪙 Coins: <b id="coins">0</b><br>
+    🪨 Stones: <b id="peb">0</b> &nbsp; 🪙 Coins: <b id="coins">0</b> &nbsp; ⭐ Stars: <b id="stars">0</b><br>
     🏆 Race: <b id="rank">#?</b> &nbsp; 
     <span id="compass">🍄 <span id="carrow" style="display:inline-block">➜</span> <b id="cdist">?</b></span>
     <span id="birdinfo"></span><span id="sense"></span>
@@ -152,6 +158,8 @@
     <button class="btn blue" id="updatesBtn">📋 Updates</button>
     <button class="btn" id="photoBtn">📸 Photo</button>
     <button class="btn pink" id="musicBtn">🎵 Music</button>
+    <button class="btn green" id="petBtn">🐾 Collect Pet</button>
+    <button class="btn blue" id="taxiBtn">🚕 Taxi</button>
     <button class="btn" id="helpBtn">❓ Help</button>
   </div>
   <div id="games" class="panel">
@@ -238,7 +246,8 @@
   <div class="card">
     <h2>🎮 Play Your Games</h2>
     <div>Play against the toad friends from the world. Win mushrooms 🍄, petals 🌸, and XP!</div>
-    <div class="gcard"><div class="em">🔨</div><div style="flex:1"><div class="nm">Hamash</div><p>Grab your hammer and hop into the arena with 6 other toads. Press <b>E</b> to swing! Bonk toads off the edge or knock out all their hearts. The more evolved your toad, the harder you hit. <b>Last toad standing wins!</b></p></div><button class="btn red" id="playHamash">Play</button></div>
+    <div class="gcard"><div class="em">👑</div><div style="flex:1"><div class="nm">Boss Race</div><p>A one-on-one race against the toad at the top of the Legendary Race board. 3 laps. They are FAST. Beat them for a huge prize and 2 ⭐ stars!</p></div><button class="btn" id="playBoss">Play</button></div>
+    <div class="gcard"><div class="em">🔨</div><div style="flex:1"><div class="nm">Hamash</div><p>Pick one of 4 arenas: Classic, Watery, Survive Life, or Starry Zoom. Hop in with 9 other toads. Press <b>E</b> to swing! Bonk toads off the edge or knock out all their hearts. The more evolved your toad, the harder you hit. <b>Last toad standing wins!</b></p></div><button class="btn red" id="playHamash">Play</button></div>
     <div class="gcard"><div class="em">🏁</div><div style="flex:1"><div class="nm">Runny Race</div><p>Race 7 toads around the track for <b>6 laps</b>. Grab ⚡ boosters and ❓ power-up boxes, then press <b>E</b> to use them: 🐙 Octopus ink slows a racer, 💣 Bomb must be passed on or you're stunned, 🌈 Rainbow Rain doubles boosters and prizes, 🛡️ Force Field blocks one attack, ✨ Magic Spell freezes a racer!</p></div><button class="btn blue" id="playRace">Play</button></div>
     <div class="gcard"><div class="em">👅</div><div style="flex:1"><div class="nm">Fly Catch</div><p>60 seconds to eat more flies than 4 toad friends. Run into flies, or press <b>E</b> to shoot your tongue at far ones!</p></div><button class="btn green" id="playFly">Play</button></div>
     <div class="gcard"><div class="em">🪷</div><div style="flex:1"><div class="nm">Lily Pad Hop</div><p>Hop across wobbly, moving lily pads all the way across the pond to the golden pad. Fall in and you start over!</p></div><button class="btn pink" id="playLily">Play</button></div>
@@ -270,7 +279,19 @@
   <div class="card">
     <h2>📋 Update Log</h2>
     <div>Everything new in Toad Adventure, newest first. Ideas by Sasha!</div>
-    <div class="upd"><h3>🆕 Update 5 · September 13, 2026</h3><ul>
+    <div class="upd"><h3>🆕 Update 6 · September 16, 2026</h3><ul>
+      <li>🐾 <b>Collect Pet!</b> Earn ⭐ stars by winning games, discovering places, and helping toads. Each star hatches a random pet (rarity 1 to 10 stars) for your pet shelf. Take one along with you.</li>
+      <li>🥷 <b>Pet stealing:</b> every toad friend keeps a pet on a nest. Mark one, sneak over, and hold E for 4 seconds. The owner comes running with their hammer! Toads always carry hammers now, and sometimes bonk you just for fun.</li>
+      <li>🔨 <b>4 Hamash arenas:</b> Classic, Watery (ponds that slow you and sink you), Survive Life (boulders and lightning), and Starry Zoom (catch falling stars for XP). The arena is much bigger, with 9 opponents and 8 new toad friends.</li>
+      <li>⚡ Toad friends now steer into the cyan zoom pads in the Runny Race.</li>
+      <li>👑 <b>Boss Race:</b> a 3-lap duel against the top toad on the Legendary Race board.</li>
+      <li>🏠 <b>Toad House:</b> build one in your fort, walk inside, and pick your wallpaper.</li>
+      <li>🌧️ <b>Rain</b> with puddles that give petals, and a rainbow after.</li>
+      <li>🚕 <b>Dragonfly taxi:</b> fly to any landmark for 1 coin.</li>
+      <li>🎣 <b>Fishing:</b> buy a rod in the shop and fish from any shore. Catch a Golden Koi for a star!</li>
+      <li>📱 Fixed the iPad layout: Play Your Games moved to the left so it no longer covers the buttons.</li>
+    </ul></div>
+    <div class="upd"><h3>Update 5 · September 13, 2026</h3><ul>
       <li>🍂 <b>Seasons!</b> Spring, summer, autumn, and winter change every day. Leaves fall in autumn. In winter it snows and the ponds freeze: walk on the ice, slide around, and press Space to twirl (⛸️ coins for fancy twirls).</li>
       <li>🐌 <b>Pet snail:</b> adopt and name a snail in the Snail Race. It follows you, very slowly. Mash E to cheer it on in the race.</li>
       <li>📸 <b>Photo mode:</b> pick a pose, look around, and snap a framed picture of your toad you can save.</li>
@@ -309,6 +330,46 @@
       <li>🐟 Toad Adventure is born! Tadpole, pond, burrow, a colossal world, 1000 mushrooms, the Mushroom Shop, and the Legendary Race.</li>
     </ul></div>
     <p style="text-align:center"><button class="btn" id="closeUpdates">Close</button></p>
+  </div>
+</div>
+
+<div id="pets" class="modal">
+  <div class="card">
+    <h2>🐾 Collect Pet</h2>
+    <div>You have <b id="petStars">0</b> ⭐ stars. Earn stars by winning games, discovering new places, and helping toad friends. Each star hatches one random pet, rarity ⭐ to ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐!</div>
+    <p style="text-align:center"><button class="btn green" id="hatchPetBtn" style="font-size:20px">🥚 Hatch a pet (1 ⭐)</button></p>
+    <h2 style="font-size:22px">🪵 Your Pet Shelf</h2>
+    <div class="items" id="petShelf"></div>
+    <h2 style="font-size:22px;margin-top:14px">🥷 Steal from a toad friend</h2>
+    <div class="pr">Jealous of a rare pet? Mark it, sneak to that toad's nest, and hold E for 4 seconds. The owner gets a notification and comes running with their hammer. One bonk and the steal fails!</div>
+    <div id="stealList"></div>
+    <p style="text-align:center"><button class="btn" id="closePets">Done</button></p>
+  </div>
+</div>
+
+<div id="arenaModal" class="modal">
+  <div class="card">
+    <h2>🔨 Pick your Hamash arena</h2>
+    <div id="arenaList"></div>
+    <p style="text-align:center"><button class="btn" id="closeArena">Cancel</button></p>
+  </div>
+</div>
+
+<div id="taxi" class="modal">
+  <div class="card" style="text-align:center">
+    <h2>🚕 Dragonfly Taxi</h2>
+    <div>Zzzip! Fly anywhere for 1 🪙. You have <b id="taxiCoins">0</b> coins.</div>
+    <div id="taxiList" style="margin:10px 0"></div>
+    <button class="btn" id="closeTaxi">Close</button>
+  </div>
+</div>
+
+<div id="wallpaper" class="modal">
+  <div class="card" style="text-align:center">
+    <h2>🎨 Wallpaper</h2>
+    <div>Pick the wallpaper for your Toad House.</div>
+    <div id="wpList" style="margin:10px 0"></div>
+    <button class="btn" id="closeWallpaper">Done</button>
   </div>
 </div>
 
@@ -388,7 +449,7 @@ const FOREST_POS = { x: -400, z: -160 };
 const BURROW_WATER = { x: MAIN.r - 14, z: 0 };
 const BURROW_LAND = { x: MAIN.r + 9, z: 0 };
 const BIRD_READY_XP = 100;
-const ARENA = { x: -620, z: 600, r: 34, y: 8 };
+const ARENA = { x: -620, z: 600, r: 50, y: 8 };
 const TRACK = { x: 150, z: -250, r: 62, w: 14, laps: 6 };
 const PLATFORMS = [ARENA];
 const BIRDS = [
@@ -448,9 +509,10 @@ const FURNITURE = [
   { id: 'pot', name: 'Flower Pot', cost: 2, em: '🪴', use: 'The flower smells sweet.' },
   { id: 'chest', name: 'Treasure Chest', cost: 8, em: '🧰', use: 'You peek inside. Shiny things!' },
   { id: 'trophy', name: 'Trophy Shelf', cost: 4, em: '🏆', use: 'You admire your trophies. So shiny!' },
+  { id: 'house', name: 'Toad House', cost: 12, em: '🏠', use: 'Home sweet home!' },
 ];
 
-const NPC_NAMES = ['Hoppy', 'Sir Croaksalot', 'Lily', 'Bubbles', 'Wartley', 'Pip', 'Gumbo', 'Ribbert', 'Speckle', 'Mossy', 'Princess Puddle', 'Jumper', 'Boing', 'Toadette', 'Captain Croak', 'Peaches', 'Ziggy', 'Marshmallow', 'Dr. Hops', 'Sunny', 'Twinkle', 'Bumble'];
+const NPC_NAMES = ['Hoppy', 'Sir Croaksalot', 'Lily', 'Bubbles', 'Wartley', 'Pip', 'Gumbo', 'Ribbert', 'Speckle', 'Mossy', 'Princess Puddle', 'Jumper', 'Boing', 'Toadette', 'Captain Croak', 'Peaches', 'Ziggy', 'Marshmallow', 'Dr. Hops', 'Sunny', 'Twinkle', 'Bumble', 'Pickles', 'Sir Hopsalot', 'Muddy', 'Clover', 'Sprocket', 'Daisy', 'Thunder', 'Noodle'];
 const NPC_LINES = [
   "Ribbit! I'm going to be the most legendary toad ever!",
   "Have you seen the golden mushrooms? They give free clothes!",
@@ -515,6 +577,7 @@ function H(x, z) {
 }
 function groundY(x, z, y) {           // where the toad stands: terrain, or a sky island if it is up there
   if (player.inCave) return CAVE.floorY;
+  if (player.inHouse) return HOUSE.floorY;
   const isl = islandAt(x, z);
   if (isl && y > isl.y - 3) return isl.y;
   for (const pf of PLATFORMS) if (dist2(x, z, pf.x, pf.z) < pf.r * pf.r && y > pf.y - 3) return pf.y;
@@ -573,13 +636,14 @@ function loadSave() {
   if (save.quest === undefined) save.quest = null; if (!save.questsDone) save.questsDone = 0;
   if (typeof save.dayT !== 'number') save.dayT = 20;
   if (!save.seenVersion) save.seenVersion = 0;
+  if (typeof save.stars !== 'number') save.stars = 0; if (!save.pets) save.pets = []; if (save.activePet === undefined) save.activePet = null; if (!save.npcPets) save.npcPets = {}; if (save.stealTarget === undefined) save.stealTarget = null; if (!save.discovered) save.discovered = []; if (!save.wallpaper) save.wallpaper = 'stripes'; if (!save.rod) save.rod = false;
   if (save.snail === undefined) save.snail = null; if (!save.instruments) save.instruments = []; if (save.instrument === undefined) save.instrument = null; if (save.caveDay === undefined) save.caveDay = -1;
 }
-const GAME_VERSION = 5;
+const GAME_VERSION = 6;
 function curBird() { return save.activeBird ? save.birds[save.activeBird] : null; }
 function curBirdSpec() { return BIRDS.find(b => b.id === save.activeBird) || BIRDS[0]; }
 function writeSave() {
-  save.pos = mode !== 'world' ? worldReturn.pos : player.inCave ? { x: CAVE.entrance.x, y: -3, z: CAVE.entrance.z } : { x: player.pos.x, y: player.pos.y, z: player.pos.z };
+  save.pos = mode !== 'world' ? worldReturn.pos : player.inCave ? { x: CAVE.entrance.x, y: -3, z: CAVE.entrance.z } : player.inHouse ? { x: player.houseExit.x, y: 0, z: player.houseExit.z } : { x: player.pos.x, y: player.pos.y, z: player.pos.z };
   if (npcs.length) save.npcXp = npcs.map(n => Math.floor(n.xp));   // remember every toad's progress in the Legendary Race
   try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {}
 }
@@ -592,7 +656,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 const scene = new THREE.Scene();
 const SKY = new THREE.Color(0x8fd3ff), WATER = new THREE.Color(0x2b86b8);
-const fogAir = new THREE.Fog(SKY, 120, 1100), fogWater = new THREE.FogExp2(WATER, 0.035), CAVE_BG = new THREE.Color(0x0a0814), fogCave = new THREE.FogExp2(0x0a0814, 0.02);
+const fogAir = new THREE.Fog(SKY, 120, 1100), fogWater = new THREE.FogExp2(WATER, 0.035), CAVE_BG = new THREE.Color(0x0a0814), fogCave = new THREE.FogExp2(0x0a0814, 0.02), HOUSE_BG = new THREE.Color(0xfff3d6), fogHouse = new THREE.Fog(0xfff3d6, 40, 80);
 scene.background = SKY; scene.fog = fogAir;
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 4000);
 const hemi = new THREE.HemisphereLight(0xcfe9ff, 0x4a8a3a, 0.75); scene.add(hemi);
@@ -912,6 +976,7 @@ function makeFurniture(id) {
     case 'rug': { const r = add(new THREE.CircleGeometry(1.5, 16), M(0xff6fb5, { side: THREE.DoubleSide }), 0, 0.05, 0); r.rotation.x = -Math.PI / 2; r.castShadow = false; const r2 = add(new THREE.CircleGeometry(0.9, 16), M(0xffe066, { side: THREE.DoubleSide }), 0, 0.07, 0); r2.rotation.x = -Math.PI / 2; r2.castShadow = false; break; }
     case 'shelf': add(new THREE.BoxGeometry(1.6, 2.4, 0.6), wood, 0, 1.2, 0); for (let i = 0; i < 6; i++) add(new THREE.BoxGeometry(0.22, 0.6, 0.4), M(new THREE.Color().setHSL(i / 6, 0.8, 0.5)), -0.6 + i * 0.24, 1.5, 0.15); for (let i = 0; i < 4; i++) add(new THREE.BoxGeometry(0.28, 0.5, 0.4), M(new THREE.Color().setHSL((i + 2) / 6, 0.8, 0.5)), -0.5 + i * 0.32, 0.6, 0.15); break;
     case 'pot': add(new THREE.CylinderGeometry(0.45, 0.32, 0.6, 10), M(0xd35400), 0, 0.3, 0); add(new THREE.CylinderGeometry(0.05, 0.05, 1.0, 5), M(0x3e9f2e), 0, 1.0, 0); for (let i = 0; i < 5; i++) { const a = i / 5 * 6.283; add(new THREE.SphereGeometry(0.18, 6, 5), M(0xff9ff3), Math.cos(a) * 0.25, 1.5, Math.sin(a) * 0.25); } add(new THREE.SphereGeometry(0.15, 6, 5), M(0xffe066), 0, 1.55, 0); break;
+    case 'house': add(new THREE.BoxGeometry(4, 3.2, 4), M(0xf7ead0), 0, 1.6, 0); add(new THREE.ConeGeometry(3.4, 2.2, 4), M(0xe53935), 0, 4.3, 0).rotation.y = Math.PI / 4; add(new THREE.BoxGeometry(1.2, 2, 0.2), dark, 0, 1, 2.05); add(new THREE.BoxGeometry(1, 1, 0.2), M(0x8fd3ff), -1.2, 2, 2.05); add(new THREE.BoxGeometry(0.6, 1, 0.6), M(0x8d8d8d), 1.2, 4.6, -0.8); break;
     case 'trophy': add(new THREE.BoxGeometry(1.9, 2.4, 0.5), wood, 0, 1.2, -0.1); add(new THREE.BoxGeometry(1.9, 0.08, 0.6), dark, 0, 0.55, 0); add(new THREE.BoxGeometry(1.9, 0.08, 0.6), dark, 0, 1.25, 0); add(new THREE.BoxGeometry(1.9, 0.08, 0.6), dark, 0, 1.95, 0); g.userData.cups = []; break;
     case 'chest': add(new THREE.BoxGeometry(1.4, 0.8, 0.9), wood, 0, 0.4, 0); add(new THREE.CylinderGeometry(0.45, 0.45, 1.4, 10, 1, false, 0, Math.PI), M(0x8d5524), 0, 0.8, 0).rotation.z = Math.PI / 2; add(new THREE.BoxGeometry(0.25, 0.3, 0.1), M(0xffd700), 0, 0.6, 0.5); break;
   }
@@ -955,7 +1020,7 @@ function makeSprite() {  // the best friend: a little glowing spirit with eyes
 }
 
 // ---------------------------------------------------------------- PLAYER
-const player = { pos: new THREE.Vector3(0, -3, 0), yaw: 0, vy: 0, group: new THREE.Group(), model: null, anchors: {}, hopT: 0, moving: false, inWater: true, flying: false, clothes: {}, sparkles: null, kx: 0, kz: 0, slowMul: 0, frozen: false, stunned: false, inCave: false, pose: null, poseT: 0, spinT: 0, onIce: false, svx: 0, svz: 0 };
+const player = { pos: new THREE.Vector3(0, -3, 0), yaw: 0, vy: 0, group: new THREE.Group(), model: null, anchors: {}, hopT: 0, moving: false, inWater: true, flying: false, clothes: {}, sparkles: null, kx: 0, kz: 0, slowMul: 0, frozen: false, stunned: false, inCave: false, inHouse: false, houseExit: null, pose: null, poseT: 0, spinT: 0, onIce: false, svx: 0, svz: 0 };
 scene.add(player.group);
 const blob = new THREE.Mesh(new THREE.CircleGeometry(1, 16), M(0x000000, { transparent: true, opacity: 0.22 })); blob.rotation.x = -Math.PI / 2; scene.add(blob);
 function rebuildPlayerModel() {
@@ -1010,7 +1075,8 @@ function updateNPCs(dt, t) {
     n.xp = Math.min(6500, n.xp + n.rate * dt);
     const st = stageFor(n.xp);
     if (st !== n.stage) { n.stage = st; n.model.scale.setScalar(Math.max(0.7, STAGES[st].scale) * 0.95); if (st >= 4) n.model.userData.mat.color.setHex(STAGES[st].color); }
-    if (n.talkT > 0) { n.talkT -= dt; n.moving = false; n.yaw = Math.atan2(player.pos.x - n.pos.x, player.pos.z - n.pos.z); }
+    if (updateNpcHammers(n, dt, t)) {}
+    else if (n.talkT > 0) { n.talkT -= dt; n.moving = false; n.yaw = Math.atan2(player.pos.x - n.pos.x, player.pos.z - n.pos.z); }
     else wanderNPC(n, dt, 6 + st * 1.2, 90);
     n.pos.y = H(n.pos.x, n.pos.z);
     if (n.danceT > 0) { n.danceT -= dt; n.hopT += dt; }
@@ -1170,7 +1236,7 @@ function updateHUD() {
   const cb = curBird(); if (cb && cb.xp < BIRD_READY_XP) q += '<br>🐦 Feed ' + cb.name + ' petals (E) to raise it: ' + Math.floor(cb.xp) + '/' + BIRD_READY_XP;
   if (save.quest) q += '<br>' + questText();
   $('quest').innerHTML = q;
-  $('coins').textContent = save.coins; $('seasonTag').textContent = season >= 0 ? SEASONS[season].em + ' ' + SEASONS[season].name : '';
+  $('coins').textContent = save.coins; $('stars').textContent = save.stars; $('seasonTag').textContent = season >= 0 ? SEASONS[season].em + ' ' + SEASONS[season].name : '';
   $('mush').textContent = save.mush; $('petals').textContent = save.petals; $('peb').textContent = save.pebbles;
   $('shopMush').textContent = save.mush; $('shopPetals').textContent = save.petals; $('buildPeb').textContent = save.pebbles;
   $('rank').textContent = '#' + (1 + npcs.filter(n => n.xp > save.xp).length) + ' of ' + (npcs.length + 1);
@@ -1220,12 +1286,12 @@ function renderBoard() {
   const rows = npcs.map(n => ({ name: n.name, xp: n.xp })).concat([{ name: 'YOU', xp: save.xp, me: true }]).sort((a, b) => b.xp - a.xp);
   $('boardTable').innerHTML = rows.map((r, i) => '<tr class="' + (r.me ? 'me' : '') + '"><td>#' + (i + 1) + '</td><td>' + r.name + '</td><td>' + STAGES[stageFor(r.xp)].emoji + ' ' + STAGES[stageFor(r.xp)].name + '</td><td>' + Math.floor(r.xp) + ' XP</td></tr>').join('');
 }
-function anyModalOpen() { return ['shop', 'build', 'board', 'namer', 'birds', 'gamesModal', 'results', 'trophies', 'updates', 'music', 'photoModal'].some(id => $(id).style.display === 'flex'); }
+function anyModalOpen() { return ['shop', 'build', 'board', 'namer', 'birds', 'gamesModal', 'results', 'trophies', 'updates', 'music', 'photoModal', 'pets', 'arenaModal', 'taxi', 'wallpaper'].some(id => $(id).style.display === 'flex'); }
 function toggleModal(id, open) {
   const el = $(id); const show = open === undefined ? el.style.display !== 'flex' : open;
   if (show) ['shop', 'build', 'board'].forEach(o => { if (o !== id) $(o).style.display = 'none'; });
   el.style.display = show ? 'flex' : 'none';
-  if (show) { if (id === 'shop') renderShop(); if (id === 'build') renderBuild(); if (id === 'board') renderBoard(); if (id === 'birds') renderBirds(); if (id === 'trophies') renderTrophies(); if (id === 'music') renderMusic(); }
+  if (show) { if (id === 'shop') renderShop(); if (id === 'build') renderBuild(); if (id === 'board') renderBoard(); if (id === 'birds') renderBirds(); if (id === 'trophies') renderTrophies(); if (id === 'music') renderMusic(); if (id === 'pets') renderPets(); if (id === 'taxi') renderTaxi(); if (id === 'wallpaper') renderWallpapers(); }
 }
 function askName(title, text, choices, cb) {
   $('namerTitle').textContent = title; $('namerText').innerHTML = text; $('namerInput').value = '';
@@ -1252,7 +1318,12 @@ $('playHide').onclick = () => { toggleModal('gamesModal', false); startHide(); }
 $('playSnail').onclick = () => { toggleModal('gamesModal', false); startSnailRace(); };
 $('photoBtn').onclick = () => togglePhoto(true); $('photoDone').onclick = () => togglePhoto(false); $('snapBtn').onclick = snapPhoto; $('photoClose').onclick = () => { $('photoModal').style.display = 'none'; };
 document.querySelectorAll('#photoUI .pose').forEach(b => b.onclick = () => setPose(b.dataset.pose));
-$('musicBtn').onclick = () => toggleModal('music'); $('closeMusic').onclick = () => toggleModal('music', false);
+$('musicBtn').onclick = () => toggleModal('music');
+$('petBtn').onclick = () => toggleModal('pets'); $('closePets').onclick = () => toggleModal('pets', false); $('hatchPetBtn').onclick = hatchPet;
+$('closeArena').onclick = () => toggleModal('arenaModal', false);
+$('taxiBtn').onclick = () => toggleModal('taxi'); $('closeTaxi').onclick = () => toggleModal('taxi', false);
+$('closeWallpaper').onclick = () => toggleModal('wallpaper', false);
+$('playBoss').onclick = () => { toggleModal('gamesModal', false); startRace({ boss: true }); }; $('closeMusic').onclick = () => toggleModal('music', false);
 $('updatesBtn').onclick = () => toggleModal('updates'); $('closeUpdates').onclick = () => toggleModal('updates', false);
 $('trophyBtn').onclick = () => toggleModal('trophies'); $('closeTrophies').onclick = () => toggleModal('trophies', false);
 $('closeResults').onclick = () => { $('results').style.display = 'none'; leaveGame(); };
@@ -1277,7 +1348,7 @@ window.addEventListener('keydown', ev => {
   if (ev.target.tagName === 'INPUT') { if (code === 'Enter' || ev.key === 'Enter') $('namerOk').onclick(); return; }
   keys[code] = true;
   if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(code)) ev.preventDefault();
-  if (code === 'Escape') { ['shop', 'build', 'board', 'birds', 'gamesModal', 'trophies', 'updates', 'music'].forEach(id => toggleModal(id, false)); return; }
+  if (code === 'Escape') { ['shop', 'build', 'board', 'birds', 'gamesModal', 'trophies', 'updates', 'music', 'pets', 'arenaModal', 'taxi', 'wallpaper'].forEach(id => toggleModal(id, false)); return; }
   if (mode === 'race' && race.me.frozenT > 0) { mash(); return; }
   if (/^Digit[1-8]$/.test(code) && save.instruments.length && mode === 'world') { playNote(+code[5] - 1); return; }
   if (anyModalOpen()) return;
@@ -1322,6 +1393,9 @@ function talkTo(n) {
 }
 function nearestInteraction() {
   const p = player.pos, sc = STAGES[save.stage].scale, list = [];
+  if (fishing) return fishingPrompt();
+  if (stealing) return { label: '🥷 Stealing... keep holding E! ' + Math.ceil(4 - stealing.t) + 's', fn: () => {} };
+  if (player.inHouse) { const near0 = (x, z, r) => dist2(x, z, p.x, p.z) < r * r; if (near0(HOUSE.door.x, HOUSE.door.z, 2.5)) return { label: 'Press E to go outside 🚪', fn: exitHouse }; if (p.z < HOUSE.z - HOUSE.w + 2.5) return { label: 'Press E to change the wallpaper 🎨', fn: () => toggleModal('wallpaper', true) }; return null; }
   const near = (x, z, r) => dist2(x, z, p.x, p.z) < r * r;
   if (player.flying) return { label: 'Press E to land ' + curBird().name + ' 🐦', fn: () => stopFlying() };
   if (save.stage === 0) {
@@ -1331,19 +1405,21 @@ function nearestInteraction() {
     for (const bs of BIRDS) if (!save.birds[bs.id] && near(bs.egg.x, bs.egg.z, 6) && Math.abs((bs.egg.y || H(bs.egg.x, bs.egg.z)) - p.y) < 5) list.push({ d: 1, label: save.stage >= 2 ? 'Press E to adopt the ' + bs.name + ' egg! 🥚' + bs.em : 'A magic egg... you must be a Toad to adopt it!', fn: () => { if (save.stage >= 2) adoptBird(bs); } });
     if (bird && !player.flying && near(bird.pos.x, bird.pos.z, 5 + sc)) {
       const cb = curBird();
-      if (cb.xp >= BIRD_READY_XP) list.push({ d: 1, label: 'Press E to ride ' + cb.name + ' and FLY! ' + bird.spec.em, fn: startFlying });
-      else list.push({ d: 1, label: 'Press E to feed ' + cb.name + ' 5 petals 🌸 (' + Math.floor(cb.xp) + '/' + BIRD_READY_XP + ')', fn: feedBird });
+      if (cb.xp >= BIRD_READY_XP) list.push({ d: 5, label: 'Press E to ride ' + cb.name + ' and FLY! ' + bird.spec.em, fn: startFlying });
+      else list.push({ d: 5, label: 'Press E to feed ' + cb.name + ' 5 petals 🌸 (' + Math.floor(cb.xp) + '/' + BIRD_READY_XP + ')', fn: feedBird });
     }
     for (const g of giants) if (near(g.x, g.z, 6 * g.s)) list.push({ d: 3, label: 'Press E to bounce on the giant mushroom! 🍄', fn: () => { player.vy = 38; beep(300, 0.3, 'sine'); setTimeout(() => beep(600, 0.3), 100); showMsg('BOING! 🍄', 1200); } });
-    for (const f of fortMeshes) if (near(f.mesh.position.x, f.mesh.position.z, 2.5 + sc)) { const it = FURNITURE.find(x => x.id === f.data.type); list.push({ d: 2, label: 'Press E to use the ' + it.name + ' ' + it.em, fn: () => { showMsg(it.em + ' ' + it.use); beep(440, 0.15); } }); }
+    for (const f of fortMeshes) if (near(f.mesh.position.x, f.mesh.position.z, 2.5 + sc + (f.data.type === 'house' ? 2 : 0))) { const it = FURNITURE.find(x => x.id === f.data.type); if (it.id === 'house') { list.push({ d: 1, label: 'Press E to go inside your Toad House 🏠', fn: () => enterHouse(f) }); continue; } list.push({ d: 2, label: 'Press E to use the ' + it.name + ' ' + it.em, fn: () => { showMsg(it.em + ' ' + it.use); beep(440, 0.15); } }); }
     if (!player.inWater) for (const pad of lilyPads) if (near(pad.position.x, pad.position.z, 3)) list.push({ d: 3, label: 'Press E to sit on the lily pad 🪷', fn: () => showMsg('🪷 You sit on the lily pad and watch the ripples. So peaceful.') });
   }
   if (player.inCave) { if (near(CAVE.x + 10, CAVE.z - 8, 4.5)) list.push({ d: 0, label: 'Press E to open the treasure chest! 🧰', fn: openCaveChest }); if (near(CAVE.x, CAVE.z + 18, 3.5)) list.push({ d: 0, label: 'Press E to swim back up to the pond 💦', fn: exitCave }); return list.sort((a, b) => a.d - b.d)[0] || null; }
   if (player.inWater && p.y < -3.5 && near(CAVE.entrance.x, CAVE.entrance.z, 4.5)) list.push({ d: 0, label: 'Press E to dive into the secret cave! 🕳️', fn: enterCave });
+  if (save.stealTarget != null && save.stage > 0) { const n = npcs[save.stealTarget]; if (n && near(n.home.x, n.home.z, 4)) list.push({ d: 0, label: '🥷 Hold E to steal ' + n.name + "'s " + save.npcPets[n.idx].em + ' (4 seconds!)', fn: () => startSteal(n) }); }
+  if (save.rod && !player.inWater && !player.flying && save.stage > 0 && fishSpot()) list.push({ d: 4, label: 'Press E to fish 🎣', fn: startFishing });
   for (const n of npcs) if (near(n.pos.x, n.pos.z, 5 + sc)) { const qq = n.quest || (save.quest && save.quest.npc === n.idx); list.push({ d: qq ? 0 : 2, label: qq ? 'Press E: ' + n.name + ' has a quest! 📜' : 'Press E to talk to ' + n.name + ' 💬', fn: () => talkTo(n) }); }
   for (const a of animals) if (near(a.pos.x, a.pos.z, 4 + sc)) list.push({ d: 2, label: 'Press E to talk to ' + a.name + ' the ' + a.kind + ' 💬', fn: () => { talkTo(a); if (a.kind === 'duck' && Math.random() < 0.3) { save.petals++; updateHUD(); showMsg('🌸 ' + a.name + ' gave you a petal!'); } } });
-  for (const b of babies) if (near(b.pos.x, b.pos.z, 3 + sc)) list.push({ d: 1, label: b.gift ? 'Press E: ' + b.name + ' dug up a treasure! 🎁' : 'Press E to pet ' + b.name + ' 💕', fn: () => { if (b.gift) { babyGift(b); return; } b.line = ['Ribbit! 💕', 'I love you!', '*happy wiggle*', 'Can we play?'][Math.floor(Math.random() * 4)]; b.lines = [b.line]; b.bubbleT = 4; b.talkT = 3; jingle([880, 1100]); showMsg('💕 ' + b.name + ' loves you!'); } });
-  if (friend && near(friend.pos.x, friend.pos.z, 4)) list.push({ d: 4, label: 'Press E to chat with ' + friend.name + ' ✨', fn: () => { friend.line = friend.lines[Math.floor(Math.random() * friend.lines.length)]; friend.bubbleT = 4; beep(900, 0.15, 'triangle'); } });
+  for (const b of babies) if (near(b.pos.x, b.pos.z, 3 + sc)) list.push({ d: b.gift ? 1 : 6, label: b.gift ? 'Press E: ' + b.name + ' dug up a treasure! 🎁' : 'Press E to pet ' + b.name + ' 💕', fn: () => { if (b.gift) { babyGift(b); return; } b.line = ['Ribbit! 💕', 'I love you!', '*happy wiggle*', 'Can we play?'][Math.floor(Math.random() * 4)]; b.lines = [b.line]; b.bubbleT = 4; b.talkT = 3; jingle([880, 1100]); showMsg('💕 ' + b.name + ' loves you!'); } });
+  if (friend && near(friend.pos.x, friend.pos.z, 4)) list.push({ d: 7, label: 'Press E to chat with ' + friend.name + ' ✨', fn: () => { friend.line = friend.lines[Math.floor(Math.random() * friend.lines.length)]; friend.bubbleT = 4; beep(900, 0.15, 'triangle'); } });
   if (!save.bestFriend && save.stage >= 1 && spriteMeet && near(spriteMeet.pos.x, spriteMeet.pos.z, 5)) list.push({ d: 0, label: 'Press E to say hello to the glowing sprite ✨', fn: meetFriend });
   list.sort((a, b) => a.d - b.d);
   return list[0] || null;
@@ -1496,20 +1572,20 @@ function gameInteraction() {
 
 // ---------------------------------------------------------------- HAMASH (hammer arena)
 function hammerDmg(stage) { return 1 + Math.floor(stage / 2); }
-function startHamash() {
-  if (save.stage === 0) { showMsg('Tadpoles are too small for Hamash! Become a toad first.'); return; }
+function startHamashWith(variant) {
   enterGame('hamash');
   hamash = { list: [], me: null, t: 0, countdown: 3.5, over: false };
   const mk = (n, isPlayer) => { const c = makeRival(n, isPlayer); Object.assign(c, { hearts: isPlayer ? 8 : 6, alive: true, cd: 0, swingT: 0, hitT: 0, kx: 0, kz: 0, think: rand(0.3, 1), fallV: 0 }); c.hammer = makeHammer(1); c.hammer.position.set(0.95, 0.7, 0.5); c.hammer.rotation.set(-0.6, 0, -0.3); c.model.add(c.hammer); return c; };
   hamash.me = mk({ name: 'YOU', stage: save.stage }, true); hamash.list.push(hamash.me);
-  for (const n of pickOpponents(6)) hamash.list.push(mk(n, false));
+  for (const n of pickOpponents(9)) hamash.list.push(mk(n, false));
+  setupArena(variant || 'classic');
   hamash.list.forEach((c, i) => {
     const a = i / hamash.list.length * Math.PI * 2;
     c.pos.set(ARENA.x + Math.cos(a) * (ARENA.r - 8), ARENA.y, ARENA.z + Math.sin(a) * (ARENA.r - 8)); c.yaw = Math.atan2(ARENA.x - c.pos.x, ARENA.z - c.pos.z);
     if (c.isPlayer) { player.yaw = c.yaw; camYaw = c.yaw; camManual = 0; }
   });
   camera.position.set(player.pos.x - Math.sin(camYaw) * 10, ARENA.y + 6, player.pos.z - Math.cos(camYaw) * 10);
-  jingle([392, 523, 659]); showMsg('🔨 HAMASH! Press E to swing your hammer. Bonk toads off the edge. Last toad standing wins!', 4000);
+  jingle([392, 523, 659]); showMsg('🔨 HAMASH · ' + ARENAS.find(a => a.id === hamash.variant).name + '! Press E to swing. Last toad standing wins!', 4000);
 }
 function swingHammer(c) {
   if (!hamash || hamash.over || !c.alive || c.cd > 0 || hamash.countdown > 0) return;
@@ -1541,6 +1617,7 @@ function knockOut(c, why, by) {
 function updateHamash(dt, t) {
   const h = hamash; h.t += dt; updateFx(dt);
   if (h.countdown > 0) { h.countdown -= dt; player.stunned = true; if (h.countdown <= 0) { player.stunned = false; showMsg('GO! 🔨', 1000); beep(880, 0.3); } }
+  updateArenaVariant(dt, t);
   const alive = h.list.filter(c => c.alive);
   for (const c of h.list) {
     if (!c.alive) continue;
@@ -1558,7 +1635,7 @@ function updateHamash(dt, t) {
       if (tg) {
         const dx = tg.pos.x - c.pos.x, dz = tg.pos.z - c.pos.z, dist = Math.hypot(dx, dz) || 0.001, reach = 2.2 + c.model.scale.x * 1.5;
         c.yaw = lerpAngle(c.yaw, Math.atan2(dx, dz), Math.min(1, dt * 6));
-        if (dist > reach) { const sp = 6.5 + c.stage * 0.8; c.pos.x += dx / dist * sp * dt; c.pos.z += dz / dist * sp * dt; c.hopT += dt; c.moving = true; }
+        if (dist > reach) { const sp = (6.5 + c.stage * 0.8) * arenaSpeedMul(c); c.pos.x += dx / dist * sp * dt; c.pos.z += dz / dist * sp * dt; c.hopT += dt; c.moving = true; }
         else if (c.cd <= 0 && Math.random() < 0.06) { swingHammer(c); c.cd = 1.5; }
       }
     }
@@ -1571,14 +1648,15 @@ function updateHamash(dt, t) {
 }
 
 // ---------------------------------------------------------------- RUNNY RACE
-function startRace() {
+function startRace(opts) {
+  opts = opts || {};
   if (save.stage === 0) { showMsg('Tadpoles are too small to race! Become a toad first.'); return; }
   enterGame('race');
-  race = { list: [], me: null, t: 0, countdown: 3.5, over: false, items: [], spawnT: 2, rainbowT: 0, rain: null };
-  const mk = (n, isPlayer, i) => { const r = makeRival(n, isPlayer); Object.assign(r, { lane: (i - 3.5) * 1.5, angle: 0, lastAngle: 0, progress: 0, slowT: 0, frozenT: 0, stunT: 0, boostT: 0, shield: false, item: null, bomb: 0, useT: rand(2, 5), finishT: null, mash: 0, passT: 0, base: 11.5 + n.stage * 1.3 + rand(-1, 1) }); return r; };
-  const opp = pickOpponents(7);
+  race = { list: [], me: null, t: 0, countdown: 3.5, over: false, items: [], spawnT: 2, rainbowT: 0, rain: null, laps: opts.boss ? 3 : TRACK.laps, boss: !!opts.boss };
+  const mk = (n, isPlayer, i) => { const r = makeRival(n, isPlayer); Object.assign(r, { lane: (i - 3.5) * 1.5, homeLane: (i - 3.5) * 1.5, angle: 0, lastAngle: 0, progress: 0, slowT: 0, frozenT: 0, stunT: 0, boostT: 0, shield: false, item: null, bomb: 0, useT: rand(2, 5), finishT: null, mash: 0, passT: 0, base: opts.boss && !isPlayer ? Math.max(STAGES[save.stage].speed, 16) * 1.1 * 1.04 : 11.5 + n.stage * 1.3 + rand(-1, 1) }); return r; };
+  const opp = opts.boss ? [npcs.slice().sort((a, b) => b.xp - a.xp)[0]] : pickOpponents(7);
   opp.forEach((n, i) => race.list.push(mk(n, false, i)));
-  race.me = mk({ name: 'YOU', stage: save.stage }, true, 3); race.list.splice(3, 0, race.me);
+  race.me = mk({ name: 'YOU', stage: save.stage }, true, 3); race.list.splice(Math.min(3, race.list.length), 0, race.me);
   race.list.forEach((r, i) => {
     r.angle = -0.06 - Math.floor(i / 2) * 0.045; r.lastAngle = r.angle; r.angle0 = r.angle; const rr = TRACK.r + r.lane;
     r.pos.set(TRACK.x + Math.cos(r.angle) * rr, 0, TRACK.z + Math.sin(r.angle) * rr); r.yaw = Math.atan2(-Math.sin(r.angle), Math.cos(r.angle));
@@ -1588,7 +1666,7 @@ function startRace() {
   for (let i = 0; i < 4; i++) spawnItem('boost', rand(0, 6.28), rand(-4, 4));
   camera.position.set(player.pos.x - Math.sin(camYaw) * 10, 6, player.pos.z - Math.cos(camYaw) * 10);
   showGear(true);
-  jingle([392, 523, 659]); showMsg('🏁 RUNNY RACE! 6 laps. Grab ⚡ boosters and ❓ boxes. Press E to use a power-up!', 4000);
+  jingle([392, 523, 659]); showMsg(opts.boss ? '👑 BOSS RACE vs ' + opp[0].name + '! 3 laps. Use every booster and power-up you can!' : '🏁 RUNNY RACE! 6 laps. Grab ⚡ boosters and ❓ boxes. Press E to use a power-up!', 4000);
 }
 function spawnItem(type, angle, lane) {
   let mesh;
@@ -1596,7 +1674,7 @@ function spawnItem(type, angle, lane) {
   else { mesh = new THREE.Group(); for (let i = 0; i < 3; i++) { const ch = new THREE.Mesh(new THREE.ConeGeometry(0.8, 1.3, 4), new THREE.MeshBasicMaterial({ color: 0x00e5ff })); ch.rotation.x = Math.PI / 2; ch.position.z = -i; mesh.add(ch); } }
   const rr = TRACK.r + lane; mesh.position.set(TRACK.x + Math.cos(angle) * rr, type === 'box' ? 1.3 : 0.35, TRACK.z + Math.sin(angle) * rr);
   if (type === 'boost') mesh.rotation.y = Math.atan2(-Math.sin(angle), Math.cos(angle));
-  scene.add(mesh); race.items.push({ type, mesh, respawn: 0 });
+  scene.add(mesh); race.items.push({ type, mesh, respawn: 0, angle, lane });
 }
 function racerMul(r) {
   let m = 1;
@@ -1654,7 +1732,7 @@ function updateRace(dt, t) {
   rc.spawnT -= dt;
   if (rc.spawnT <= 0) { rc.spawnT = rc.rainbowT > 0 ? 2.5 : 5; if (rc.items.filter(i => i.type === 'boost').length < 8) spawnItem('boost', rand(0, 6.28), rand(-4.5, 4.5)); }
   for (const it of rc.items) { if (it.respawn > 0) { it.respawn -= dt; if (it.respawn <= 0) it.mesh.visible = true; } it.mesh.rotation.y += (it.type === 'box' ? 2 : 0) * dt; }
-  const total = TRACK.laps * Math.PI * 2;
+  const total = rc.laps * Math.PI * 2;
   for (const r of rc.list) {
     r.slowT = Math.max(0, r.slowT - dt); r.stunT = Math.max(0, r.stunT - dt); r.boostT = Math.max(0, r.boostT - dt);
     if (r.frozenT > 0) { r.frozenT -= dt; if (r.frozenT <= 0 && r.isPlayer) $('frozen').style.display = 'none'; }
@@ -1673,7 +1751,7 @@ function updateRace(dt, t) {
       const ang = Math.atan2(p.z - TRACK.z, p.x - TRACK.x), d = wrapPi(ang - r.lastAngle); r.lastAngle = ang;
       if (onTrack && r.finishT == null) r.progress += d;
     } else {
-      if (r.finishT == null && rc.countdown <= 0) { const sp = r.base * mul; r.angle += sp / (TRACK.r + r.lane) * dt; r.progress = r.angle - r.angle0; r.moving = sp > 0; if (r.moving) r.hopT += dt; }
+      if (r.finishT == null && rc.countdown <= 0) { let tgtLane = r.homeLane; for (const it of rc.items) { if (!it.mesh.visible || it.type !== 'boost') continue; const da = wrapPi(it.angle - r.angle); if (da > 0.02 && da < 0.55) { tgtLane = it.lane; break; } } r.lane = lerp(r.lane, tgtLane, Math.min(1, dt * 2.5)); const sp = r.base * mul; r.angle += sp / (TRACK.r + r.lane) * dt; r.progress = r.angle - r.angle0; r.moving = sp > 0; if (r.moving) r.hopT += dt; }
       else r.moving = false;
       const rr = TRACK.r + r.lane; r.pos.set(TRACK.x + Math.cos(r.angle) * rr, 0, TRACK.z + Math.sin(r.angle) * rr); r.yaw = Math.atan2(-Math.sin(r.angle), Math.cos(r.angle));
       r.group.position.set(r.pos.x, r.moving ? Math.abs(Math.sin(r.hopT * 9)) * 0.45 : 0, r.pos.z); r.group.rotation.y = r.yaw;
@@ -1691,9 +1769,9 @@ function updateRace(dt, t) {
   }
   for (let i = rc.items.length - 1; i >= 0; i--) if (rc.items[i].respawn >= 1e9) { scene.remove(rc.items[i].mesh); rc.items.splice(i, 1); }
   const me = rc.me, order = rc.list.slice().sort((a, b) => { const ka = a.finishT != null ? -1e6 + a.finishT : -a.progress, kb = b.finishT != null ? -1e6 + b.finishT : -b.progress; return Math.abs(ka - kb) < 0.02 ? (a.isPlayer ? -1 : b.isPlayer ? 1 : 0) : ka - kb; });
-  const place = order.indexOf(me) + 1, lap = Math.min(TRACK.laps, Math.floor(Math.max(0, me.progress) / (Math.PI * 2)) + 1);
+  const place = order.indexOf(me) + 1, lap = Math.min(rc.laps, Math.floor(Math.max(0, me.progress) / (Math.PI * 2)) + 1);
   const suf = place === 1 ? 'st' : place === 2 ? 'nd' : place === 3 ? 'rd' : 'th';
-  setGameInfo('🏁 Lap <b>' + lap + '/' + TRACK.laps + '</b> · Position <b>' + place + suf + '</b>' + (me.item ? ' · ' + POWERS[me.item].em + ' ' + POWERS[me.item].name + ' (<b>E</b>)' : '') + (me.bomb > 0 ? ' · 💣 <b>' + Math.ceil(me.bomb) + 's</b> PASS IT!' : '') + (me.shield ? ' · 🛡️' : '') + (rc.rainbowT > 0 ? ' · 🌈 ' + Math.ceil(rc.rainbowT) + 's' : '') + (rc.countdown > 0 ? ' · Ready... <b>' + Math.ceil(rc.countdown) + '</b>' : ''));
+  setGameInfo((rc.boss ? '👑 BOSS RACE · ' : '🏁 ') + 'Lap <b>' + lap + '/' + rc.laps + '</b> · Position <b>' + place + suf + '</b>' + (me.item ? ' · ' + POWERS[me.item].em + ' ' + POWERS[me.item].name + ' (<b>E</b>)' : '') + (me.bomb > 0 ? ' · 💣 <b>' + Math.ceil(me.bomb) + 's</b> PASS IT!' : '') + (me.shield ? ' · 🛡️' : '') + (rc.rainbowT > 0 ? ' · 🌈 ' + Math.ceil(rc.rainbowT) + 's' : '') + (rc.countdown > 0 ? ' · Ready... <b>' + Math.ceil(rc.countdown) + '</b>' : ''));
 }
 
 // ---------------------------------------------------------------- END / LEAVE
@@ -1705,12 +1783,13 @@ function endGameClassic(result, quit) {
   let title, body = '', reward = null;
   if (quit) { title = '🏳️ You left the game'; body = 'No prizes this time. Come back and play again!'; }
   else if (kind === 'hamash') {
-    if (result.won) { title = '🏆 YOU WIN HAMASH!'; reward = { mush: 40, petals: 15, coins: 20, xp: 80 }; save.wins.hamash++; jingle([523, 659, 784, 1047, 1319]); body = '<div style="font-size:20px">Last toad standing! 🔨</div>'; }
+    if (result.won) { title = '🏆 YOU WIN HAMASH!'; reward = { mush: 40, petals: 15, coins: 20, xp: 80, stars: 1 }; save.wins.hamash++; jingle([523, 659, 784, 1047, 1319]); body = '<div style="font-size:20px">Last toad standing! 🔨</div>'; }
     else { title = '💥 Knocked out! You placed #' + result.place; reward = result.place <= 3 ? { mush: 15, petals: 5, coins: 8, xp: 30 } : { mush: 5, petals: 0, coins: 3, xp: 10 }; body = '<div>Better luck next time! Bigger toads hit harder.</div>'; }
   } else {
     const rows = race.list.slice().sort((a, b) => (a.finishT != null ? a.finishT : 1e9 - a.progress) - (b.finishT != null ? b.finishT : 1e9 - b.progress));
     const place = rows.indexOf(race.me) + 1, mul = race.rainbowT > 0 && place === 1 ? 2 : 1;
-    if (place === 1) { title = '🏆 YOU WIN THE RUNNY RACE!' + (mul === 2 ? ' 🌈 x2!' : ''); reward = { mush: 40 * mul, petals: 15 * mul, coins: 20 * mul, xp: 80 }; save.wins.race++; jingle([523, 659, 784, 1047, 1319]); }
+    if (place === 1 && race.boss) { title = '👑 YOU BEAT THE LEGENDARY TOAD!'; reward = { mush: 60, petals: 30, coins: 40, xp: 150, stars: 2 }; save.wins.boss = (save.wins.boss || 0) + 1; jingle([523, 659, 784, 1047, 1319, 1568]); }
+    else if (place === 1) { title = '🏆 YOU WIN THE RUNNY RACE!' + (mul === 2 ? ' 🌈 x2!' : ''); reward = { mush: 40 * mul, petals: 15 * mul, coins: 20 * mul, xp: 80, stars: 1 }; save.wins.race++; jingle([523, 659, 784, 1047, 1319]); }
     else { title = '🏁 You finished #' + place; reward = place <= 3 ? { mush: 15, petals: 5, coins: 8, xp: 30 } : { mush: 5, petals: 0, coins: 3, xp: 10 }; }
     body = '<table>' + rows.map((r, i) => '<tr class="' + (r.isPlayer ? 'me' : '') + '"><td>#' + (i + 1) + '</td><td>' + r.name + '</td><td>' + STAGES[r.stage].emoji + ' ' + STAGES[r.stage].name + '</td></tr>').join('') + '</table>';
   }
@@ -1722,7 +1801,7 @@ function endGameClassic(result, quit) {
 function leaveGameClassic() {
   if (mode === 'world') return;
   mode = 'world';
-  if (hamash) { for (const c of hamash.list) { if (c.hammer.parent) c.hammer.parent.remove(c.hammer); if (c.group) scene.remove(c.group); } hamash = null; }
+  if (hamash) { for (const c of hamash.list) { if (c.hammer.parent) c.hammer.parent.remove(c.hammer); if (c.group) scene.remove(c.group); } for (const m of (hamash.deco || [])) scene.remove(m); hamash = null; }
   if (race) { for (const r of race.list) if (r.group) scene.remove(r.group); for (const it of race.items) scene.remove(it.mesh); if (race.rain) scene.remove(race.rain); race = null; }
   for (const f of fxList) scene.remove(f.mesh); fxList.length = 0;
   player.pos.copy(worldReturn.pos); player.inWater = worldReturn.inWater; player.flying = false; player.vy = 0; player.kx = player.kz = 0; player.stunned = false; player.frozen = false; player.slowMul = 0; player.model.rotation.z = 0;
@@ -1737,11 +1816,11 @@ function leaveGameClassic() {
 // ---------------------------------------------------------------- COINS, REWARDS, STATS
 function applyReward(r) {
   if (!r) return;
-  save.mush += r.mush || 0; save.petals += r.petals || 0; save.coins += r.coins || 0; if (r.xp) gainXP(r.xp);
+  save.mush += r.mush || 0; save.petals += r.petals || 0; save.coins += r.coins || 0; if (r.stars) { save.stars += r.stars; } if (r.xp) gainXP(r.xp);
 }
 function rewardText(r) {
   if (!r) return '';
-  return '<div style="font-size:20px;margin-top:8px">Prizes: ' + (r.mush ? '🍄 ' + r.mush + ' &nbsp; ' : '') + (r.petals ? '🌸 ' + r.petals + ' &nbsp; ' : '') + (r.coins ? '🪙 ' + r.coins + ' &nbsp; ' : '') + (r.xp ? '⭐ ' + r.xp + ' XP' : '') + '</div>';
+  return '<div style="font-size:20px;margin-top:8px">Prizes: ' + (r.mush ? '🍄 ' + r.mush + ' &nbsp; ' : '') + (r.petals ? '🌸 ' + r.petals + ' &nbsp; ' : '') + (r.coins ? '🪙 ' + r.coins + ' &nbsp; ' : '') + (r.stars ? '⭐ ' + r.stars + ' star' + (r.stars > 1 ? 's' : '') + ' &nbsp; ' : '') + (r.xp ? '✨ ' + r.xp + ' XP' : '') + '</div>';
 }
 function stat(key, n) { save.stats[key] = (save.stats[key] || 0) + (n == null ? 1 : n); }
 
@@ -1792,6 +1871,9 @@ function renderGear(wrap) {
     };
     d.appendChild(b); grid.appendChild(d);
   }
+  const rd = document.createElement('div'); rd.className = 'item' + (save.rod ? ' equipped' : ''); rd.innerHTML = '<div class="em">🎣</div><div class="nm">Fishing Rod</div><div class="pr">Fish from any shore for coins and XP.<br>' + (save.rod ? 'Owned' : '🪙 20') + '</div>';
+  if (!save.rod) { const rb = document.createElement('button'); rb.className = 'btn'; rb.textContent = 'Buy'; rb.onclick = () => { if (save.coins < 20) { beep(150, 0.2, 'sawtooth'); showMsg('Not enough coins! 🪙'); return; } save.coins -= 20; save.rod = true; jingle([660, 880]); writeSave(); updateHUD(); renderShop(); }; rd.appendChild(rb); }
+  grid.appendChild(rd);
 }
 
 // ---------------------------------------------------------------- NPC MAGIC BIRDS
@@ -1887,7 +1969,7 @@ function buildNight() {
   fireflies.userData.cx = player.pos.x; fireflies.userData.cz = player.pos.z;
 }
 function updateNight(dt, t) {
-  save.dayT += dt; const f = dayFactor(), nf = 1 - f;
+  save.dayT += dt; const f = (hamash && hamash.variant === 'starry') ? 0 : dayFactor(), nf = 1 - f;
   hemi.intensity = 0.15 + 0.6 * f; sun.intensity = 0.12 + 0.9 * f;
   SKY.copy(DAY_SKY).lerp(NIGHT_SKY, nf); fogAir.color.copy(SKY);
   skyGroup.userData.sky.material.color.copy(new THREE.Color(0xffffff)).lerp(NIGHT_TINT, nf);
@@ -1935,7 +2017,7 @@ function playerHidden() {
 }
 function updateHeron(dt, t) {
   if (!heron) {
-    if (mode !== 'world' || save.stage === 0 || player.flying || player.inCave || photoMode || anyModalOpen()) return;
+    if (mode !== 'world' || save.stage === 0 || player.flying || player.inCave || player.inHouse || taxi || photoMode || anyModalOpen()) return;
     heronT -= dt; if (heronT > 0) return;
     heron = { group: makeHeron(), phase: 'warn', t: 0, pos: new THREE.Vector3(player.pos.x - 180, player.pos.y + 70, player.pos.z - 180) };
     heron.shadow = new THREE.Mesh(new THREE.CircleGeometry(6, 16), M(0x000000, { transparent: true, opacity: 0.35 })); heron.shadow.rotation.x = -Math.PI / 2; scene.add(heron.shadow);
@@ -2004,7 +2086,7 @@ function questTalk(n) {
   else if (q.type === 'mush' && save.mush >= q.need) { save.mush -= q.need; done = true; }
   else if ((q.type === 'hat' || q.type === 'visit') && q.have) done = true;
   if (!done) { n.line = { petals: 'Ribbit! Come back when you have ' + q.need + ' petals 🌸.', mush: 'Come back with ' + q.need + ' mushrooms 🍄, please!', hat: 'Did you find my hat yet? 🎩', visit: 'Have you been to ' + q.targetName + ' yet?' }[q.type]; n.talkT = 4; n.bubbleT = 5; return true; }
-  save.quest = null; save.questsDone++; const reward = { coins: q.coins, xp: 40 };
+  save.quest = null; save.questsDone++; const reward = { coins: q.coins, xp: 40, stars: 1 };
   if (Math.random() < 0.25 && CLOTHES.some(c => !save.owned.includes(c.id))) goldenReward(0);
   applyReward(reward); n.line = 'THANK YOU! You are the best toad ever! 💛'; n.talkT = 5; n.bubbleT = 6; jingle([523, 659, 784, 1047]); spawnStars(n.pos);
   showMsg('📜 Quest complete! +' + q.coins + ' 🪙 +40 XP', 3500); writeSave(); updateHUD(); return true;
@@ -2051,6 +2133,14 @@ const BADGES = [
   { id: 'photo', em: '📸', name: 'Say Cheese', desc: 'Took a photo in Photo mode', test: () => (save.stats.photos || 0) >= 1 },
   { id: 'cave', em: '🕳️', name: 'Cave Explorer', desc: 'Found the secret cave', test: () => (save.stats.cave || 0) >= 1 },
   { id: 'music', em: '🎵', name: 'Toad Musician', desc: 'Played 50 notes', test: () => (save.stats.notes || 0) >= 50 },
+  { id: 'pet1', em: '🐾', name: 'Pet Parent', desc: 'Hatched your first pet', test: () => save.pets.length >= 1 },
+  { id: 'pet10', em: '👑', name: 'Legendary Pet', desc: 'Own a 10-star pet', test: () => save.pets.some(p => p.rarity >= 10) },
+  { id: 'thief', em: '🥷', name: 'Sneaky Toad', desc: 'Stole a pet from a toad friend', test: () => (save.stats.steals || 0) >= 1 },
+  { id: 'boss', em: '👑', name: 'Boss Beater', desc: 'Won the Boss Race', test: () => (save.wins.boss || 0) >= 1 },
+  { id: 'fisher', em: '🎣', name: 'Fisher Toad', desc: 'Caught 10 fish', test: () => (save.stats.fish || 0) >= 10 },
+  { id: 'house', em: '🏠', name: 'Home Sweet Home', desc: 'Went inside your Toad House', test: () => (save.stats.house || 0) >= 1 },
+  { id: 'arenas', em: '🔨', name: 'Arena Master', desc: 'Played all 4 Hamash arenas', test: () => (save.stats.arenas || []).length >= 4 },
+  { id: 'explorer', em: '🗺️', name: 'World Explorer', desc: 'Discovered every landmark', test: () => save.discovered.length >= 14 },
 ];
 function earnedBadges() { return BADGES.filter(b => { try { return b.test(); } catch (e) { return false; } }); }
 function checkBadges() {
@@ -2076,7 +2166,7 @@ function finishGame(res) {
   if (!curGame || curGame.over) return;
   curGame.over = true; player.stunned = true;
   if (res.reward) { applyReward(res.reward); res.body = (res.body || '') + rewardText(res.reward); }
-  if (res.win) { save.wins[mode] = (save.wins[mode] || 0) + 1; jingle([523, 659, 784, 1047, 1319]); }
+  if (res.win) { save.wins[mode] = (save.wins[mode] || 0) + 1; save.stars++; res.body = (res.body || '') + '<div>⭐ +1 star for winning! Hatch a pet in 🐾 Collect Pet.</div>'; jingle([523, 659, 784, 1047, 1319]); }
   writeSave(); updateHUD();
   $('resultsTitle').textContent = res.title; $('resultsBody').innerHTML = res.body || '';
   setTimeout(() => { $('results').style.display = 'flex'; }, res.quit ? 0 : 1500);
@@ -2487,6 +2577,329 @@ function renderMusic() {
   $('musicHint').textContent = save.instruments.length ? 'Press keys 1 to 8 (or the buttons) to play. Nearby toads dance along! Notes played: ' + (save.stats.notes || 0) : 'Buy an instrument with coins to start playing!';
 }
 
+// ================================================================ UPDATE 6: stars & pets, arenas, house, weather, taxi, fishing, boss race
+// ---------------------------------------------------------------- STARS
+function addStar(n, why) { save.stars += n; showMsg('⭐ +' + n + ' star' + (n > 1 ? 's' : '') + ' ' + (why || '') + ' Open 🐾 Collect Pet to hatch a pet!', 3500); jingle([880, 1100, 1320]); updateHUD(); }
+const DISCOVER = [
+  { id: 'circle', name: 'the Stone Circle', x: CIRCLE_POS.x, z: CIRCLE_POS.z, r: 40 }, { id: 'forest', name: 'the Giant Mushroom Forest', x: FOREST_POS.x, z: FOREST_POS.z, r: 60 },
+  { id: 'lily', name: 'Lily Lake', x: -430, z: 320, r: 60 }, { id: 'crystal', name: 'Crystal Lake', x: 510, z: -400, r: 70 }, { id: 'petal', name: 'Petal Lake', x: 260, z: 560, r: 55 }, { id: 'moon', name: 'Moon Lake', x: -560, z: -510, r: 75 },
+  { id: 'arena', name: 'the Hamash Arena', x: ARENA.x, z: ARENA.z, r: 60 }, { id: 'track', name: 'the Race Track', x: TRACK.x, z: TRACK.z, r: 90 }, { id: 'field', name: 'the Fly Field', x: FIELD.x, z: FIELD.z, r: 40 },
+  { id: 'isl1', name: 'a Sky Island', x: 120, z: -520, r: 45, y: 70 }, { id: 'isl2', name: 'the Western Sky Island', x: -520, z: 60, r: 40, y: 95 }, { id: 'isl3', name: 'the Eastern Sky Island', x: 560, z: 330, r: 50, y: 110 }, { id: 'isl4', name: 'the Highest Sky Island', x: -150, z: 620, r: 35, y: 130 },
+  { id: 'corner', name: 'the Far Corner of the World', x: 720, z: 720, r: 60 },
+];
+let discoverT = 0;
+function updateDiscover(dt) {
+  discoverT -= dt; if (discoverT > 0 || mode !== 'world' || save.stage === 0) return; discoverT = 1;
+  for (const d of DISCOVER) if (!save.discovered.includes(d.id) && dist2(d.x, d.z, player.pos.x, player.pos.z) < d.r * d.r && (d.y == null || Math.abs(player.pos.y - d.y) < 15)) { save.discovered.push(d.id); addStar(1, 'for discovering ' + d.name + '!'); writeSave(); return; }
+}
+
+// ---------------------------------------------------------------- PETS
+const PET_TYPES = [
+  { r: 1, em: '🐞', name: 'Ladybug' }, { r: 1, em: '🐛', name: 'Caterpillar' }, { r: 2, em: '🐝', name: 'Bee' }, { r: 2, em: '🐜', name: 'Ant' },
+  { r: 3, em: '🦋', name: 'Butterfly' }, { r: 3, em: '🐌', name: 'Racing Snail' }, { r: 4, em: '🐢', name: 'Turtle' }, { r: 4, em: '🐭', name: 'Mouse' },
+  { r: 5, em: '🦔', name: 'Hedgehog' }, { r: 5, em: '🐰', name: 'Bunny' }, { r: 6, em: '🦊', name: 'Fox' }, { r: 6, em: '🦉', name: 'Owl' },
+  { r: 7, em: '🦄', name: 'Unicorn' }, { r: 7, em: '🐧', name: 'Penguin' }, { r: 8, em: '🐉', name: 'Baby Dragon' }, { r: 8, em: '🦚', name: 'Peacock' },
+  { r: 9, em: '🌟', name: 'Star Sprite' }, { r: 9, em: '🔮', name: 'Crystal Cat' }, { r: 10, em: '👑', name: 'Golden Dragon' }, { r: 10, em: '🌈', name: 'Rainbow Phoenix' },
+];
+const RARITY_W = [25, 18, 14, 11, 9, 7, 6, 5, 3, 2];
+function rollRarity(min, max) { min = min || 1; max = max || 10; let tot = 0; for (let i = min; i <= max; i++) tot += RARITY_W[i - 1]; let x = Math.random() * tot; for (let i = min; i <= max; i++) { x -= RARITY_W[i - 1]; if (x <= 0) return i; } return max; }
+function randomPet(min, max) { const r = rollRarity(min, max), opts = PET_TYPES.filter(p => p.r === r), tp = opts[Math.floor(Math.random() * opts.length)]; return { id: 'p' + Date.now().toString(36) + Math.floor(Math.random() * 1e6).toString(36), em: tp.em, type: tp.name, name: tp.name, rarity: r }; }
+function petHue(r) { return r <= 3 ? 0.3 : r <= 6 ? 0.58 : r <= 8 ? 0.78 : r === 9 ? 0.9 : 0.13; }
+function petStars(r) { return '⭐'.repeat(r); }
+function makePetModel(pet) {
+  const g = new THREE.Group(), col = new THREE.Color().setHSL(petHue(pet.rarity), 0.85, pet.rarity === 10 ? 0.55 : 0.6);
+  const body = new THREE.Mesh(new THREE.SphereGeometry(0.45, 10, 8), pet.rarity >= 9 ? new THREE.MeshBasicMaterial({ color: col }) : M(col.getHex())); body.position.y = 0.45; g.add(body);
+  for (const sx of [-1, 1]) { const e = new THREE.Mesh(new THREE.SphereGeometry(0.1, 6, 5), M(0xffffff)); e.position.set(sx * 0.17, 0.55, 0.38); g.add(e); const pp = new THREE.Mesh(new THREE.SphereGeometry(0.05, 6, 5), M(0x111111)); pp.position.set(sx * 0.17, 0.56, 0.46); g.add(pp); }
+  for (const sx of [-1, 1]) { const f = new THREE.Mesh(new THREE.SphereGeometry(0.1, 6, 5), M(col.getHex())); f.position.set(sx * 0.25, 0.08, 0.1); g.add(f); }
+  if (pet.rarity >= 7) for (const sx of [-1, 1]) { const w = new THREE.Mesh(new THREE.CircleGeometry(0.35, 10), M(0xffffff, { transparent: true, opacity: 0.8, side: THREE.DoubleSide })); w.position.set(sx * 0.5, 0.6, -0.1); w.rotation.y = sx * 0.5; g.add(w); g.userData.wings = g.userData.wings || []; g.userData.wings.push({ m: w, sx }); }
+  if (pet.rarity >= 9) { const halo = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.04, 6, 16), new THREE.MeshBasicMaterial({ color: 0xffe066 })); halo.position.y = 1.05; halo.rotation.x = Math.PI / 2; g.add(halo); }
+  if (pet.rarity === 10) { const l = new THREE.PointLight(0xffd700, 0.7, 6); l.position.y = 0.6; g.add(l); }
+  return g;
+}
+let activePet = null;
+function spawnActivePet() {
+  if (activePet) { scene.remove(activePet.group); activePet = null; }
+  const pet = save.pets.find(p => p.id === save.activePet); if (!pet) return;
+  const g = makePetModel(pet); scene.add(g);
+  activePet = { group: g, pos: player.pos.clone().add(v(-2, 0, 1)), name: pet.name, kind: 'pet', pet, bubble: null, lines: ['*' + pet.type.toLowerCase() + ' noises*', 'I love adventures!', 'Best toad ever!'], line: '' };
+}
+function updateActivePet(dt, t) {
+  if (!activePet) return;
+  const a = activePet, tx = player.pos.x - Math.cos(player.yaw) * 2.2 - Math.sin(player.yaw) * 1.5, tz = player.pos.z + Math.sin(player.yaw) * 2.2 - Math.cos(player.yaw) * 1.5, dx = tx - a.pos.x, dz = tz - a.pos.z, d = Math.hypot(dx, dz);
+  if (d > 40 || player.flying || mode !== 'world') { a.pos.x = tx; a.pos.z = tz; } else if (d > 1) { const sp = Math.min(d * 3, 22); a.pos.x += dx / d * sp * dt; a.pos.z += dz / d * sp * dt; a.group.rotation.y = Math.atan2(dx, dz); }
+  const fly = a.pet.rarity >= 7, inW = pondAt(a.pos.x, a.pos.z) && !onIce(a.pos.x, a.pos.z) && !player.inCave && !player.inHouse;
+  a.pos.y = (inW ? 0 : groundY(a.pos.x, a.pos.z, player.pos.y)) + (fly ? 1.4 + Math.sin(t * 3) * 0.3 : 0) + (player.flying ? player.pos.y - groundY(a.pos.x, a.pos.z, player.pos.y) : 0);
+  a.group.position.copy(a.pos); a.group.visible = mode === 'world';
+  if (a.group.userData.wings) for (const w of a.group.userData.wings) w.m.rotation.y = w.sx * (0.5 + Math.sin(t * 14) * 0.5);
+}
+function hatchPet() {
+  if (save.stars < 1) { showMsg('You need a ⭐ star to hatch a pet! Win games, explore new places, or help toad friends.'); beep(150, 0.2, 'sawtooth'); return; }
+  save.stars--; const pet = randomPet(1, 10); save.pets.push(pet); if (!save.activePet) { save.activePet = pet.id; spawnActivePet(); }
+  jingle(pet.rarity >= 8 ? [523, 659, 784, 1047, 1319, 1568] : [660, 880, 1100]);
+  showMsg('🥚 It hatched! A <b>' + pet.em + ' ' + pet.type + '</b> · ' + petStars(pet.rarity) + (pet.rarity >= 9 ? ' · LEGENDARY!' : pet.rarity >= 7 ? ' · Rare!' : ''), 4500);
+  stat('petsHatched'); writeSave(); updateHUD(); renderPets(); checkBadges();
+}
+function renderPets() {
+  $('petStars').textContent = save.stars;
+  const shelf = $('petShelf'); shelf.innerHTML = '';
+  if (!save.pets.length) shelf.innerHTML = '<div class="pr" style="text-align:center">Your shelf is empty. Hatch a pet with a ⭐ star!</div>';
+  for (const pet of save.pets.slice().sort((a, b) => b.rarity - a.rarity)) {
+    const d = document.createElement('div'); d.className = 'item' + (save.activePet === pet.id ? ' equipped' : '');
+    d.innerHTML = '<div class="em">' + pet.em + '</div><div class="nm">' + pet.name + '</div><div class="pr">' + pet.type + '<br>' + petStars(pet.rarity) + '</div>';
+    const b = document.createElement('button'); b.className = 'btn' + (save.activePet === pet.id ? ' green' : ''); b.textContent = save.activePet === pet.id ? 'With you' : 'Take along';
+    b.onclick = () => { save.activePet = save.activePet === pet.id ? null : pet.id; spawnActivePet(); writeSave(); renderPets(); beep(600, 0.1); };
+    d.appendChild(b);
+    const rn = document.createElement('button'); rn.className = 'btn blue'; rn.textContent = 'Name'; rn.style.marginLeft = '4px';
+    rn.onclick = () => askName('Name your ' + pet.type, pet.em + ' What should we call it?', null, (name) => { pet.name = name; writeSave(); renderPets(); if (save.activePet === pet.id) spawnActivePet(); });
+    d.appendChild(rn); shelf.appendChild(d);
+  }
+  const steal = $('stealList'); steal.innerHTML = '';
+  const rows = npcs.map(n => ({ n, pet: save.npcPets[n.idx] })).filter(x => x.pet).sort((a, b) => b.pet.rarity - a.pet.rarity);
+  for (const { n, pet } of rows) {
+    const d = document.createElement('div'); d.className = 'bird-row'; const dist = Math.round(Math.sqrt(dist2(n.home.x, n.home.z, player.pos.x, player.pos.z)));
+    d.innerHTML = '<div class="em">' + pet.em + '</div><div class="info"><div class="nm">' + n.name + "'s " + pet.type + ' ' + petStars(pet.rarity) + '</div>Kept on a nest ' + dist + ' hops away' + (save.stealTarget === n.idx ? ' · 🎯 marked on your map' : '') + '</div>';
+    const b = document.createElement('button'); b.className = 'btn red'; b.textContent = save.stealTarget === n.idx ? 'Cancel' : '🥷 Steal';
+    b.onclick = () => { save.stealTarget = save.stealTarget === n.idx ? null : n.idx; writeSave(); renderPets(); if (save.stealTarget != null) { toggleModal('pets', false); showMsg('🥷 Sneak to ' + n.name + "'s nest (🎯 on the map) and hold E for 4 seconds. If " + n.name + ' bonks you first, you fail!', 5000); } };
+    d.appendChild(b); steal.appendChild(d);
+  }
+}
+// NPC pets, nests, stealing, and hammer-happy toads
+let stealing = null;
+function assignNpcPets() {
+  npcs.forEach(n => { if (!save.npcPets[n.idx]) save.npcPets[n.idx] = randomPet(1, 10); });
+}
+function buildNests() {
+  for (const n of npcs) {
+    n.home = n.pos.clone(); n.nest = new THREE.Group();
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(1.4, 0.45, 8, 16), M(0x8b5a2b)); ring.rotation.x = -Math.PI / 2; n.nest.add(ring);
+    n.nest.position.set(n.home.x, H(n.home.x, n.home.z) + 0.3, n.home.z); scene.add(n.nest); refreshNestPet(n);
+    n.hammer = makeHammer(0.8); n.hammer.position.set(0.95, 0.7, 0.5); n.hammer.rotation.set(-0.6, 0, -0.3); n.model.add(n.hammer);
+  }
+}
+function refreshNestPet(n) { if (n.nestPet) n.nest.remove(n.nestPet); const pet = save.npcPets[n.idx]; if (!pet) return; n.nestPet = makePetModel(pet); n.nestPet.scale.setScalar(0.8); n.nest.add(n.nestPet); }
+function startSteal(n) {
+  if (stealing) return;
+  stealing = { n, t: 0, sx: player.pos.x, sz: player.pos.z }; n.alert = 14; n.line = "HEY! That's MY pet! Stop, thief! ‼️"; n.bubbleT = 6;
+  showMsg('‼️ ' + n.name + ' noticed you! Hold E... they are running over with the hammer!', 3000); beep(200, 0.3, 'sawtooth', 0.08);
+}
+function updateSteal(dt) {
+  if (!stealing) return; const s = stealing, n = s.n;
+  if (!keys.KeyE || dist2(player.pos.x, player.pos.z, s.sx, s.sz) > 6) { stealing = null; showMsg('🥷 You let go. The pet is still on the nest.', 2000); return; }
+  s.t += dt;
+  if (s.t >= 4) { const pet = save.npcPets[n.idx]; save.pets.push(pet); save.npcPets[n.idx] = randomPet(1, 3); refreshNestPet(n); save.stealTarget = null; stealing = null; stat('steals'); jingle([523, 659, 784, 1047]); showMsg('🥷 You stole ' + n.name + "'s " + pet.em + ' ' + pet.type + ' ' + petStars(pet.rarity) + '! It is on your shelf now.', 4500); n.line = 'Nooo, my pet! 😭 I will find a new one...'; n.bubbleT = 5; n.alert = 0; writeSave(); updateHUD(); checkBadges(); }
+}
+function npcBonk(n, playful) {
+  const dx = player.pos.x - n.pos.x, dz = player.pos.z - n.pos.z, d = Math.hypot(dx, dz) || 1;
+  n.swingT = 0.3; player.kx = dx / d * 14; player.kz = dz / d * 14; player.vy = 6; spawnStars(player.pos); beep(110, 0.2, 'sawtooth', 0.1);
+  if (stealing && stealing.n === n) { stealing = null; const lost = Math.min(3, save.coins); save.coins -= lost; showMsg('💥 ' + n.name + ' bonked you! The steal FAILED' + (lost ? ' and you dropped ' + lost + ' 🪙' : '') + '. Try again when they are far away!', 4000); n.alert = 0; n.line = 'Hands off my pet! 😤'; n.bubbleT = 4; updateHUD(); }
+  else if (n.alert > 0) { showMsg('💥 ' + n.name + ' bonked you! Run!', 1500); }
+  else showMsg('💥 BOINK! ' + n.name + ' bonked you for fun. ' + ['Ha ha!', 'Gotcha!', 'Just playing!'][Math.floor(Math.random() * 3)], 2000);
+}
+function updateNpcHammers(n, dt, t) {
+  if (n.swingT > 0) { n.swingT -= dt; n.hammer.rotation.x = -1.5 + (1 - n.swingT / 0.3) * 2.4; } else n.hammer.rotation.x = lerp(n.hammer.rotation.x, -0.6, Math.min(1, dt * 8));
+  n.bonkCd = Math.max(0, (n.bonkCd || 0) - dt);
+  const d = Math.hypot(player.pos.x - n.pos.x, player.pos.z - n.pos.z);
+  if (n.alert > 0) {
+    n.alert -= dt; n.moving = false;
+    if (d > 2.4) { const dx = player.pos.x - n.pos.x, dz = player.pos.z - n.pos.z; n.pos.x += dx / d * 11 * dt; n.pos.z += dz / d * 11 * dt; n.yaw = Math.atan2(dx, dz); n.hopT += dt; n.moving = true; }
+    else if (n.bonkCd <= 0 && mode === 'world' && !player.inCave && !player.inHouse) { n.bonkCd = 1.4; npcBonk(n); }
+    if (n.alert <= 0) { n.line = 'Hmph. Stay away from my nest!'; n.bubbleT = 3; n.target = null; }
+    return true;
+  }
+  if (mode === 'world' && !player.inWater && d < 3) { n.nearT = (n.nearT || 0) + dt; if (n.nearT > 5 && n.bonkCd <= 0) { n.nearT = 0; n.bonkCd = 12; if (Math.random() < 0.3) npcBonk(n, true); } } else n.nearT = 0;
+  return false;
+}
+
+// ---------------------------------------------------------------- HAMASH ARENAS
+const ARENAS = [
+  { id: 'classic', name: 'Classic', em: '🔨', desc: 'The big round arena. Bonk toads off the edge!' },
+  { id: 'watery', name: 'Watery', em: '💧', desc: 'Ponds all over the arena. Water slows you down, and if you stay in too long you sink and lose a heart!' },
+  { id: 'survive', name: 'Survive Life', em: '☄️', desc: 'Disasters rain down: boulders, lightning, and quakes. Smack and survive!' },
+  { id: 'starry', name: 'Starry Zoom', em: '🌟', desc: 'A night arena where stars fall. Catch stars for XP while you fight!' },
+];
+function startHamash() { if (save.stage === 0) { showMsg('Tadpoles are too small for Hamash! Become a toad first.'); return; } renderArenas(); toggleModal('arenaModal', true); }
+function renderArenas() {
+  const wrap = $('arenaList'); wrap.innerHTML = '';
+  for (const a of ARENAS) { const d = document.createElement('div'); d.className = 'gcard'; d.innerHTML = '<div class="em">' + a.em + '</div><div style="flex:1"><div class="nm">' + a.name + '</div><p>' + a.desc + '</p></div>'; const b = document.createElement('button'); b.className = 'btn red'; b.textContent = 'Play'; b.onclick = () => { toggleModal('arenaModal', false); startHamashWith(a.id); }; d.appendChild(b); wrap.appendChild(d); }
+}
+function setupArena(variant) {
+  const h = hamash; h.variant = variant; h.deco = []; h.puddles = []; h.disasters = []; h.stars = []; h.spawnT = 2;
+  if (!save.stats.arenas) save.stats.arenas = []; if (!save.stats.arenas.includes(variant)) save.stats.arenas.push(variant);
+  const add = (m) => { scene.add(m); h.deco.push(m); return m; };
+  if (variant === 'watery') {
+    for (let i = 0; i < 6; i++) { const a = i / 6 * 6.283 + 0.4, r = 14 + (i % 2) * 14, x = ARENA.x + Math.cos(a) * r, z = ARENA.z + Math.sin(a) * r, pr = rand(5, 8); const m = add(new THREE.Mesh(new THREE.CircleGeometry(pr, 20), M(0x3aa0e0, { transparent: true, opacity: 0.75 }))); m.rotation.x = -Math.PI / 2; m.position.set(x, ARENA.y + 0.06, z); h.puddles.push({ x, z, r: pr, mesh: m }); }
+  }
+  if (variant === 'starry') {
+    const floor = add(new THREE.Mesh(new THREE.CircleGeometry(ARENA.r - 0.5, 40), M(0x1a1f55))); floor.rotation.x = -Math.PI / 2; floor.position.set(ARENA.x, ARENA.y + 0.05, ARENA.z);
+    for (let i = 0; i < 40; i++) { const a = rand(0, 6.283), r = rand(0, ARENA.r - 2); const d = add(new THREE.Mesh(new THREE.CircleGeometry(rand(0.2, 0.5), 6), new THREE.MeshBasicMaterial({ color: 0xffe066 }))); d.rotation.x = -Math.PI / 2; d.position.set(ARENA.x + Math.cos(a) * r, ARENA.y + 0.07, ARENA.z + Math.sin(a) * r); }
+  }
+  if (variant === 'survive') { for (let i = 0; i < 4; i++) { const a = i / 4 * 6.283; const rock = add(new THREE.Mesh(new THREE.DodecahedronGeometry(2, 0), M(0x666666))); rock.position.set(ARENA.x + Math.cos(a) * (ARENA.r + 6), ARENA.y - 1, ARENA.z + Math.sin(a) * (ARENA.r + 6)); } }
+}
+function arenaSpeedMul(c) { const h = hamash; if (!h || h.variant !== 'watery') return 1; for (const p of h.puddles) if (dist2(p.x, p.z, c.pos.x, c.pos.z) < p.r * p.r) return 0.45; return 1; }
+function updateArenaVariant(dt, t) {
+  const h = hamash; if (!h || h.over) return;
+  const alive = h.list.filter(c => c.alive);
+  if (h.variant === 'watery') {
+    for (const c of alive) {
+      const inP = h.puddles.some(p => dist2(p.x, p.z, c.pos.x, c.pos.z) < p.r * p.r);
+      c.puddleT = inP ? (c.puddleT || 0) + dt : 0;
+      if (c.isPlayer) player.slowMul = inP ? 0.45 : 0;
+      if (c.puddleT > 2.2) { c.puddleT = 0; c.hearts -= 1; c.hitT = 0.6; spawnStars(c.pos, 0x3aa0e0); beep(180, 0.3, 'sine'); const dx = c.pos.x - ARENA.x, dz = c.pos.z - ARENA.z, d = Math.hypot(dx, dz) || 1; if (c.isPlayer) { player.kx = -dx / d * 12; player.kz = -dz / d * 12; player.vy = 7; showMsg('💦 You sank in the pond! -1 ❤️', 1500); } else { c.kx = -dx / d * 12; c.kz = -dz / d * 12; } if (c.hearts <= 0) knockOut(c, 'sank in a pond!'); }
+    }
+    for (const p of h.puddles) p.mesh.material.opacity = 0.65 + Math.sin(t * 2 + p.x) * 0.1;
+  }
+  if (h.variant === 'survive' && h.countdown <= 0) {
+    h.spawnT -= dt;
+    if (h.spawnT <= 0) {
+      h.spawnT = rand(1.6, 2.8); const kind = Math.random() < 0.7 ? 'rock' : 'bolt';
+      let x, z; if (Math.random() < 0.5 && alive.length) { const tg = alive[Math.floor(Math.random() * alive.length)]; x = tg.pos.x + rand(-3, 3); z = tg.pos.z + rand(-3, 3); } else { const a = rand(0, 6.283), r = rand(0, ARENA.r - 4); x = ARENA.x + Math.cos(a) * r; z = ARENA.z + Math.sin(a) * r; }
+      const ring = new THREE.Mesh(new THREE.RingGeometry(3.2, 4.2, 24), new THREE.MeshBasicMaterial({ color: kind === 'rock' ? 0xff3d00 : 0xffe066, transparent: true, opacity: 0.8, side: THREE.DoubleSide })); ring.rotation.x = -Math.PI / 2; ring.position.set(x, ARENA.y + 0.1, z); scene.add(ring); h.deco.push(ring);
+      const rock = kind === 'rock' ? new THREE.Mesh(new THREE.DodecahedronGeometry(1.8, 0), M(0x777777)) : new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.9, 40, 6), new THREE.MeshBasicMaterial({ color: 0xffe066, transparent: true, opacity: 0.9 }));
+      rock.position.set(x, ARENA.y + 40, z); rock.visible = false; scene.add(rock); h.deco.push(rock);
+      h.disasters.push({ kind, x, z, ring, rock, t: 0 });
+    }
+    for (let i = h.disasters.length - 1; i >= 0; i--) {
+      const d = h.disasters[i]; d.t += dt; d.ring.scale.setScalar(1 + Math.sin(d.t * 10) * 0.08);
+      if (d.t > 1.3 && !d.hit) {
+        d.rock.visible = true; const k = Math.min(1, (d.t - 1.3) / 0.35); d.rock.position.y = d.kind === 'rock' ? ARENA.y + 40 - 39 * k : ARENA.y + 20;
+        if (k >= 1) {
+          d.hit = true; beep(80, 0.4, 'sawtooth', 0.15); spawnStars(v(d.x, ARENA.y, d.z), d.kind === 'rock' ? 0x999999 : 0xffe066);
+          for (const c of alive) { const dx = c.pos.x - d.x, dz = c.pos.z - d.z, dist = Math.hypot(dx, dz) || 1; if (dist < 4.5) { c.hearts -= 2; c.hitT = 0.8; if (c.isPlayer) { player.kx = dx / dist * 18; player.kz = dz / dist * 18; player.vy = 8; showMsg(d.kind === 'rock' ? '☄️ BOULDER! -2 ❤️' : '⚡ ZAP! -2 ❤️', 1500); } else { c.kx = dx / dist * 18; c.kz = dz / dist * 18; } if (c.hearts <= 0) knockOut(c, d.kind === 'rock' ? 'got squished by a boulder!' : 'got zapped!'); } }
+        }
+      }
+      if (d.t > 3.5) { scene.remove(d.ring); scene.remove(d.rock); h.disasters.splice(i, 1); }
+    }
+  }
+  if (h.variant === 'starry' && h.countdown <= 0) {
+    h.spawnT -= dt;
+    if (h.spawnT <= 0 && h.stars.length < 10) { h.spawnT = 1.4; const a = rand(0, 6.283), r = rand(2, ARENA.r - 4); const m = new THREE.Mesh(new THREE.OctahedronGeometry(0.7), new THREE.MeshBasicMaterial({ color: 0xffe066 })); m.position.set(ARENA.x + Math.cos(a) * r, ARENA.y + 25, ARENA.z + Math.sin(a) * r); scene.add(m); h.deco.push(m); h.stars.push({ mesh: m, x: m.position.x, z: m.position.z, vy: 0 }); }
+    for (let i = h.stars.length - 1; i >= 0; i--) {
+      const s = h.stars[i]; if (s.mesh.position.y > ARENA.y + 1.2) { s.vy -= 30 * dt; s.mesh.position.y = Math.max(ARENA.y + 1.2, s.mesh.position.y + s.vy * dt); } else s.mesh.position.y = ARENA.y + 1.2 + Math.sin(t * 3 + s.x) * 0.2;
+      s.mesh.rotation.y = t * 3; let taken = false;
+      for (const c of alive) { if (dist2(s.x, s.z, c.pos.x, c.pos.z) < 2.2 * 2.2 && s.mesh.position.y < ARENA.y + 3) { taken = true; if (c.isPlayer) { gainXP(5); stat('arenaStars'); beep(1200, 0.1, 'triangle'); showMsg('🌟 +5 XP', 600); } break; } }
+      if (taken) { scene.remove(s.mesh); h.stars.splice(i, 1); }
+    }
+  }
+}
+
+// ---------------------------------------------------------------- TOAD HOUSE
+const HOUSE = { x: 480, z: -660, floorY: -120, w: 8 };
+const WALLPAPERS = [{ id: 'stripes', name: 'Candy Stripes', a: '#ffd1e8', b: '#fff5fa' }, { id: 'dots', name: 'Polka Dots', a: '#c8f0ff', b: '#3b82f6' }, { id: 'stars', name: 'Night Stars', a: '#1a237e', b: '#ffe066' }, { id: 'flowers', name: 'Flower Garden', a: '#e8ffd6', b: '#ff6fb5' }];
+let houseGroup = null, houseWalls = [];
+function wallpaperTexture(wp) {
+  const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d'); g.fillStyle = wp.a; g.fillRect(0, 0, 128, 128); g.fillStyle = wp.b;
+  if (wp.id === 'stripes') for (let i = 0; i < 128; i += 32) g.fillRect(i, 0, 14, 128);
+  if (wp.id === 'dots') for (let y = 16; y < 128; y += 32) for (let x = 16; x < 128; x += 32) { g.beginPath(); g.arc(x, y, 7, 0, 6.3); g.fill(); }
+  if (wp.id === 'stars') for (let i = 0; i < 14; i++) { const x = (i * 37) % 128, y = (i * 53) % 128; g.beginPath(); g.moveTo(x, y - 6); g.lineTo(x + 2, y - 2); g.lineTo(x + 6, y); g.lineTo(x + 2, y + 2); g.lineTo(x, y + 6); g.lineTo(x - 2, y + 2); g.lineTo(x - 6, y); g.lineTo(x - 2, y - 2); g.fill(); }
+  if (wp.id === 'flowers') for (let y = 20; y < 128; y += 40) for (let x = 20; x < 128; x += 40) { for (let k = 0; k < 5; k++) { const a = k / 5 * 6.283; g.beginPath(); g.arc(x + Math.cos(a) * 6, y + Math.sin(a) * 6, 4, 0, 6.3); g.fill(); } g.fillStyle = '#ffe066'; g.beginPath(); g.arc(x, y, 3, 0, 6.3); g.fill(); g.fillStyle = wp.b; }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(4, 2); return t;
+}
+function buildHouse() {
+  houseGroup = new THREE.Group(); const W = HOUSE.w, y0 = HOUSE.floorY;
+  const floor = new THREE.Mesh(new THREE.BoxGeometry(W * 2, 0.3, W * 2), M(0xc9a26b)); floor.position.set(HOUSE.x, y0 - 0.15, HOUSE.z); floor.receiveShadow = true; houseGroup.add(floor);
+  const ceil = new THREE.Mesh(new THREE.BoxGeometry(W * 2, 0.3, W * 2), M(0xfff8e1)); ceil.position.set(HOUSE.x, y0 + 7, HOUSE.z); houseGroup.add(ceil);
+  houseWalls = [];
+  for (const [dx, dz, ry] of [[0, -1, 0], [0, 1, Math.PI], [-1, 0, Math.PI / 2], [1, 0, -Math.PI / 2]]) { const wall = new THREE.Mesh(new THREE.PlaneGeometry(W * 2, 7), new THREE.MeshLambertMaterial({ color: 0xffffff })); wall.position.set(HOUSE.x + dx * W, y0 + 3.5, HOUSE.z + dz * W); wall.rotation.y = ry; houseGroup.add(wall); houseWalls.push(wall); }
+  const win = new THREE.Mesh(new THREE.PlaneGeometry(3.5, 2.6), new THREE.MeshBasicMaterial({ color: 0x8fd3ff })); win.position.set(HOUSE.x - W + 0.05, y0 + 4, HOUSE.z - 2); win.rotation.y = Math.PI / 2; houseGroup.add(win);
+  const sunW = new THREE.Mesh(new THREE.CircleGeometry(0.5, 12), new THREE.MeshBasicMaterial({ color: 0xffe066 })); sunW.position.set(HOUSE.x - W + 0.08, y0 + 4.8, HOUSE.z - 3); sunW.rotation.y = Math.PI / 2; houseGroup.add(sunW);
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(0.15, 2.9, 3.8), M(0xffffff)); frame.position.set(HOUSE.x - W + 0.02, y0 + 4, HOUSE.z - 2); houseGroup.add(frame);
+  const door = new THREE.Mesh(new THREE.BoxGeometry(2.2, 3.6, 0.2), M(0x6d4c41)); door.position.set(HOUSE.x, y0 + 1.8, HOUSE.z + W - 0.1); houseGroup.add(door); HOUSE.door = { x: HOUSE.x, z: HOUSE.z + W - 1 };
+  const knob = new THREE.Mesh(new THREE.SphereGeometry(0.12, 6, 5), M(0xffd700)); knob.position.set(HOUSE.x + 0.8, y0 + 1.8, HOUSE.z + W - 0.25); houseGroup.add(knob);
+  for (const [id, x, z, ry] of [['bed', -4.5, -4.5, 0.4], ['rug', 0, 0, 0], ['lamp', 5.5, -5.5, 0], ['table', 4.5, 3.5, 0], ['chair', 2.5, 3.5, 1.2], ['shelf', -5.5, 4, Math.PI / 2], ['pot', 6, 5.5, 0]]) { const m = makeFurniture(id); m.position.set(HOUSE.x + x, y0, HOUSE.z + z); m.rotation.y = ry; houseGroup.add(m); }
+  const tr = makeFurniture('trophy'); tr.position.set(HOUSE.x + 5.5, y0, HOUSE.z - 1); tr.rotation.y = -Math.PI / 2; houseGroup.add(tr); HOUSE.trophy = tr;
+  const light = new THREE.PointLight(0xffe0b0, 1.2, 30); light.position.set(HOUSE.x, y0 + 5, HOUSE.z); houseGroup.add(light);
+  scene.add(houseGroup); applyWallpaper();
+}
+function applyWallpaper() { const wp = WALLPAPERS.find(w => w.id === save.wallpaper) || WALLPAPERS[0]; const tex = wallpaperTexture(wp); for (const w of houseWalls) { w.material.map = tex; w.material.needsUpdate = true; } }
+function enterHouse(f) {
+  player.inHouse = true; player.houseExit = { x: f.mesh.position.x + 3, z: f.mesh.position.z + 3 }; player.inWater = false; player.flying = false; player.vy = 0;
+  player.pos.set(HOUSE.x, HOUSE.floorY, HOUSE.z + HOUSE.w - 3); player.yaw = Math.PI; camYaw = Math.PI; camManual = 0; camera.position.set(HOUSE.x, HOUSE.floorY + 4, HOUSE.z + HOUSE.w + 2);
+  refreshTrophyShelf(HOUSE.trophy); if (!save.stats.house) { stat('house'); checkBadges(); } showMsg('🏠 Welcome home! Press E by the back wall to change the wallpaper.', 3500); beep(500, 0.15);
+}
+function exitHouse() { player.inHouse = false; const e = player.houseExit || { x: 0, z: 0 }; player.pos.set(e.x, groundY(e.x, e.z, 0), e.z); camera.position.set(e.x - 6, player.pos.y + 4, e.z - 6); beep(400, 0.15); }
+function updateHouse(dt) { if (!player.inHouse) return; const p = player.pos, W = HOUSE.w - 1; p.x = clamp(p.x, HOUSE.x - W, HOUSE.x + W); p.z = clamp(p.z, HOUSE.z - W, HOUSE.z + W); }
+function renderWallpapers() { const wrap = $('wpList'); wrap.innerHTML = ''; for (const wp of WALLPAPERS) { const b = document.createElement('button'); b.className = 'btn' + (save.wallpaper === wp.id ? ' green' : ''); b.textContent = wp.name; b.style.margin = '4px'; b.style.background = wp.a; b.style.color = '#234'; b.onclick = () => { save.wallpaper = wp.id; applyWallpaper(); writeSave(); renderWallpapers(); beep(600, 0.1); }; wrap.appendChild(b); } }
+
+// ---------------------------------------------------------------- WEATHER: rain, puddles, rainbow
+let wx = { rain: null, t: 240, left: 0, puddles: [], rainbow: null, rainbowT: 0 };
+function updateWeather(dt, t) {
+  if (wx.rainbowT > 0) { wx.rainbowT -= dt; if (wx.rainbow) wx.rainbow.material.opacity = Math.min(0.85, wx.rainbowT / 5); if (wx.rainbowT <= 0 && wx.rainbow) { scene.remove(wx.rainbow); wx.rainbow = null; } }
+  if (!wx.rain) {
+    if (mode !== 'world' || player.inCave || player.inHouse || isWinter() || save.stage === 0) return;
+    wx.t -= dt; if (wx.t > 0) return;
+    const N = 500, geo = new THREE.BufferGeometry(), pos = new Float32Array(N * 3); for (let i = 0; i < N; i++) { pos[i * 3] = rand(-50, 50); pos[i * 3 + 1] = rand(0, 40); pos[i * 3 + 2] = rand(-50, 50); } geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    wx.rain = new THREE.Points(geo, new THREE.PointsMaterial({ color: 0x9be7ff, size: 0.35, transparent: true, opacity: 0.8 })); wx.rain.frustumCulled = false; scene.add(wx.rain); wx.left = 40;
+    for (let i = 0; i < 8; i++) { const p = randLandPos(4); const a = rand(0, 6.283), r = rand(10, 45); const x = clamp(player.pos.x + Math.cos(a) * r, -WORLD + 5, WORLD - 5), z = clamp(player.pos.z + Math.sin(a) * r, -WORLD + 5, WORLD - 5); if (pondAt(x, z)) continue; const m = new THREE.Mesh(new THREE.CircleGeometry(rand(1.5, 2.5), 14), M(0x74b9ff, { transparent: true, opacity: 0.75 })); m.rotation.x = -Math.PI / 2; m.position.set(x, H(x, z) + 0.06, z); scene.add(m); wx.puddles.push({ mesh: m, x, z, got: false }); }
+    showMsg('🌧️ Rain! Splash through the puddles for petals 🌸', 3000);
+    return;
+  }
+  wx.left -= dt; wx.rain.position.set(player.pos.x, player.pos.y, player.pos.z);
+  const pos = wx.rain.geometry.attributes.position.array; for (let i = 1; i < pos.length; i += 3) { pos[i] -= 22 * dt; if (pos[i] < -2) pos[i] = 40; } wx.rain.geometry.attributes.position.needsUpdate = true;
+  for (const p of wx.puddles) if (!p.got && dist2(p.x, p.z, player.pos.x, player.pos.z) < 4 && !player.inCave && !player.inHouse) { p.got = true; save.petals += 2; stat('petalsTotal', 2); p.mesh.material.opacity = 0.3; beep(1000, 0.1, 'triangle'); showMsg('💦 Splash! +2 🌸', 800); updateHUD(); }
+  if (wx.left <= 0) {
+    scene.remove(wx.rain); wx.rain = null; wx.t = rand(240, 420); for (const p of wx.puddles) scene.remove(p.mesh); wx.puddles = [];
+    const geo = new THREE.TorusGeometry(60, 5, 8, 40, Math.PI), cols = [], pp = geo.attributes.position, c = new THREE.Color();
+    for (let i = 0; i < pp.count; i++) { const x = pp.getX(i), y = pp.getY(i), rr = Math.hypot(x, y); c.setHSL(clamp((rr - 55) / 10, 0, 1) * 0.85, 0.9, 0.6); cols.push(c.r, c.g, c.b); }
+    geo.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
+    wx.rainbow = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.85, side: THREE.DoubleSide })); wx.rainbow.position.set(player.pos.x, player.pos.y - 5, player.pos.z - 80); wx.rainbow.rotation.y = 0; scene.add(wx.rainbow); wx.rainbowT = 45;
+    showMsg('🌈 The rain stopped and a rainbow appeared!', 3000); jingle([523, 659, 784]);
+  }
+}
+
+// ---------------------------------------------------------------- DRAGONFLY TAXI
+let taxi = null, taxiMesh = null;
+const TAXI_STOPS = DISCOVER.filter(d => ['circle', 'forest', 'lily', 'crystal', 'petal', 'moon', 'arena', 'track', 'field', 'isl1', 'isl2', 'isl3', 'isl4'].includes(d.id)).concat([{ id: 'pond', name: 'the Home Pond', x: MAIN.r + 12, z: 0, r: 0 }, { id: 'shop', name: 'the Mushroom Shop', x: SHOP_POS.x - 12, z: SHOP_POS.z, r: 0 }]);
+function renderTaxi() {
+  const wrap = $('taxiList'); wrap.innerHTML = '';
+  for (const s of TAXI_STOPS) { const b = document.createElement('button'); b.className = 'btn blue'; b.style.margin = '4px'; b.textContent = '🚕 ' + s.name; b.onclick = () => { toggleModal('taxi', false); callTaxi(s); }; wrap.appendChild(b); }
+  $('taxiCoins').textContent = save.coins;
+}
+function callTaxi(stop) {
+  if (mode !== 'world' || player.inCave || player.inHouse) { showMsg('The taxi only picks up outside!'); return; }
+  if (save.coins < 1) { showMsg('The dragonfly taxi costs 1 🪙. Catch some fireflies or win a game!'); beep(150, 0.2, 'sawtooth'); return; }
+  save.coins--; updateHUD(); player.flying = false; player.inWater = false;
+  const ty = stop.y != null ? stop.y : groundY(stop.x, stop.z, stop.y || 0);
+  taxi = { from: player.pos.clone(), to: v(stop.x, ty, stop.z), t: 0, dur: Math.min(9, 3 + player.pos.distanceTo(v(stop.x, ty, stop.z)) / 120), name: stop.name };
+  if (!taxiMesh) { taxiMesh = makeAnimal('dragonfly'); taxiMesh.scale.setScalar(3.2); } scene.add(taxiMesh); player.stunned = true;
+  showMsg('🚕 Zzzip! The dragonfly taxi is flying you to ' + stop.name + '!', 3000); beep(900, 0.2, 'square', 0.05);
+}
+function updateTaxi(dt, t) {
+  if (!taxi) return; taxi.t += dt; const k = Math.min(1, taxi.t / taxi.dur), e = k * k * (3 - 2 * k);
+  player.pos.lerpVectors(taxi.from, taxi.to, e); player.pos.y += Math.sin(k * Math.PI) * 70; player.vy = 0;
+  taxiMesh.position.set(player.pos.x, player.pos.y + 2.2 * STAGES[save.stage].scale + 1, player.pos.z); taxiMesh.rotation.y = Math.atan2(taxi.to.x - taxi.from.x, taxi.to.z - taxi.from.z); player.yaw = taxiMesh.rotation.y;
+  for (const w of taxiMesh.userData.wings) w.g.rotation.z = w.sx * Math.sin(t * 40) * 0.7;
+  if (k >= 1) { scene.remove(taxiMesh); player.stunned = false; player.pos.copy(taxi.to); player.pos.y = groundY(taxi.to.x, taxi.to.z, taxi.to.y); if (pondAt(player.pos.x, player.pos.z) && !onIce(player.pos.x, player.pos.z)) { player.inWater = true; player.pos.y = -0.3; } showMsg('🚕 You arrived at ' + taxi.name + '!', 2000); taxi = null; }
+}
+
+// ---------------------------------------------------------------- FISHING
+const FISH = [{ em: '🐟', name: 'Minnow', w: 40, coins: 1, xp: 8 }, { em: '🐠', name: 'Goldfish', w: 28, coins: 3, xp: 15 }, { em: '🐡', name: 'Puffer', w: 15, coins: 5, xp: 25 }, { em: '🦈', name: 'Pond Shark', w: 9, coins: 8, xp: 40 }, { em: '🌈', name: 'Rainbow Trout', w: 6, coins: 12, xp: 60 }, { em: '👑', name: 'Golden Koi', w: 2, coins: 25, xp: 100, star: true }];
+let fishing = null, bobber = null;
+function fishSpot() { const p = player.pos, ax = p.x + Math.sin(player.yaw) * 4, az = p.z + Math.cos(player.yaw) * 4; const pd = pondAt(ax, az); return pd && !onIce(ax, az) ? { x: ax, z: az } : null; }
+function startFishing() {
+  const sp = fishSpot(); if (!sp) return;
+  if (!bobber) { bobber = new THREE.Group(); const b = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 6), M(0xe53935)); bobber.add(b); const b2 = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 6, 0, 6.283, 0, 1.57), M(0xffffff)); b2.position.y = 0.02; bobber.add(b2); }
+  bobber.position.set(sp.x, 0.1, sp.z); scene.add(bobber);
+  fishing = { t: 0, biteAt: rand(2.5, 6), bit: false, biteT: 0, sx: player.pos.x, sz: player.pos.z, rod: null };
+  fishing.rod = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.06, 3.2, 5), M(0x8b5a2b)); fishing.rod.position.set(0.7, 1.4, 1.2); fishing.rod.rotation.x = -0.9; player.model.add(fishing.rod);
+  beep(500, 0.1); showMsg('🎣 Cast! Hold still and wait for the bobber to jump... then press E fast!', 3000);
+}
+function stopFishing(msg) { if (!fishing) return; scene.remove(bobber); if (fishing.rod) player.model.remove(fishing.rod); fishing = null; if (msg) showMsg(msg, 2000); }
+function fishAction() {
+  if (!fishing) return;
+  if (!fishing.bit) { stopFishing('🎣 Too early! The fish swam away.'); beep(200, 0.2); return; }
+  let tot = FISH.reduce((a, f) => a + f.w, 0), x = Math.random() * tot, f = FISH[0]; for (const ff of FISH) { x -= ff.w; if (x <= 0) { f = ff; break; } }
+  stopFishing(); stat('fish'); save.coins += f.coins; gainXP(f.xp); spawnStars(bobber.position, 0x74b9ff); jingle(f.star ? [523, 659, 784, 1047, 1319] : [660, 880]);
+  showMsg('🎣 You caught a <b>' + f.em + ' ' + f.name + '</b>! +' + f.coins + ' 🪙 +' + f.xp + ' XP' + (f.star ? ' · A GOLDEN KOI!' : ''), 3500); if (f.star) addStar(1, 'for the Golden Koi!'); writeSave(); updateHUD(); checkBadges();
+}
+function updateFishing(dt, t) {
+  if (!fishing) return;
+  if (dist2(player.pos.x, player.pos.z, fishing.sx, fishing.sz) > 1 || player.inWater || mode !== 'world') { stopFishing('🎣 You moved. Fishing cancelled.'); return; }
+  fishing.t += dt; bobber.position.y = 0.1 + Math.sin(t * 2) * 0.05;
+  if (!fishing.bit && fishing.t >= fishing.biteAt) { fishing.bit = true; fishing.biteT = 1.3; beep(1400, 0.15, 'square', 0.1); }
+  if (fishing.bit) { fishing.biteT -= dt; bobber.position.y = -0.5 + Math.abs(Math.sin(t * 20)) * 0.5; if (fishing.biteT <= 0) { stopFishing('🎣 Too slow! It got away.'); beep(200, 0.25); } }
+}
+function fishingPrompt() { return { label: fishing.bit ? '‼️ BITE! PRESS E NOW!' : '🎣 Waiting for a bite... hold still', fn: fishAction }; }
+
 // ---------------------------------------------------------------- GAME LOOP
 let running = false, lastT = 0, saveT = 0;
 const mapCtx = $('minimap').getContext('2d');
@@ -2513,7 +2926,7 @@ function update(dt, t) {
   if (player.kx || player.kz) { p.x += player.kx * dt; p.z += player.kz * dt; const kd = Math.max(0, 1 - 4 * dt); player.kx *= kd; player.kz *= kd; if (Math.abs(player.kx) + Math.abs(player.kz) < 0.2) player.kx = player.kz = 0; }
   player.moving = moving;
   p.x = clamp(p.x, -WORLD + 3, WORLD - 3); p.z = clamp(p.z, -WORLD + 3, WORLD - 3);
-  const pond = player.inCave ? null : pondAt(p.x, p.z);
+  const pond = player.inCave || player.inHouse ? null : pondAt(p.x, p.z);
 
   if (player.flying) {
     p.y += (up - dn) * 22 * dt;
@@ -2603,6 +3016,7 @@ function update(dt, t) {
   updateNPCs(dt, t); updateAnimals(dt, t); updateBabies(dt, t); updateFriend(dt, t); updateBird(dt, t); updateTrail(dt); clouds.update(dt);
   if (mode === 'hamash') updateHamash(dt, t); else if (mode === 'race') updateRace(dt, t); else if (EXTRA_GAMES[mode] && curGame) EXTRA_GAMES[mode](dt, t);
   updateNight(dt, t); updateHeron(dt, t); updateQuest(dt, t); updateSeason(dt, t); updatePetSnail(dt, t); updateCave(dt, t);
+  updateDiscover(dt); updateSteal(dt); updateWeather(dt, t); updateTaxi(dt, t); updateFishing(dt, t); updateHouse(dt); updateActivePet(dt, t);
   for (const pd of PONDS) pd.water.material.opacity = 0.5 + Math.sin(t * 1.3 + pd.x) * 0.05;
 
   // ---- camera, sun, sky follow the player
@@ -2616,7 +3030,7 @@ function update(dt, t) {
   camera.position.lerp(tmpV, Math.min(1, dt * 6));
   camera.lookAt(p.x, p.y + st.scale * 1.2, p.z);
   const camUnder = camera.position.y < -0.1 && pondAt(camera.position.x, camera.position.z);
-  scene.fog = player.inCave ? fogCave : camUnder ? fogWater : fogAir; scene.background = player.inCave ? CAVE_BG : camUnder ? WATER : SKY; skyGroup.visible = !camUnder && !player.inCave;
+  scene.fog = player.inCave ? fogCave : player.inHouse ? fogHouse : camUnder ? fogWater : fogAir; scene.background = player.inCave ? CAVE_BG : player.inHouse ? HOUSE_BG : camUnder ? WATER : SKY; skyGroup.visible = !camUnder && !player.inCave && !player.inHouse;
   skyGroup.position.set(p.x, 0, p.z);
   sun.position.set(p.x + 120, p.y + 200, p.z + 80); sun.target.position.set(p.x, p.y, p.z);
 
@@ -2672,6 +3086,7 @@ function drawMap() {
   if (save.quest && save.quest.type === 'hat' && !save.quest.have && save.quest.hat) c.fillText('🎩', (save.quest.hat.x + WORLD) * k, (save.quest.hat.z + WORLD) * k + 4);
   if (save.quest && save.quest.type === 'visit' && !save.quest.have) { const lm = LANDMARKS.find(l => l.id === save.quest.target); c.fillText('📍', (lm.x + WORLD) * k, (lm.z + WORLD) * k + 4); }
   if (heron) { c.fillText('🦩', (heron.pos.x + WORLD) * k, (heron.pos.z + WORLD) * k + 4); }
+  if (save.stealTarget != null && npcs[save.stealTarget]) { const n = npcs[save.stealTarget]; c.fillText('🎯', (n.home.x + WORLD) * k, (n.home.z + WORLD) * k + 4); }
   c.fillStyle = '#fff'; c.strokeStyle = '#000'; c.beginPath(); c.arc((player.pos.x + WORLD) * k, (player.pos.z + WORLD) * k, 4, 0, 6.3); c.fill(); c.stroke();
 }
 function frame(now) {
@@ -2696,16 +3111,16 @@ function startGame() {
   if (save.bestFriend) spawnFriend(); else buildSpriteMeet();
   spawnBird(); for (const id in eggs) if (save.birds[id]) eggs[id].visible = false;
   camYaw = player.yaw; camera.position.set(player.pos.x - 8, player.pos.y + 4, player.pos.z - 8);
-  spawnPetSnail(); skatesMesh = makeGear('skates'); skatesMesh.scale.setScalar(0.55 + STAGES[save.stage].scale * 0.4); skatesMesh.visible = false; player.group.add(skatesMesh);
+  spawnPetSnail(); spawnActivePet(); skatesMesh = makeGear('skates'); skatesMesh.scale.setScalar(0.55 + STAGES[save.stage].scale * 0.4); skatesMesh.visible = false; player.group.add(skatesMesh);
   updateHUD(); running = true;
   if (save.seenVersion < GAME_VERSION && save.xp > 0) { save.seenVersion = GAME_VERSION; writeSave(); setTimeout(() => toggleModal('updates', true), 1200); } else if (save.seenVersion < GAME_VERSION) { save.seenVersion = GAME_VERSION; }
   showMsg(save.stage === 0 ? '🐟 You are a tiny tadpole! Swim around (WASD) and eat the snacks.' : '🐸 Welcome back, ' + STAGES[save.stage].name + '!', 4000);
 }
 loadSave();
-buildSky(); buildGround(); buildIslands(); buildScenery(); buildMushrooms(); buildFood(); buildBurrow(); buildNPCs(); buildAnimals(); buildArena(); buildTrack(); buildEggs(); buildNight(); buildCave();
+buildSky(); buildGround(); buildIslands(); buildScenery(); buildMushrooms(); buildFood(); buildBurrow(); buildNPCs(); buildAnimals(); buildArena(); buildTrack(); buildEggs(); buildNight(); buildCave(); assignNpcPets(); buildNests(); buildHouse();
 $('playBtn').onclick = () => { $('start').style.display = 'none'; beep(660, 0.1); startGame(); };
 $('resetBtn').onclick = () => { if (confirm('Start a brand new game? Your toad will go back to being a tadpole!')) { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} location.reload(); } };
-window.TA = { player, mush, npcs, animals, babies, makeClothing, CLOTHES, equipVisual, startSnailRace, snailCheer, togglePhoto, snapPhoto, setPose, enterCave, exitCave, openCaveChest, playNote, applySeason, get season() { return season; }, get petSnail() { return petSnail; }, CAVE, SEASONS, get photoMode() { return photoMode; }, get curGame() { return curGame; }, get heron() { return heron; }, get friend() { return friend; }, startFlyCatch, startLily, startSky, startHide, finishGame, questTalk, offerQuests, babyGift, checkBadges, earnedBadges, applyReward, GEAR, BADGES, dayFactor, set heronT(v) { heronT = v; }, set questOfferT(v) { questOfferT = v; }, get mode() { return mode; }, get worldReturn() { return worldReturn; }, get hamash() { return hamash; }, get race() { return race; }, startHamash, startRace, endGame, leaveGame, usePower, swingHammer, applyEffect, eggs, BIRDS, get bird() { return bird; }, get save() { return save; }, get camYaw() { return camYaw; }, set camYaw(v) { camYaw = v; camManual = 5; }, get running() { return running; }, keys, H, gainXP, adoptBird, hatchBaby, meetFriend, feedBird, startFlying, updateHUD };
+window.TA = { player, mush, npcs, animals, babies, makeClothing, CLOTHES, equipVisual, hatchPet, startSteal, startHamashWith, enterHouse, exitHouse, callTaxi, startFishing, fishAction, renderPets, addStar, get fishing() { return fishing; }, get stealing() { return stealing; }, get taxi() { return taxi; }, get wx() { return wx; }, set rainT(v) { wx.t = v; }, HOUSE, ARENAS, DISCOVER, TAXI_STOPS, startSnailRace, snailCheer, togglePhoto, snapPhoto, setPose, enterCave, exitCave, openCaveChest, playNote, applySeason, get season() { return season; }, get petSnail() { return petSnail; }, CAVE, SEASONS, get photoMode() { return photoMode; }, get curGame() { return curGame; }, get heron() { return heron; }, get friend() { return friend; }, startFlyCatch, startLily, startSky, startHide, finishGame, questTalk, offerQuests, babyGift, checkBadges, earnedBadges, applyReward, GEAR, BADGES, dayFactor, set heronT(v) { heronT = v; }, set questOfferT(v) { questOfferT = v; }, get mode() { return mode; }, get worldReturn() { return worldReturn; }, get hamash() { return hamash; }, get race() { return race; }, startHamash, startRace, endGame, leaveGame, usePower, swingHammer, applyEffect, eggs, BIRDS, get bird() { return bird; }, get save() { return save; }, get camYaw() { return camYaw; }, set camYaw(v) { camYaw = v; camManual = 5; }, get running() { return running; }, keys, H, gainXP, adoptBird, hatchBaby, meetFriend, feedBird, startFlying, updateHUD };
 requestAnimationFrame(frame);
 })();
 </script>
