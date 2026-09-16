@@ -164,7 +164,7 @@
   </div>
   <div id="games" class="panel">
     <button class="btn pink" id="gamesBtn">🎮 Play Your<br>Games</button>
-    <div class="title" style="margin:6px 0 0">6 games inside!</div>
+    <div class="title" style="margin:6px 0 0">9 games inside!</div>
   </div>
   <div id="gamehud" class="panel"><div id="gameinfo"></div><button class="btn red" id="quitGame">🏳️ Quit game</button></div>
   <div id="photoUI" class="panel">
@@ -252,6 +252,7 @@
     <div class="gcard"><div class="em">👅</div><div style="flex:1"><div class="nm">Fly Catch</div><p>60 seconds to eat more flies than 4 toad friends. Run into flies, or press <b>E</b> to shoot your tongue at far ones!</p></div><button class="btn green" id="playFly">Play</button></div>
     <div class="gcard"><div class="em">🪷</div><div style="flex:1"><div class="nm">Lily Pad Hop</div><p>Hop across wobbly, moving lily pads all the way across the pond to the golden pad. Fall in and you start over!</p></div><button class="btn pink" id="playLily">Play</button></div>
     <div class="gcard"><div class="em">☁️</div><div style="flex:1"><div class="nm">Sky Ring Race</div><p>Ride your grown-up magic bird through 12 rings in the sky before the other toads on their birds. Needs a bird that can fly.</p></div><button class="btn" id="playSky">Play</button></div>
+    <div class="gcard"><div class="em">🏷️</div><div style="flex:1"><div class="nm">Tag</div><p>9 toads in the field. Whoever is IT has <b>30 seconds</b> to tag somebody (press <b>E</b> next to them) or they are OUT. Last toad standing wins. Faster toads have the edge!</p></div><button class="btn red" id="playTag">Play</button></div>
     <div class="gcard"><div class="em">🐌</div><div style="flex:1"><div class="nm">Snail Race</div><p>Your pet snail races 3 other snails. Very. Slowly. Mash <b>E</b> to cheer and make it crawl faster! (The first time, you adopt and name your snail.)</p></div><button class="btn green" id="playSnail">Play</button></div>
     <div class="gcard"><div class="em">🙈</div><div style="flex:1"><div class="nm">Hide and Seek</div><p>6 toad friends hide around the world. Follow the hot-and-cold arrow and find them all in 2 minutes!</p></div><button class="btn red" id="playHide">Play</button></div>
     <p style="text-align:center"><button class="btn" id="closeGames">Close</button></p>
@@ -279,7 +280,14 @@
   <div class="card">
     <h2>📋 Update Log</h2>
     <div>Everything new in Toad Adventure, newest first. Ideas by Sasha!</div>
-    <div class="upd"><h3>🆕 Update 6 · September 16, 2026</h3><ul>
+    <div class="upd"><h3>🆕 Update 7 · September 16, 2026</h3><ul>
+      <li>🪺 <b>Your own Pet Nest:</b> build it anywhere from the Build menu (2 stones). You need one to hatch or steal pets. Your pets sit on it.</li>
+      <li>🥷 <b>Carry the loot:</b> after you grab a pet you carry it on your back and must run it home to your nest while the owner chases you. A bonk makes you drop it.</li>
+      <li>😱 <b>Toad thieves:</b> other toads sometimes sneak to your nest to steal a pet. You get a warning. Run there and press E to bonk them, and they drop it!</li>
+      <li>🏷️ <b>Tag:</b> a new game. Whoever is IT has 30 seconds to tag someone or they are out. Last toad standing wins.</li>
+      <li>🐦 You can <b>unequip</b> your bird in the Birds menu, so it stops offering rides when you want to press E on something else.</li>
+    </ul></div>
+    <div class="upd"><h3>Update 6 · September 16, 2026</h3><ul>
       <li>🐾 <b>Collect Pet!</b> Earn ⭐ stars by winning games, discovering places, and helping toads. Each star hatches a random pet (rarity 1 to 10 stars) for your pet shelf. Take one along with you.</li>
       <li>🥷 <b>Pet stealing:</b> every toad friend keeps a pet on a nest. Mark one, sneak over, and hold E for 4 seconds. The owner comes running with their hammer! Toads always carry hammers now, and sometimes bonk you just for fun.</li>
       <li>🔨 <b>4 Hamash arenas:</b> Classic, Watery (ponds that slow you and sink you), Survive Life (boulders and lightning), and Starry Zoom (catch falling stars for XP). The arena is much bigger, with 9 opponents and 8 new toad friends.</li>
@@ -341,7 +349,7 @@
     <h2 style="font-size:22px">🪵 Your Pet Shelf</h2>
     <div class="items" id="petShelf"></div>
     <h2 style="font-size:22px;margin-top:14px">🥷 Steal from a toad friend</h2>
-    <div class="pr">Jealous of a rare pet? Mark it, sneak to that toad's nest, and hold E for 4 seconds. The owner gets a notification and comes running with their hammer. One bonk and the steal fails!</div>
+    <div class="pr">You need your own <b>🪺 Pet Nest</b> (Build menu) to hatch or steal. Jealous of a rare pet? Mark it, sneak to that toad's nest, and hold E for 4 seconds. The owner gets a notification and comes running with their hammer. Then carry the pet all the way home to YOUR nest. One bonk and you drop it! Watch out: toads can sneak over and steal from your nest too. Run there and press E to bonk them.</div>
     <div id="stealList"></div>
     <p style="text-align:center"><button class="btn" id="closePets">Done</button></p>
   </div>
@@ -510,6 +518,7 @@ const FURNITURE = [
   { id: 'chest', name: 'Treasure Chest', cost: 8, em: '🧰', use: 'You peek inside. Shiny things!' },
   { id: 'trophy', name: 'Trophy Shelf', cost: 4, em: '🏆', use: 'You admire your trophies. So shiny!' },
   { id: 'house', name: 'Toad House', cost: 12, em: '🏠', use: 'Home sweet home!' },
+  { id: 'nest', name: 'Pet Nest', cost: 2, em: '🪺', use: 'Your pets are cozy in the nest.' },
 ];
 
 const NPC_NAMES = ['Hoppy', 'Sir Croaksalot', 'Lily', 'Bubbles', 'Wartley', 'Pip', 'Gumbo', 'Ribbert', 'Speckle', 'Mossy', 'Princess Puddle', 'Jumper', 'Boing', 'Toadette', 'Captain Croak', 'Peaches', 'Ziggy', 'Marshmallow', 'Dr. Hops', 'Sunny', 'Twinkle', 'Bumble', 'Pickles', 'Sir Hopsalot', 'Muddy', 'Clover', 'Sprocket', 'Daisy', 'Thunder', 'Noodle'];
@@ -639,7 +648,7 @@ function loadSave() {
   if (typeof save.stars !== 'number') save.stars = 0; if (!save.pets) save.pets = []; if (save.activePet === undefined) save.activePet = null; if (!save.npcPets) save.npcPets = {}; if (save.stealTarget === undefined) save.stealTarget = null; if (!save.discovered) save.discovered = []; if (!save.wallpaper) save.wallpaper = 'stripes'; if (!save.rod) save.rod = false;
   if (save.snail === undefined) save.snail = null; if (!save.instruments) save.instruments = []; if (save.instrument === undefined) save.instrument = null; if (save.caveDay === undefined) save.caveDay = -1;
 }
-const GAME_VERSION = 6;
+const GAME_VERSION = 7;
 function curBird() { return save.activeBird ? save.birds[save.activeBird] : null; }
 function curBirdSpec() { return BIRDS.find(b => b.id === save.activeBird) || BIRDS[0]; }
 function writeSave() {
@@ -976,6 +985,7 @@ function makeFurniture(id) {
     case 'rug': { const r = add(new THREE.CircleGeometry(1.5, 16), M(0xff6fb5, { side: THREE.DoubleSide }), 0, 0.05, 0); r.rotation.x = -Math.PI / 2; r.castShadow = false; const r2 = add(new THREE.CircleGeometry(0.9, 16), M(0xffe066, { side: THREE.DoubleSide }), 0, 0.07, 0); r2.rotation.x = -Math.PI / 2; r2.castShadow = false; break; }
     case 'shelf': add(new THREE.BoxGeometry(1.6, 2.4, 0.6), wood, 0, 1.2, 0); for (let i = 0; i < 6; i++) add(new THREE.BoxGeometry(0.22, 0.6, 0.4), M(new THREE.Color().setHSL(i / 6, 0.8, 0.5)), -0.6 + i * 0.24, 1.5, 0.15); for (let i = 0; i < 4; i++) add(new THREE.BoxGeometry(0.28, 0.5, 0.4), M(new THREE.Color().setHSL((i + 2) / 6, 0.8, 0.5)), -0.5 + i * 0.32, 0.6, 0.15); break;
     case 'pot': add(new THREE.CylinderGeometry(0.45, 0.32, 0.6, 10), M(0xd35400), 0, 0.3, 0); add(new THREE.CylinderGeometry(0.05, 0.05, 1.0, 5), M(0x3e9f2e), 0, 1.0, 0); for (let i = 0; i < 5; i++) { const a = i / 5 * 6.283; add(new THREE.SphereGeometry(0.18, 6, 5), M(0xff9ff3), Math.cos(a) * 0.25, 1.5, Math.sin(a) * 0.25); } add(new THREE.SphereGeometry(0.15, 6, 5), M(0xffe066), 0, 1.55, 0); break;
+    case 'nest': add(new THREE.TorusGeometry(1.6, 0.5, 8, 18), M(0x8b5a2b), 0, 0.3, 0).rotation.x = -Math.PI / 2; add(new THREE.CylinderGeometry(1.4, 1.4, 0.2, 18), M(0xc9a26b), 0, 0.15, 0); add(new THREE.ConeGeometry(0.35, 1.2, 6), M(0xffe066), 0, 0.9, -1.5); break;
     case 'house': add(new THREE.BoxGeometry(4, 3.2, 4), M(0xf7ead0), 0, 1.6, 0); add(new THREE.ConeGeometry(3.4, 2.2, 4), M(0xe53935), 0, 4.3, 0).rotation.y = Math.PI / 4; add(new THREE.BoxGeometry(1.2, 2, 0.2), dark, 0, 1, 2.05); add(new THREE.BoxGeometry(1, 1, 0.2), M(0x8fd3ff), -1.2, 2, 2.05); add(new THREE.BoxGeometry(0.6, 1, 0.6), M(0x8d8d8d), 1.2, 4.6, -0.8); break;
     case 'trophy': add(new THREE.BoxGeometry(1.9, 2.4, 0.5), wood, 0, 1.2, -0.1); add(new THREE.BoxGeometry(1.9, 0.08, 0.6), dark, 0, 0.55, 0); add(new THREE.BoxGeometry(1.9, 0.08, 0.6), dark, 0, 1.25, 0); add(new THREE.BoxGeometry(1.9, 0.08, 0.6), dark, 0, 1.95, 0); g.userData.cups = []; break;
     case 'chest': add(new THREE.BoxGeometry(1.4, 0.8, 0.9), wood, 0, 0.4, 0); add(new THREE.CylinderGeometry(0.45, 0.45, 1.4, 10, 1, false, 0, Math.PI), M(0x8d5524), 0, 0.8, 0).rotation.z = Math.PI / 2; add(new THREE.BoxGeometry(0.25, 0.3, 0.1), M(0xffd700), 0, 0.6, 0.5); break;
@@ -1203,11 +1213,13 @@ function addFortPiece(p) {
   const mesh = makeFurniture(p.type); const y = pondAt(p.x, p.z) ? H(p.x, p.z) : groundY(p.x, p.z, p.y || 0);
   mesh.position.set(p.x, y, p.z); mesh.rotation.y = p.rot || 0; scene.add(mesh); fortMeshes.push({ mesh, data: p });
   if (p.type === 'trophy') refreshTrophyShelf(mesh);
+  if (p.type === 'nest') setTimeout(refreshPlayerNest, 0);
 }
 function placeFurniture(id) {
   const item = FURNITURE.find(f => f.id === id);
   if (save.pebbles < item.cost) { showMsg('You need ' + item.cost + ' stones 🪨 for a ' + item.name + '!'); beep(150, 0.2, 'sawtooth'); return; }
   save.pebbles -= item.cost;
+  if (id === 'nest') { const old = myNest(); if (old) { scene.remove(old.mesh); fortMeshes.splice(fortMeshes.indexOf(old), 1); save.fort.splice(save.fort.indexOf(old.data), 1); save.pebbles += item.cost; showMsg('🪺 Moved your nest!', 1500); } }
   const d = 2.5 + STAGES[save.stage].scale;
   const piece = { type: id, x: Math.round(player.pos.x + Math.sin(player.yaw) * d), z: Math.round(player.pos.z + Math.cos(player.yaw) * d), y: player.pos.y, rot: Math.round(player.yaw / (Math.PI / 2)) * (Math.PI / 2) + Math.PI };
   save.fort.push(piece); addFortPiece(piece); writeSave(); updateHUD(); beep(300, 0.15, 'square'); showMsg(item.em + ' ' + item.name + ' placed! (' + save.fort.length + ' pieces in your fort)');
@@ -1316,6 +1328,7 @@ $('playLily').onclick = () => { toggleModal('gamesModal', false); startLily(); }
 $('playSky').onclick = () => { toggleModal('gamesModal', false); startSky(); };
 $('playHide').onclick = () => { toggleModal('gamesModal', false); startHide(); };
 $('playSnail').onclick = () => { toggleModal('gamesModal', false); startSnailRace(); };
+$('playTag').onclick = () => { toggleModal('gamesModal', false); startTag(); };
 $('photoBtn').onclick = () => togglePhoto(true); $('photoDone').onclick = () => togglePhoto(false); $('snapBtn').onclick = snapPhoto; $('photoClose').onclick = () => { $('photoModal').style.display = 'none'; };
 document.querySelectorAll('#photoUI .pose').forEach(b => b.onclick = () => setPose(b.dataset.pose));
 $('musicBtn').onclick = () => toggleModal('music');
@@ -1395,6 +1408,8 @@ function nearestInteraction() {
   const p = player.pos, sc = STAGES[save.stage].scale, list = [];
   if (fishing) return fishingPrompt();
   if (stealing) return { label: '🥷 Stealing... keep holding E! ' + Math.ceil(4 - stealing.t) + 's', fn: () => {} };
+  if (carrying) { const nest = myNest(); return { label: '🥷 Carrying ' + carrying.pet.em + ' · run to your nest 🪺' + (nest ? ' (' + Math.round(Math.sqrt(dist2(nest.mesh.position.x, nest.mesh.position.z, p.x, p.z))) + ' hops)' : ''), fn: () => {} }; }
+  for (const n of npcs) if (n.thief && dist2(n.pos.x, n.pos.z, p.x, p.z) < (3.5 + sc) * (3.5 + sc)) list.push({ d: 0, label: '💥 Press E to BONK the thief ' + n.name + '!', fn: () => bonkThief(n) });
   if (player.inHouse) { const near0 = (x, z, r) => dist2(x, z, p.x, p.z) < r * r; if (near0(HOUSE.door.x, HOUSE.door.z, 2.5)) return { label: 'Press E to go outside 🚪', fn: exitHouse }; if (p.z < HOUSE.z - HOUSE.w + 2.5) return { label: 'Press E to change the wallpaper 🎨', fn: () => toggleModal('wallpaper', true) }; return null; }
   const near = (x, z, r) => dist2(x, z, p.x, p.z) < r * r;
   if (player.flying) return { label: 'Press E to land ' + curBird().name + ' 🐦', fn: () => stopFlying() };
@@ -1425,7 +1440,7 @@ function nearestInteraction() {
   return list[0] || null;
 }
 let currentInteract = null;
-function interact() { if (!running || anyModalOpen()) return; if (mode === 'hamash') return swingHammer(hamash.me); if (mode === 'race') return usePower(race.me); if (mode === 'fly') return flyTongue(); if (mode === 'snail') return snailCheer(); if (mode === 'lily' || mode === 'sky' || mode === 'hide') return; if (currentInteract) currentInteract.fn(); }
+function interact() { if (!running || anyModalOpen()) return; if (mode === 'hamash') return swingHammer(hamash.me); if (mode === 'race') return usePower(race.me); if (mode === 'fly') return flyTongue(); if (mode === 'snail') return snailCheer(); if (mode === 'tag') return tagAction(); if (mode === 'lily' || mode === 'sky' || mode === 'hide') return; if (currentInteract) currentInteract.fn(); }
 let spriteMeet = null;
 function buildSpriteMeet() { if (save.bestFriend) return; const g = makeSprite(); const x = BURROW_LAND.x + 14, z = BURROW_LAND.z - 10; g.position.set(x, H(x, z) + 2, z); scene.add(g); spriteMeet = { group: g, pos: { x, z } }; }
 function meetFriend() {
@@ -1458,8 +1473,8 @@ function renderBirds() {
   for (const bs of BIRDS) {
     const b = save.birds[bs.id], d = document.createElement('div'); d.className = 'bird-row' + (save.activeBird === bs.id ? ' active' : '');
     d.innerHTML = '<div class="em">' + bs.em + '</div><div class="info"><div class="nm">' + bs.name + (b ? ' "' + b.name + '"' : '') + '</div>' + bs.power + '<br>' + (b ? (b.xp >= BIRD_READY_XP ? '✅ Grown up and ready to fly!' : '🌸 Raised: ' + Math.floor(b.xp) + '/' + BIRD_READY_XP) : '🥚 Not found yet. ' + bs.hint) + '</div>';
-    if (b) { const btn = document.createElement('button'); btn.className = 'btn' + (save.activeBird === bs.id ? ' green' : ''); btn.textContent = save.activeBird === bs.id ? 'Equipped' : 'Equip';
-      btn.onclick = () => { if (save.activeBird === bs.id) return; if (player.flying) stopFlying(); save.activeBird = bs.id; spawnBird(); writeSave(); updateHUD(); renderBirds(); beep(700, 0.12); showMsg(bs.em + ' ' + b.name + ' is now your bird!'); }; d.appendChild(btn); }
+    if (b) { const btn = document.createElement('button'); btn.className = 'btn' + (save.activeBird === bs.id ? ' red' : ' green'); btn.textContent = save.activeBird === bs.id ? 'Unequip' : 'Equip';
+      btn.onclick = () => { if (player.flying) stopFlying(); if (save.activeBird === bs.id) { save.activeBird = null; spawnBird(); writeSave(); updateHUD(); renderBirds(); beep(400, 0.1); showMsg(bs.em + ' ' + b.name + ' stays home for now. Equip a bird any time in 🐦 Birds.'); return; } save.activeBird = bs.id; spawnBird(); writeSave(); updateHUD(); renderBirds(); beep(700, 0.12); showMsg(bs.em + ' ' + b.name + ' is now your bird!'); }; d.appendChild(btn); }
     wrap.appendChild(d);
   }
 }
@@ -2141,6 +2156,8 @@ const BADGES = [
   { id: 'house', em: '🏠', name: 'Home Sweet Home', desc: 'Went inside your Toad House', test: () => (save.stats.house || 0) >= 1 },
   { id: 'arenas', em: '🔨', name: 'Arena Master', desc: 'Played all 4 Hamash arenas', test: () => (save.stats.arenas || []).length >= 4 },
   { id: 'explorer', em: '🗺️', name: 'World Explorer', desc: 'Discovered every landmark', test: () => save.discovered.length >= 14 },
+  { id: 'guard', em: '💥', name: 'Nest Guardian', desc: 'Bonked a pet thief', test: () => (save.stats.thievesBonked || 0) >= 1 },
+  { id: 'tag', em: '🏷️', name: 'Tag Champion', desc: 'Won a game of Tag', test: () => (save.wins.tag || 0) >= 1 },
 ];
 function earnedBadges() { return BADGES.filter(b => { try { return b.test(); } catch (e) { return false; } }); }
 function checkBadges() {
@@ -2343,7 +2360,7 @@ function updateHide(dt, t) {
     finishGame({ win: all, title: all ? '🏆 YOU FOUND EVERYONE!' : "⏰ Time's up! You found " + g.found + ' of 6', body: '<div style="font-size:20px">' + (all ? 'Found all 6 in ' + Math.floor(g.t) + ' seconds!' : 'The others were hiding really well.') + '</div>', reward: all ? { mush: 30, petals: 12, coins: 20, xp: 70 } : { mush: g.found * 4, coins: g.found * 2, xp: g.found * 8 } });
   }
 }
-const EXTRA_GAMES = { fly: updateFlyCatch, lily: updateLily, sky: updateSky, hide: updateHide, snail: updateSnailRace };
+const EXTRA_GAMES = { fly: updateFlyCatch, lily: updateLily, sky: updateSky, hide: updateHide, snail: updateSnailRace, tag: updateTag };
 function overPlatform(x, z, y) { for (const pf of PLATFORMS) if (dist2(x, z, pf.x, pf.z) < pf.r * pf.r && y > pf.y - 3) return true; return false; }
 
 // ================================================================ UPDATE 5: seasons, pet snail, camera, cave, music
@@ -2633,8 +2650,9 @@ function updateActivePet(dt, t) {
   if (a.group.userData.wings) for (const w of a.group.userData.wings) w.m.rotation.y = w.sx * (0.5 + Math.sin(t * 14) * 0.5);
 }
 function hatchPet() {
+  if (!myNest()) { showMsg('🪺 Build a Pet Nest first (Build menu, 2 stones) so your pets have a home!'); beep(150, 0.2, 'sawtooth'); return; }
   if (save.stars < 1) { showMsg('You need a ⭐ star to hatch a pet! Win games, explore new places, or help toad friends.'); beep(150, 0.2, 'sawtooth'); return; }
-  save.stars--; const pet = randomPet(1, 10); save.pets.push(pet); if (!save.activePet) { save.activePet = pet.id; spawnActivePet(); }
+  save.stars--; const pet = randomPet(1, 10); save.pets.push(pet); if (!save.activePet) { save.activePet = pet.id; spawnActivePet(); } refreshPlayerNest();
   jingle(pet.rarity >= 8 ? [523, 659, 784, 1047, 1319, 1568] : [660, 880, 1100]);
   showMsg('🥚 It hatched! A <b>' + pet.em + ' ' + pet.type + '</b> · ' + petStars(pet.rarity) + (pet.rarity >= 9 ? ' · LEGENDARY!' : pet.rarity >= 7 ? ' · Rare!' : ''), 4500);
   stat('petsHatched'); writeSave(); updateHUD(); renderPets(); checkBadges();
@@ -2647,7 +2665,7 @@ function renderPets() {
     const d = document.createElement('div'); d.className = 'item' + (save.activePet === pet.id ? ' equipped' : '');
     d.innerHTML = '<div class="em">' + pet.em + '</div><div class="nm">' + pet.name + '</div><div class="pr">' + pet.type + '<br>' + petStars(pet.rarity) + '</div>';
     const b = document.createElement('button'); b.className = 'btn' + (save.activePet === pet.id ? ' green' : ''); b.textContent = save.activePet === pet.id ? 'With you' : 'Take along';
-    b.onclick = () => { save.activePet = save.activePet === pet.id ? null : pet.id; spawnActivePet(); writeSave(); renderPets(); beep(600, 0.1); };
+    b.onclick = () => { save.activePet = save.activePet === pet.id ? null : pet.id; spawnActivePet(); refreshPlayerNest(); writeSave(); renderPets(); beep(600, 0.1); };
     d.appendChild(b);
     const rn = document.createElement('button'); rn.className = 'btn blue'; rn.textContent = 'Name'; rn.style.marginLeft = '4px';
     rn.onclick = () => askName('Name your ' + pet.type, pet.em + ' What should we call it?', null, (name) => { pet.name = name; writeSave(); renderPets(); if (save.activePet === pet.id) spawnActivePet(); });
@@ -2678,7 +2696,8 @@ function buildNests() {
 }
 function refreshNestPet(n) { if (n.nestPet) n.nest.remove(n.nestPet); const pet = save.npcPets[n.idx]; if (!pet) return; n.nestPet = makePetModel(pet); n.nestPet.scale.setScalar(0.8); n.nest.add(n.nestPet); }
 function startSteal(n) {
-  if (stealing) return;
+  if (stealing || carrying) return;
+  if (!myNest()) { showMsg('🪺 You need your own Pet Nest first! Build one from the Build menu (2 stones).'); beep(150, 0.2, 'sawtooth'); return; }
   stealing = { n, t: 0, sx: player.pos.x, sz: player.pos.z }; n.alert = 14; n.line = "HEY! That's MY pet! Stop, thief! ‼️"; n.bubbleT = 6;
   showMsg('‼️ ' + n.name + ' noticed you! Hold E... they are running over with the hammer!', 3000); beep(200, 0.3, 'sawtooth', 0.08);
 }
@@ -2686,11 +2705,12 @@ function updateSteal(dt) {
   if (!stealing) return; const s = stealing, n = s.n;
   if (!keys.KeyE || dist2(player.pos.x, player.pos.z, s.sx, s.sz) > 6) { stealing = null; showMsg('🥷 You let go. The pet is still on the nest.', 2000); return; }
   s.t += dt;
-  if (s.t >= 4) { const pet = save.npcPets[n.idx]; save.pets.push(pet); save.npcPets[n.idx] = randomPet(1, 3); refreshNestPet(n); save.stealTarget = null; stealing = null; stat('steals'); jingle([523, 659, 784, 1047]); showMsg('🥷 You stole ' + n.name + "'s " + pet.em + ' ' + pet.type + ' ' + petStars(pet.rarity) + '! It is on your shelf now.', 4500); n.line = 'Nooo, my pet! 😭 I will find a new one...'; n.bubbleT = 5; n.alert = 0; writeSave(); updateHUD(); checkBadges(); }
+  if (s.t >= 4) { const pet = save.npcPets[n.idx]; save.stealTarget = null; stealing = null; setCarry(pet, n); if (n.nestPet) n.nestPet.visible = false; n.alert = 999; beep(900, 0.2, 'triangle'); showMsg('🥷 You grabbed ' + pet.em + ' ' + pet.type + '! Now RUN it home to your nest 🪺 (marked on the map) before ' + n.name + ' bonks you!', 5000); }
 }
 function npcBonk(n, playful) {
   const dx = player.pos.x - n.pos.x, dz = player.pos.z - n.pos.z, d = Math.hypot(dx, dz) || 1;
   n.swingT = 0.3; player.kx = dx / d * 14; player.kz = dz / d * 14; player.vy = 6; spawnStars(player.pos); beep(110, 0.2, 'sawtooth', 0.1);
+  if (carrying && carrying.from === n) { dropCarry(n); const lost = Math.min(3, save.coins); save.coins -= lost; updateHUD(); return; }
   if (stealing && stealing.n === n) { stealing = null; const lost = Math.min(3, save.coins); save.coins -= lost; showMsg('💥 ' + n.name + ' bonked you! The steal FAILED' + (lost ? ' and you dropped ' + lost + ' 🪙' : '') + '. Try again when they are far away!', 4000); n.alert = 0; n.line = 'Hands off my pet! 😤'; n.bubbleT = 4; updateHUD(); }
   else if (n.alert > 0) { showMsg('💥 ' + n.name + ' bonked you! Run!', 1500); }
   else showMsg('💥 BOINK! ' + n.name + ' bonked you for fun. ' + ['Ha ha!', 'Gotcha!', 'Just playing!'][Math.floor(Math.random() * 3)], 2000);
@@ -2706,6 +2726,7 @@ function updateNpcHammers(n, dt, t) {
     if (n.alert <= 0) { n.line = 'Hmph. Stay away from my nest!'; n.bubbleT = 3; n.target = null; }
     return true;
   }
+  if (n.thief) return true;
   if (mode === 'world' && !player.inWater && d < 3) { n.nearT = (n.nearT || 0) + dt; if (n.nearT > 5 && n.bonkCd <= 0) { n.nearT = 0; n.bonkCd = 12; if (Math.random() < 0.3) npcBonk(n, true); } } else n.nearT = 0;
   return false;
 }
@@ -2900,6 +2921,139 @@ function updateFishing(dt, t) {
 }
 function fishingPrompt() { return { label: fishing.bit ? '‼️ BITE! PRESS E NOW!' : '🎣 Waiting for a bite... hold still', fn: fishAction }; }
 
+// ================================================================ UPDATE 7: player nest, carrying stolen pets, toad thieves, tag, bird unequip
+// ---------------------------------------------------------------- PLAYER NEST
+function myNest() { return fortMeshes.find(f => f.data.type === 'nest') || null; }
+function refreshPlayerNest() {
+  const nest = myNest(); if (!nest) return;
+  const m = nest.mesh; while (m.userData.petMeshes && m.userData.petMeshes.length) m.remove(m.userData.petMeshes.pop());
+  m.userData.petMeshes = [];
+  const shown = save.pets.filter(p => p.id !== save.activePet).slice(0, 6);
+  shown.forEach((pet, i) => { const pm = makePetModel(pet); pm.scale.setScalar(0.7); const a = i / Math.max(1, shown.length) * 6.283; pm.position.set(Math.cos(a) * 1.1, 0.5, Math.sin(a) * 1.1); pm.rotation.y = -a + Math.PI / 2; m.add(pm); m.userData.petMeshes.push(pm); });
+}
+let carrying = null, carryMesh = null;
+function setCarry(pet, from) {
+  carrying = pet ? { pet, from } : null;
+  if (carryMesh) { player.group.remove(carryMesh); carryMesh = null; }
+  if (pet) { carryMesh = makePetModel(pet); carryMesh.scale.setScalar(0.8); carryMesh.position.set(0, 2.4 * STAGES[save.stage].scale, -0.5); player.group.add(carryMesh); }
+}
+function updateCarry(dt, t) {
+  if (!carrying) return;
+  if (carryMesh) carryMesh.position.y = 2.4 * STAGES[save.stage].scale + Math.sin(t * 4) * 0.15;
+  const nest = myNest(); if (!nest) return;
+  if (dist2(nest.mesh.position.x, nest.mesh.position.z, player.pos.x, player.pos.z) < 3.5 * 3.5 && mode === 'world') {
+    const pet = carrying.pet, n = carrying.from; save.pets.push(pet); save.npcPets[n.idx] = randomPet(1, 3); refreshNestPet(n); if (n.nestPet) n.nestPet.visible = true;
+    n.alert = 0; n.line = 'Nooo, my pet! 😭 I will find a new one...'; n.bubbleT = 5; setCarry(null); stat('steals'); jingle([523, 659, 784, 1047]);
+    showMsg('🪺 Safe in your nest! ' + pet.em + ' ' + pet.type + ' ' + petStars(pet.rarity) + ' is yours now.', 4500); refreshPlayerNest(); writeSave(); updateHUD(); checkBadges();
+  }
+}
+function dropCarry(n) {
+  if (!carrying) return; const pet = carrying.pet, from = carrying.from; setCarry(null); if (from.nestPet) from.nestPet.visible = true; from.alert = 0; from.line = 'Got my pet back! 😤'; from.bubbleT = 4;
+  showMsg('💥 You dropped ' + pet.em + ' ' + pet.type + '! It ran back to ' + from.name + "'s nest.", 3500);
+}
+// ---------------------------------------------------------------- TOAD THIEVES
+let thiefT = 110;
+function stealablePets() { return save.pets.filter(p => p.id !== save.activePet).sort((a, b) => b.rarity - a.rarity); }
+function updateThieves(dt, t) {
+  const nest = myNest();
+  const active = npcs.find(n => n.thief);
+  if (!active) {
+    if (mode !== 'world' || !nest || !stealablePets().length || player.inCave || player.inHouse) return;
+    thiefT -= dt; if (thiefT > 0) return; thiefT = rand(120, 200);
+    const cands = npcs.filter(n => !n.alert && dist2(n.pos.x, n.pos.z, nest.mesh.position.x, nest.mesh.position.z) < 260 * 260); if (!cands.length) return;
+    const n = cands[Math.floor(Math.random() * cands.length)]; n.thief = { phase: 'go', t: 0 }; n.line = 'Hee hee... that pet looks nice... 🥷'; n.bubbleT = 5;
+    showMsg('‼️ ' + n.name + ' is sneaking toward your nest to steal a pet! Run there and press E to bonk them!', 6000); beep(200, 0.3, 'sawtooth', 0.08); jingle([330, 262]);
+    return;
+  }
+  const n = active, th = n.thief;
+  if (!nest) { n.thief = null; return; }
+  const goal = th.phase === 'home' ? n.home : nest.mesh.position, dx = goal.x - n.pos.x, dz = goal.z - n.pos.z, d = Math.hypot(dx, dz) || 0.001;
+  n.moving = false;
+  if (th.phase === 'go') {
+    if (d > 2.5) { n.pos.x += dx / d * 9 * dt; n.pos.z += dz / d * 9 * dt; n.yaw = Math.atan2(dx, dz); n.hopT += dt; n.moving = true; }
+    else { th.t += dt; n.model.rotation.z = Math.sin(t * 10) * 0.1; if (th.t >= 4) { const pet = stealablePets()[0]; if (!pet) { n.thief = null; return; } save.pets.splice(save.pets.indexOf(pet), 1); th.pet = pet; th.phase = 'home'; th.mesh = makePetModel(pet); th.mesh.scale.setScalar(0.8); th.mesh.position.set(0, 2.2, -0.5); n.model.add(th.mesh); n.model.rotation.z = 0; refreshPlayerNest(); showMsg('😱 ' + n.name + ' grabbed your ' + pet.em + ' ' + pet.type + '! Catch them and press E to bonk them before they get home!', 5000); beep(160, 0.4, 'sawtooth', 0.1); writeSave(); } }
+  } else {
+    if (d > 2) { n.pos.x += dx / d * 8.5 * dt; n.pos.z += dz / d * 8.5 * dt; n.yaw = Math.atan2(dx, dz); n.hopT += dt; n.moving = true; }
+    else { n.model.remove(th.mesh); const old = save.npcPets[n.idx]; save.npcPets[n.idx] = th.pet; refreshNestPet(n); n.thief = null; n.line = 'Ha ha! This ' + th.pet.type + ' is mine now! 🥷'; n.bubbleT = 5; showMsg('😭 ' + n.name + ' got away with your ' + th.pet.em + ' ' + th.pet.type + '. You can steal it back from their nest!', 5000); writeSave(); renderPetsIfOpen(); }
+  }
+  n.pos.y = H(n.pos.x, n.pos.z);
+}
+function bonkThief(n) {
+  const th = n.thief; if (!th) return;
+  n.hitT = 0.6; const dx = n.pos.x - player.pos.x, dz = n.pos.z - player.pos.z, d = Math.hypot(dx, dz) || 1; n.pos.x += dx / d * 6; n.pos.z += dz / d * 6; spawnStars(n.pos); beep(110, 0.2, 'sawtooth', 0.1);
+  if (th.phase === 'home' && th.pet) { n.model.remove(th.mesh); save.pets.push(th.pet); refreshPlayerNest(); showMsg('💥 BONK! ' + n.name + ' dropped your ' + th.pet.em + ' ' + th.pet.type + '. It hopped back to your nest!', 4000); }
+  else showMsg('💥 BONK! You chased ' + n.name + ' away from your nest!', 3000);
+  n.thief = null; n.line = 'Ouch! Okay, okay, I am leaving! 😵'; n.bubbleT = 5; n.wait = 2; n.target = null; stat('thievesBonked'); jingle([660, 880]); writeSave(); updateHUD(); checkBadges();
+}
+function renderPetsIfOpen() { if ($('pets').style.display === 'flex') renderPets(); }
+
+// ---------------------------------------------------------------- TAG
+function startTag() {
+  if (needToad()) return;
+  enterGame('tag');
+  const g = curGame = { t: 0, countdown: 3.5, over: false, players: [], timer: 30, cleanup() { for (const r of g.players) if (r.group) scene.remove(r.group); for (const m of g.deco) scene.remove(m); if (g.me.marker) player.group.remove(g.me.marker); player.slowMul = 0; } };
+  g.deco = []; for (let i = 0; i < 20; i++) { const a = i / 20 * 6.283; const post = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 1.4, 6), M(0xffffff)); post.position.set(FIELD.x + Math.cos(a) * FIELD.r, 0.7, FIELD.z + Math.sin(a) * FIELD.r); scene.add(post); g.deco.push(post); }
+  g.me = { name: 'YOU', stage: save.stage, isPlayer: true, pos: player.pos, alive: true, yaw: 0, hopT: 0 };
+  g.players = [g.me].concat(pickOpponents(8).map(n => { const r = makeRival(n, false); r.alive = true; r.think = 0; r.dir = rand(0, 6.283); return r; }));
+  g.players.forEach((r, i) => { const a = i / g.players.length * 6.283; r.pos.set(FIELD.x + Math.cos(a) * 16, 0, FIELD.z + Math.sin(a) * 16); if (r.isPlayer) { player.yaw = a + Math.PI; camYaw = player.yaw; camManual = 0; } });
+  g.tagger = g.players[1 + Math.floor(Math.random() * (g.players.length - 1))]; g.tagger.cd = 1.5;
+  camera.position.set(player.pos.x - Math.sin(camYaw) * 10, 6, player.pos.z - Math.cos(camYaw) * 10);
+  jingle([392, 523, 659]); showMsg('🏷️ TAG! ' + g.tagger.name + ' is IT! Run away! If you get tagged, press E near a toad to tag them back within 30 seconds, or you are out!', 6000);
+}
+function tagMarker(r) { if (!r.marker) { r.marker = makeMarker(); r.marker.children[0].material.color.setHex(0xff3d00); r.marker.children[1].material.color.setHex(0xff3d00); } return r.marker; }
+function setTagger(g, r, by) {
+  if (g.tagger && g.tagger.marker) { g.tagger.marker.visible = false; }
+  g.tagger = r; g.timer = 30; r.cd = 1.0; if (by) by.cd = 0;
+  const mk = tagMarker(r); mk.visible = true; if (r.isPlayer) { player.group.add(mk); mk.position.set(0, 2.6 * STAGES[save.stage].scale + 0.5, 0); } else { r.group.add(mk); mk.position.set(0, 2.6 * r.model.scale.x, 0); }
+  beep(700, 0.15, 'square'); showMsg(r.isPlayer ? '🏷️ YOU ARE IT! Tag someone (E) in 30 seconds!' : '🏷️ ' + r.name + ' is IT!' + (by && by.isPlayer ? ' Nice tag!' : ''), 2500);
+}
+function tagAction() {
+  const g = curGame; if (!g || g.over || g.countdown > 0 || g.tagger !== g.me || g.me.cd > 0) return;
+  const reach = 2.4 + STAGES[save.stage].scale * 1.4; let best = null, bd = 1e9;
+  for (const r of g.players) { if (r === g.me || !r.alive) continue; const d = r.pos.distanceToSquared(player.pos); if (d < reach * reach && d < bd) { bd = d; best = r; } }
+  player.pose = 'wave'; player.poseT = 0.4;
+  if (best) { setTagger(g, best, g.me); spawnStars(best.pos, 0xff3d00); } else beep(300, 0.08);
+}
+function updateTag(dt, t) {
+  const g = curGame; g.t += dt; updateFx(dt);
+  if (g.countdown > 0) { g.countdown -= dt; player.stunned = true; if (g.countdown <= 0) { player.stunned = false; setTagger(g, g.tagger); showMsg('GO! 🏷️', 1000); beep(880, 0.3); } }
+  const alive = g.players.filter(r => r.alive), tg = g.tagger;
+  if (g.countdown <= 0 && !g.over) {
+    g.timer -= dt; if (tg) tg.cd = Math.max(0, (tg.cd || 0) - dt);
+    if (g.timer <= 0) {
+      tg.alive = false; if (tg.marker) tg.marker.visible = false; if (tg.group) tg.group.visible = false;
+      if (tg.isPlayer) { const place = alive.length; finishGame({ title: '⏰ Time ran out! You placed #' + place, body: '<div>You were IT when the 30 seconds ended.</div>', reward: place <= 3 ? { mush: 10, coins: 5, xp: 25 } : { mush: 4, coins: 2, xp: 10 } }); return; }
+      showMsg('⏰ ' + tg.name + ' ran out of time and is OUT!', 2000); beep(200, 0.3);
+      const rest = g.players.filter(r => r.alive);
+      if (rest.length === 1 && rest[0].isPlayer) { finishGame({ win: true, title: '🏆 YOU WIN TAG!', body: '<div style="font-size:20px">Last toad standing! Nobody could catch you.</div>', reward: { mush: 30, petals: 12, coins: 20, xp: 70 } }); return; }
+      setTagger(g, rest[Math.floor(Math.random() * rest.length)]);
+    }
+  }
+  player.slowMul = tg === g.me ? 1.15 : 0;
+  for (const r of g.players) {
+    if (r.isPlayer || !r.alive) continue;
+    let moving = false;
+    if (g.countdown <= 0 && !g.over) {
+      let tx, tz;
+      if (r === tg) {
+        let best = null, bd = 1e9; for (const o of alive) { if (o === r) continue; const d = o.pos.distanceToSquared(r.pos) * (o.isPlayer ? 0.8 : 1); if (d < bd) { bd = d; best = o; } }
+        if (best) { tx = best.pos.x; tz = best.pos.z; const dd = Math.sqrt(bd / (best.isPlayer ? 0.8 : 1)); if (dd < 1.9 + r.model.scale.x && r.cd <= 0) { setTagger(g, best, r); spawnStars(best.pos, 0xff3d00); continue; } }
+      } else if (tg) {
+        r.think -= dt; if (r.think <= 0) { r.think = rand(0.3, 0.8); const ax = r.pos.x - tg.pos.x, az = r.pos.z - tg.pos.z, ad = Math.hypot(ax, az) || 1; r.dir = Math.atan2(ax, az) + rand(-0.6, 0.6); if (ad > 22) r.dir = rand(0, 6.283); }
+        tx = r.pos.x + Math.sin(r.dir) * 10; tz = r.pos.z + Math.cos(r.dir) * 10;
+        const cd = Math.hypot(tx - FIELD.x, tz - FIELD.z); if (cd > FIELD.r - 3) { const a = Math.atan2(FIELD.z - r.pos.z, FIELD.x - r.pos.x); r.dir = Math.atan2(Math.cos(a), Math.sin(a)) + rand(-0.8, 0.8); tx = r.pos.x + Math.sin(r.dir) * 10; tz = r.pos.z + Math.cos(r.dir) * 10; }
+      }
+      if (tx != null) { const dx = tx - r.pos.x, dz = tz - r.pos.z, d = Math.hypot(dx, dz) || 1; const sp = (7 + r.stage * 1.1) * (r === tg ? 1.15 : 1); r.pos.x += dx / d * sp * dt; r.pos.z += dz / d * sp * dt; r.yaw = Math.atan2(dx, dz); r.hopT += dt; moving = true; }
+      const fd = Math.hypot(r.pos.x - FIELD.x, r.pos.z - FIELD.z); if (fd > FIELD.r - 1) { const k = (FIELD.r - 1) / fd; r.pos.x = FIELD.x + (r.pos.x - FIELD.x) * k; r.pos.z = FIELD.z + (r.pos.z - FIELD.z) * k; }
+    }
+    r.group.position.set(r.pos.x, moving ? Math.abs(Math.sin(r.hopT * 9)) * 0.4 : 0, r.pos.z); r.group.rotation.y = r.yaw;
+  }
+  const pd = Math.hypot(player.pos.x - FIELD.x, player.pos.z - FIELD.z); if (pd > FIELD.r - 1) { const k = (FIELD.r - 1) / pd; player.pos.x = FIELD.x + (player.pos.x - FIELD.x) * k; player.pos.z = FIELD.z + (player.pos.z - FIELD.z) * k; }
+  if (tg && tg.marker) tg.marker.rotation.y = t * 3;
+  const left = g.players.filter(r => r.alive).length;
+  setGameInfo((tg === g.me ? '🏷️ <b>YOU ARE IT!</b> Tag someone with <b>E</b> · ' : '🏷️ ' + (tg ? tg.name : '?') + ' is IT · run! · ') + '⏱️ <b>' + Math.max(0, Math.ceil(g.timer)) + 's</b> · <b>' + left + '</b> toads left' + (g.countdown > 0 ? ' · Ready... <b>' + Math.ceil(g.countdown) + '</b>' : ''));
+}
+
 // ---------------------------------------------------------------- GAME LOOP
 let running = false, lastT = 0, saveT = 0;
 const mapCtx = $('minimap').getContext('2d');
@@ -3016,7 +3170,7 @@ function update(dt, t) {
   updateNPCs(dt, t); updateAnimals(dt, t); updateBabies(dt, t); updateFriend(dt, t); updateBird(dt, t); updateTrail(dt); clouds.update(dt);
   if (mode === 'hamash') updateHamash(dt, t); else if (mode === 'race') updateRace(dt, t); else if (EXTRA_GAMES[mode] && curGame) EXTRA_GAMES[mode](dt, t);
   updateNight(dt, t); updateHeron(dt, t); updateQuest(dt, t); updateSeason(dt, t); updatePetSnail(dt, t); updateCave(dt, t);
-  updateDiscover(dt); updateSteal(dt); updateWeather(dt, t); updateTaxi(dt, t); updateFishing(dt, t); updateHouse(dt); updateActivePet(dt, t);
+  updateDiscover(dt); updateSteal(dt); updateCarry(dt, t); updateThieves(dt, t); updateWeather(dt, t); updateTaxi(dt, t); updateFishing(dt, t); updateHouse(dt); updateActivePet(dt, t);
   for (const pd of PONDS) pd.water.material.opacity = 0.5 + Math.sin(t * 1.3 + pd.x) * 0.05;
 
   // ---- camera, sun, sky follow the player
@@ -3087,6 +3241,7 @@ function drawMap() {
   if (save.quest && save.quest.type === 'visit' && !save.quest.have) { const lm = LANDMARKS.find(l => l.id === save.quest.target); c.fillText('📍', (lm.x + WORLD) * k, (lm.z + WORLD) * k + 4); }
   if (heron) { c.fillText('🦩', (heron.pos.x + WORLD) * k, (heron.pos.z + WORLD) * k + 4); }
   if (save.stealTarget != null && npcs[save.stealTarget]) { const n = npcs[save.stealTarget]; c.fillText('🎯', (n.home.x + WORLD) * k, (n.home.z + WORLD) * k + 4); }
+  { const nest = myNest(); if (nest) c.fillText('🪺', (nest.mesh.position.x + WORLD) * k, (nest.mesh.position.z + WORLD) * k + 4); const th = npcs.find(n => n.thief); if (th) c.fillText('🥷', (th.pos.x + WORLD) * k, (th.pos.z + WORLD) * k + 4); }
   c.fillStyle = '#fff'; c.strokeStyle = '#000'; c.beginPath(); c.arc((player.pos.x + WORLD) * k, (player.pos.z + WORLD) * k, 4, 0, 6.3); c.fill(); c.stroke();
 }
 function frame(now) {
@@ -3111,7 +3266,7 @@ function startGame() {
   if (save.bestFriend) spawnFriend(); else buildSpriteMeet();
   spawnBird(); for (const id in eggs) if (save.birds[id]) eggs[id].visible = false;
   camYaw = player.yaw; camera.position.set(player.pos.x - 8, player.pos.y + 4, player.pos.z - 8);
-  spawnPetSnail(); spawnActivePet(); skatesMesh = makeGear('skates'); skatesMesh.scale.setScalar(0.55 + STAGES[save.stage].scale * 0.4); skatesMesh.visible = false; player.group.add(skatesMesh);
+  spawnPetSnail(); spawnActivePet(); refreshPlayerNest(); skatesMesh = makeGear('skates'); skatesMesh.scale.setScalar(0.55 + STAGES[save.stage].scale * 0.4); skatesMesh.visible = false; player.group.add(skatesMesh);
   updateHUD(); running = true;
   if (save.seenVersion < GAME_VERSION && save.xp > 0) { save.seenVersion = GAME_VERSION; writeSave(); setTimeout(() => toggleModal('updates', true), 1200); } else if (save.seenVersion < GAME_VERSION) { save.seenVersion = GAME_VERSION; }
   showMsg(save.stage === 0 ? '🐟 You are a tiny tadpole! Swim around (WASD) and eat the snacks.' : '🐸 Welcome back, ' + STAGES[save.stage].name + '!', 4000);
@@ -3120,7 +3275,7 @@ loadSave();
 buildSky(); buildGround(); buildIslands(); buildScenery(); buildMushrooms(); buildFood(); buildBurrow(); buildNPCs(); buildAnimals(); buildArena(); buildTrack(); buildEggs(); buildNight(); buildCave(); assignNpcPets(); buildNests(); buildHouse();
 $('playBtn').onclick = () => { $('start').style.display = 'none'; beep(660, 0.1); startGame(); };
 $('resetBtn').onclick = () => { if (confirm('Start a brand new game? Your toad will go back to being a tadpole!')) { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} location.reload(); } };
-window.TA = { player, mush, npcs, animals, babies, makeClothing, CLOTHES, equipVisual, hatchPet, startSteal, startHamashWith, enterHouse, exitHouse, callTaxi, startFishing, fishAction, renderPets, addStar, get fishing() { return fishing; }, get stealing() { return stealing; }, get taxi() { return taxi; }, get wx() { return wx; }, set rainT(v) { wx.t = v; }, HOUSE, ARENAS, DISCOVER, TAXI_STOPS, startSnailRace, snailCheer, togglePhoto, snapPhoto, setPose, enterCave, exitCave, openCaveChest, playNote, applySeason, get season() { return season; }, get petSnail() { return petSnail; }, CAVE, SEASONS, get photoMode() { return photoMode; }, get curGame() { return curGame; }, get heron() { return heron; }, get friend() { return friend; }, startFlyCatch, startLily, startSky, startHide, finishGame, questTalk, offerQuests, babyGift, checkBadges, earnedBadges, applyReward, GEAR, BADGES, dayFactor, set heronT(v) { heronT = v; }, set questOfferT(v) { questOfferT = v; }, get mode() { return mode; }, get worldReturn() { return worldReturn; }, get hamash() { return hamash; }, get race() { return race; }, startHamash, startRace, endGame, leaveGame, usePower, swingHammer, applyEffect, eggs, BIRDS, get bird() { return bird; }, get save() { return save; }, get camYaw() { return camYaw; }, set camYaw(v) { camYaw = v; camManual = 5; }, get running() { return running; }, keys, H, gainXP, adoptBird, hatchBaby, meetFriend, feedBird, startFlying, updateHUD };
+window.TA = { player, mush, npcs, animals, babies, makeClothing, CLOTHES, equipVisual, hatchPet, startSteal, myNest, startTag, tagAction, bonkThief, get carrying() { return carrying; }, set thiefT(v) { thiefT = v; }, startHamashWith, enterHouse, exitHouse, callTaxi, startFishing, fishAction, renderPets, addStar, get fishing() { return fishing; }, get stealing() { return stealing; }, get taxi() { return taxi; }, get wx() { return wx; }, set rainT(v) { wx.t = v; }, HOUSE, ARENAS, DISCOVER, TAXI_STOPS, startSnailRace, snailCheer, togglePhoto, snapPhoto, setPose, enterCave, exitCave, openCaveChest, playNote, applySeason, get season() { return season; }, get petSnail() { return petSnail; }, CAVE, SEASONS, get photoMode() { return photoMode; }, get curGame() { return curGame; }, get heron() { return heron; }, get friend() { return friend; }, startFlyCatch, startLily, startSky, startHide, finishGame, questTalk, offerQuests, babyGift, checkBadges, earnedBadges, applyReward, GEAR, BADGES, dayFactor, set heronT(v) { heronT = v; }, set questOfferT(v) { questOfferT = v; }, get mode() { return mode; }, get worldReturn() { return worldReturn; }, get hamash() { return hamash; }, get race() { return race; }, startHamash, startRace, endGame, leaveGame, usePower, swingHammer, applyEffect, eggs, BIRDS, get bird() { return bird; }, get save() { return save; }, get camYaw() { return camYaw; }, set camYaw(v) { camYaw = v; camManual = 5; }, get running() { return running; }, keys, H, gainXP, adoptBird, hatchBaby, meetFriend, feedBird, startFlying, updateHUD };
 requestAnimationFrame(frame);
 })();
 </script>
