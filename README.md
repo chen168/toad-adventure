@@ -43,10 +43,17 @@ Out in the world you'll find:
 - 👑 **Boss Race** against the top toad on the Legendary Race board.
 - 🏠 A **Toad House** to build and walk inside, with your choice of wallpaper.
 - 🌧️ Rain with petal puddles and rainbows, 🚕 a dragonfly taxi to any landmark, and 🎣 fishing from any shore.
+- 🗺️ A world **4x colossal-er**, with six biomes: Flower Meadow, Sandy Desert, Snowy Mountains, Murky Swamp, Crystal Canyon, and Bamboo Grove.
+- ☕ **The Toad Café**: chat about topics, buy coffee, earn friend requests. Real friends show gold on the map, visit often, and leave presents. Toads befriend each other too.
+- 🥕 **The Farm**: pick flowers, sell bouquets for carrot coins, buy seeds, grow crops (each seed harvests twice), and sell crops for mushrooms.
+- 🚀 **Outer space**: fly the Thunder Bird above every other bird's ceiling to land on the moon. Low gravity, four alien friends, space gems, moon rocks.
+- 🍦 **Ice Cream Shop** boosts (speed, jump, magnet) and a 👟 **Shoe Shop** where pricier shoes make you faster everywhere, even in games.
+- ✨ **10 glowing sprites** hidden across the world, each with a unique power; equip one at a time.
+- 🏷️ Tag maps: Meadow, Playground, School, and City.
 - 📋 An in-game **Update Log** with everything that's new.
 - 🌲 A giant mushroom forest (press E on a giant mushroom to bounce!), a stone circle, four lakes, and four floating sky islands.
 
-Evolution: Tadpole → Mini Toad → Toad → Big Toad → 👑 Legendary Toad → 💜 Mega Toad → 🔮 Mythic Toad → 🌈 Rainbow Toad.
+Evolution: Tadpole → Mini Toad → Toad → Big Toad → 👑 Legendary Toad → 💜 Mega Toad → 🔮 Mythic Toad → 🌈 Rainbow Toad → 💪 Unstoppable Toad → ⚡ Ultimate Toad → 🌌 Galaxy Toad.
 
 Add it to your phone or tablet home screen and it opens like a real app with its own toad icon.
 
