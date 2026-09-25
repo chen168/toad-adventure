@@ -50,6 +50,9 @@ Out in the world you'll find:
 - 🍦 **Ice Cream Shop** boosts (speed, jump, magnet) and a 👟 **Shoe Shop** where pricier shoes make you faster everywhere, even in games.
 - ✨ **10 glowing sprites** hidden across the world, each with a unique power; equip one at a time.
 - 🏷️ Tag maps: Meadow, Playground, School, and City.
+- 🔦 **Survive the Lab**: a fully-walled lab of hallways, rooms, and slammable doors. THE LEGENDARY hunts everyone for 2 minutes. Health bar, stamina bar, a big RUN button, and ghost-spectating when you're out. 1 game in 10, YOU are the Legendary.
+- 🎂 **Birthday parties** at the café with balloons and cake. Celebrate for coins, double while wearing a 🎉 Party Hat.
+- 🔄 **Trading** with 💰-marked toads: mushrooms, petals, coins, stones, flowers, carrots, stars, and sometimes full pet swaps.
 - 📋 An in-game **Update Log** with everything that's new.
 - 🌲 A giant mushroom forest (press E on a giant mushroom to bounce!), a stone circle, four lakes, and four floating sky islands.
 
