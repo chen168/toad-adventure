@@ -50,7 +50,14 @@ Out in the world you'll find:
 - 🍦 **Ice Cream Shop** boosts (speed, jump, magnet) and a 👟 **Shoe Shop** where pricier shoes make you faster everywhere, even in games.
 - ✨ **10 glowing sprites** hidden across the world, each with a unique power; equip one at a time.
 - 🏷️ Tag maps: Meadow, Playground, School, and City.
-- 🔦 **Survive the Lab**: a fully-walled lab of hallways, rooms, and slammable doors. THE LEGENDARY hunts everyone for 2 minutes. Health bar, stamina bar, a big RUN button, and ghost-spectating when you're out. 1 game in 10, YOU are the Legendary.
+- 🔦 **Survive the Lab**: a big fully-walled lab of hallways, rooms, and slammable metal doors (they all start CLOSED and flash yellow when opened). THE LEGENDARY hunts everyone for 2 minutes. Health bar, stamina bar, a big RUN button, and ghost-spectating when you're out. 1 game in 10, YOU are the giant golden Legendary — and you smash through doors just by running at them.
+- 🧪 **Lab tasks** in the corner rooms: mix potions, fix wires, repeat beaker patterns. Winning drops the clock 15 seconds, failing adds 10. Computer toads do tasks too.
+- ➕🔨 **Lab classes**: buy the Medic (heals hurt toads) or the Bonker (throws a hammer to stun the Legendary for 5 seconds) and pick a class before every game. Computer toads can have classes too.
+- 🚨 Last toad standing glows **red** — the Legendary knows exactly where you are.
+- 🎓 **Baby toads grow up** through five stages. Grown babies can be painted any color and sent off into the world; they send gift balloons 🎈 from the sky forever.
+- ⚔️ **Bonk battles**: press Q (or the BONK button) to bonk a toad for fun. Sometimes it becomes a duel — first to 3 bonks wins, and the winner takes the loser's best pet.
+- 🐸 Toad friends have their own baby toads, glowing sprites, and little forts.
+- 📖 A **tutorial** for new players and a How to Play book behind the ❓ button.
 - 🎂 **Birthday parties** at the café with balloons and cake. Celebrate for coins, double while wearing a 🎉 Party Hat.
 - 🔄 **Trading** with 💰-marked toads: mushrooms, petals, coins, stones, flowers, carrots, stars, and sometimes full pet swaps.
 - 📋 An in-game **Update Log** with everything that's new.
@@ -68,6 +75,7 @@ Add it to your phone or tablet home screen and it opens like a real app with its
 | Jump (on land) | Space |
 | Build menu / pick up a piece | B / X |
 | Talk, pet, feed, sit, ride, use, hatch, cheer | E |
+| Bonk a toad for fun | Q |
 | Play music notes | 1 to 8 |
 | Fly up / down (on the bird) | Space / Shift |
 | Shop / Race board / Help | P / L / H |

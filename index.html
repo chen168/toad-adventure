@@ -116,6 +116,9 @@
   .upd { background: #fff; border: 3px solid #ffd27f; border-radius: 16px; padding: 6px 14px; margin: 10px 0; }
   .upd h3 { margin: 6px 0; color: #2e7d32; }
   .upd ul { margin: 4px 0 8px; padding-left: 20px; font-size: 14px; line-height: 1.4; }
+  #tut { position: absolute; left: 50%; top: 86px; transform: translateX(-50%); max-width: 640px; font-size: 15px; pointer-events: auto; border-color: #ffe66d; text-align: center; z-index: 5; }
+  #tut b { color: #ffe66d; }
+  body.touch #tut { top: auto; bottom: 150px; max-width: 68%; font-size: 13px; }
   @media (max-width: 700px) {
     #help, #maplabel { display: none; }
     #topleft { min-width: 0; width: 52%; padding: 6px 10px; } #quest { font-size: 12px; } #stage { font-size: 17px; }
@@ -131,6 +134,7 @@
     .gcard { flex-direction: column; text-align: center; } .gcard .em { font-size: 36px; }
     #minimap { width: 100px; height: 100px; } #msg { font-size: 18px; top: 24%; } #prompt { font-size: 15px; bottom: 130px; white-space: normal; max-width: 90%; text-align: center; }
     #stick { bottom: 130px; left: 20px; } #tbtns { bottom: 70px; right: 14px; gap: 8px; } .tb { width: 58px; height: 58px; font-size: 12px; }
+    #tut { top: auto; bottom: 200px; font-size: 12px; max-width: 92%; }
   }
 </style>
 </head>
@@ -177,6 +181,7 @@
     <button class="btn green" id="snapBtn">📸 Snap!</button><button class="btn red" id="photoDone">Done</button>
   </div>
   <div id="msg"></div>
+  <div id="tut" class="panel" style="display:none"></div>
   <div id="prompt"></div>
   <div id="bubbles"></div>
   <div id="maplabel">🗺️ World map (the pond is the tiny blue dot!)</div>
@@ -186,6 +191,7 @@
     <b>Swim / fly up &amp; down:</b> Space / Shift<br>
     <b>E:</b> talk, pet, feed, sit, ride, use, hatch...<br>
     <b>B:</b> build menu &nbsp; <b>X:</b> pick up a fort piece<br>
+    <b>Q:</b> bonk a toad, just for fun! 🔨<br>
     <b>P:</b> shop &nbsp; <b>L:</b> race &nbsp; <b>H:</b> hide this<br>
     <b>Look around:</b> drag mouse &nbsp; <b>Zoom:</b> scroll
   </div>
@@ -198,6 +204,7 @@
     <button class="tb" data-k="ShiftLeft">DOWN</button>
     <button class="tb" data-k="KeyE">E</button>
     <button class="tb" data-k="KeyB">BUILD</button>
+    <button class="tb" data-k="KeyQ">🔨<br>BONK</button>
   </div>
 </div>
 
@@ -256,7 +263,7 @@
     <div class="gcard"><div class="em">👅</div><div style="flex:1"><div class="nm">Fly Catch</div><p>60 seconds to eat more flies than 4 toad friends. Run into flies, or press <b>E</b> to shoot your tongue at far ones!</p></div><button class="btn green" id="playFly">Play</button></div>
     <div class="gcard"><div class="em">🪷</div><div style="flex:1"><div class="nm">Lily Pad Hop</div><p>Hop across wobbly, moving lily pads all the way across the pond to the golden pad. Fall in and you start over!</p></div><button class="btn pink" id="playLily">Play</button></div>
     <div class="gcard"><div class="em">☁️</div><div style="flex:1"><div class="nm">Sky Ring Race</div><p>Ride your grown-up magic bird through 12 rings in the sky before the other toads on their birds. Needs a bird that can fly.</p></div><button class="btn" id="playSky">Play</button></div>
-    <div class="gcard"><div class="em">🔦</div><div style="flex:1"><div class="nm">Survive the Lab</div><p>Locked inside a spooky lab of hallways and rooms with 7 toad friends... and <b>THE LEGENDARY</b>, who hunts everyone! Run with the RUN button (watch your stamina), open and close doors with <b>E</b>, and survive 2 minutes. Knocked out? You spectate as a friendly ghost. And 1 game in 10, YOU are the Legendary!</p></div><button class="btn red" id="playSurvive">Play</button></div>
+    <div class="gcard"><div class="em">🔦</div><div style="flex:1"><div class="nm">Survive the Lab</div><p>Locked inside a big spooky lab with 7 toad friends... and <b>THE LEGENDARY</b>! All doors start CLOSED. Do 🧪 tasks in the corner rooms to make the clock run down faster (fail and it grows!), slam doors, heal toads as a ➕ Medic or stun the Legendary as a 🔨 Bonker, and survive 2 minutes. And 1 game in 10, YOU are the giant golden Legendary!</p></div><button class="btn red" id="playSurvive">Play</button></div>
     <div class="gcard"><div class="em">🏷️</div><div style="flex:1"><div class="nm">Tag</div><p>9 toads in a huge fenced meadow. One 30-second clock keeps ticking. Whoever is IT when it hits zero is OUT, then a new round starts. Tag with <b>E</b>, and no tagging back the toad who just tagged you. Last toad standing wins!</p></div><button class="btn red" id="playTag">Play</button></div>
     <div class="gcard"><div class="em">🐌</div><div style="flex:1"><div class="nm">Snail Race</div><p>Your pet snail races 3 other snails. Very. Slowly. Mash <b>E</b> to cheer and make it crawl faster! (The first time, you adopt and name your snail.)</p></div><button class="btn green" id="playSnail">Play</button></div>
     <div class="gcard"><div class="em">🙈</div><div style="flex:1"><div class="nm">Hide and Seek</div><p>6 toad friends hide around the world. Follow the hot-and-cold arrow and find them all in 2 minutes!</p></div><button class="btn red" id="playHide">Play</button></div>
@@ -285,7 +292,20 @@
   <div class="card">
     <h2>📋 Update Log</h2>
     <div>Everything new in Toad Adventure, newest first. Ideas by Sasha!</div>
-    <div class="upd"><h3>🆕 Update 9 · September 25, 2026</h3><ul>
+    <div class="upd"><h3>🆕 Update 10 · September 27, 2026</h3><ul>
+      <li>🔦 <b>Survive the Lab got a HUGE upgrade:</b> the lab is much bigger, all doors start CLOSED, and the doors are sleek metal with round windows now. Doors flash yellow when a toad opens them — watch the map! And closing a door can't squish you into it anymore (fixed!).</li>
+      <li>🧪 <b>Lab tasks!</b> The corner rooms hide task tables: mix potions, fix wires, and repeat beaker patterns. Finish one and the clock drops 15 seconds — fail and it grows 10. Computer toads do tasks too!</li>
+      <li>➕🔨 <b>Classes:</b> buy the Medic (100 🪙) to heal hurt toads, or the Bonker (1000 🪙) to throw your hammer and STUN the Legendary for 5 seconds. Computer toads can be Medics and Bonkers too. Pick your class before every game!</li>
+      <li>👑 When YOU are the Legendary you now turn into the giant GOLDEN toad (fixed!), you smash through closed doors just by running at them, and swinging works properly now — a sneaky bug only let you swing ONCE per game. Squashed!</li>
+      <li>🚨 Last toad standing? You glow RED, the Legendary knows exactly where you are, and surviving THAT earns the biggest prize.</li>
+      <li>🧠 Lab toads are smarter about escaping — and every lab prize pays more coins!</li>
+      <li>🎓 <b>Baby toads grow up!</b> Babies gain grow-levels while you play (pet them to help). Grown-up babies can be sent off into the world — they never forget your face and send gift balloons 🎈 from the sky forever. You can 🎨 paint your baby's skin color too!</li>
+      <li>⚔️ <b>BONK BATTLES!</b> Press Q (or the 🔨 BONK button) to bonk a toad for fun. Sometimes it turns into a battle — first to 3 bonks wins, and the winner takes the loser's BEST pet!</li>
+      <li>🐸 Toad friends now have their own baby toads, glowing sprites, and little forts around the world.</li>
+      <li>📖 A real <b>tutorial</b> for brand-new players, plus a How to Play book behind the ❓ button.</li>
+      <li>🏆 7 new trophies.</li>
+    </ul></div>
+    <div class="upd"><h3>Update 9 · September 25, 2026</h3><ul>
       <li>🔦 <b>Survive the Lab:</b> a walled lab of hallways, rooms, and doors. THE LEGENDARY hunts everyone! Health bar, stamina bar, a big RUN button, doors you can slam (toads slam them on you too!), and ghost-spectating when you're out. 1 game in 10, YOU are the Legendary.</li>
       <li>🎂 <b>Birthday parties!</b> Every so often a toad throws a party at the café with balloons and cake. Celebrate with E for coins — DOUBLE coins if you wear a 🎉 Party Hat!</li>
       <li>🔄 <b>Trading:</b> toads with a 💰 mark carry trade deals — mushrooms, petals, coins, stones, flowers, carrots, even ⭐ stars, and sometimes a full PET swap.</li>
@@ -496,6 +516,52 @@
     <div>Traders carry a 💰 mark. Every trader has different deals, and new traders come out every few minutes!</div>
     <div id="tradeList"></div>
     <p style="text-align:center"><button class="btn" id="closeTrade">Done</button></p>
+  </div>
+</div>
+
+<div id="classModal" class="modal">
+  <div class="card">
+    <h2>🔦 Survive the Lab — pick your class!</h2>
+    <div>Classes are special lab jobs. Buy one once with coins and it is yours forever! You have <b id="classCoins">0</b> 🪙. (If you get picked as THE LEGENDARY, your class sits out that round.)</div>
+    <div id="classList"></div>
+    <p style="text-align:center"><button class="btn" id="closeClass">Cancel</button></p>
+  </div>
+</div>
+
+<div id="taskModal" class="modal">
+  <div class="card" style="text-align:center">
+    <h2 id="taskTitle">🧪 Lab Task</h2>
+    <div id="taskHint"></div>
+    <div style="height:14px;background:rgba(0,0,0,.15);border-radius:8px;overflow:hidden;margin:10px auto;max-width:340px;border:2px solid #ff9f43"><div id="taskTime" style="height:100%;width:100%;background:linear-gradient(90deg,#ff6b6b,#ffe66d);transition:width .15s"></div></div>
+    <div id="taskBody"></div>
+    <p><button class="btn red" id="taskQuit">Give up (+10s!)</button></p>
+  </div>
+</div>
+
+<div id="babyModal" class="modal">
+  <div class="card" style="text-align:center">
+    <h2 id="babyTitle">🐸 Baby</h2>
+    <div id="babyInfo"></div>
+    <div style="height:14px;background:rgba(0,0,0,.15);border-radius:8px;overflow:hidden;margin:10px auto;max-width:340px;border:2px solid #7cff5a"><div id="babyFill" style="height:100%;width:0;background:linear-gradient(90deg,#7cff5a,#ffe66d)"></div></div>
+    <div class="choice" id="babyActions"></div>
+    <div id="paintRow" style="display:none"></div>
+    <p><button class="btn" id="closeBaby">Done</button></p>
+  </div>
+</div>
+
+<div id="bonkModal" class="modal">
+  <div class="card" style="text-align:center">
+    <h2>⚔️ BONK BATTLE!</h2>
+    <div id="bonkText"></div>
+    <p><button class="btn red" id="bonkYes">⚔️ Bring it on!</button> <button class="btn" id="bonkNo">No thanks</button></p>
+  </div>
+</div>
+
+<div id="howto" class="modal">
+  <div class="card">
+    <h2 id="howtoTitle">📖 How to Play</h2>
+    <div id="howtoBody" style="min-height:200px"></div>
+    <p style="text-align:center"><button class="btn" id="howtoPrev">⬅ Back</button> <span id="howtoPage" style="font-weight:bold;margin:0 10px"></span> <button class="btn green" id="howtoNext">Next ➡</button> <button class="btn" id="closeHowto">Close</button></p>
   </div>
 </div>
 
@@ -800,8 +866,11 @@ function loadSave() {
   if (save.boostKind === undefined) save.boostKind = null; if (typeof save.boostLeft !== 'number') save.boostLeft = 0;
   if (!save.sprites) save.sprites = {}; if (save.activeSprite === undefined) save.activeSprite = null;
   if (save.bestFriend && !save.sprites.aqua) { save.sprites.aqua = { name: save.bestFriend.name }; if (!save.activeSprite) save.activeSprite = 'aqua'; }
+  if (!save.classes) save.classes = []; if (save.activeClass === undefined) save.activeClass = null;
+  if (!save.sentBabies) save.sentBabies = [];
+  if (typeof save.tutStep !== 'number') save.tutStep = save.xp > 30 ? 999 : 0;
 }
-const GAME_VERSION = 9;
+const GAME_VERSION = 10;
 function curBird() { return save.activeBird ? save.birds[save.activeBird] : null; }
 function curBirdSpec() { return BIRDS.find(b => b.id === save.activeBird) || BIRDS[0]; }
 function writeSave() {
@@ -1244,7 +1313,8 @@ function updateNPCs(dt, t) {
     n.xp = Math.min(20000, n.xp + n.rate * dt);
     const st = stageFor(n.xp);
     if (st !== n.stage) { n.stage = st; n.model.scale.setScalar(Math.max(0.7, STAGES[st].scale) * 0.95); if (st >= 4) n.model.userData.mat.color.setHex(STAGES[st].color); }
-    if (updateNpcHammers(n, dt, t)) {}
+    if (duel && duel.n === n) updateDuelNpc(n, dt, t);
+    else if (updateNpcHammers(n, dt, t)) {}
     else if (n.talkT > 0) { n.talkT -= dt; n.moving = false; n.yaw = Math.atan2(player.pos.x - n.pos.x, player.pos.z - n.pos.z); }
     else if (n.cafe) updateCafeNpc(n, dt, t);
     else if (n.flight) updateNpcFlight(n, dt, t);
@@ -1254,6 +1324,7 @@ function updateNPCs(dt, t) {
     n.group.position.set(n.pos.x, n.pos.y + (n.moving || n.danceT > 0 ? Math.abs(Math.sin(n.hopT * 8)) * 0.6 : 0), n.pos.z);
     n.group.rotation.y = n.yaw;
     if (n.birdMesh) updateNpcBird(n, t);
+    updateNpcExtras(n, dt, t);
   }
 }
 
@@ -1285,7 +1356,7 @@ function updateAnimals(dt, t) {
 // ---------------------------------------------------------------- BABIES, BEST FRIEND, BIRD
 const babies = [];
 function spawnBaby(b) {
-  const model = makeToadModel(b.color || 0x8fd66a); model.scale.setScalar(0.45);
+  const model = makeToadModel(b.color || 0x8fd66a); model.scale.setScalar(babyStageOf(b).scale);
   const g = new THREE.Group(); g.add(model);
   const hat = new THREE.Object3D(); hat.position.copy(model.userData.anchors.hat); hat.add(makeClothing('party-hat')); model.add(hat);
   const pos = b.mode === 'home' ? new THREE.Vector3(b.home.x, 0, b.home.z) : player.pos.clone();
@@ -1465,7 +1536,7 @@ function renderBoard() {
   const rows = npcs.map(n => ({ name: n.name, xp: n.xp })).concat([{ name: 'YOU', xp: save.xp, me: true }]).sort((a, b) => b.xp - a.xp);
   $('boardTable').innerHTML = rows.map((r, i) => '<tr class="' + (r.me ? 'me' : '') + '"><td>#' + (i + 1) + '</td><td>' + r.name + '</td><td>' + STAGES[stageFor(r.xp)].emoji + ' ' + STAGES[stageFor(r.xp)].name + '</td><td>' + Math.floor(r.xp) + ' XP</td></tr>').join('');
 }
-function anyModalOpen() { return ['shop', 'build', 'board', 'namer', 'birds', 'gamesModal', 'results', 'trophies', 'updates', 'music', 'photoModal', 'pets', 'arenaModal', 'taxi', 'wallpaper', 'cafe', 'chatTopics', 'friendReq', 'iceShop', 'shoeShop', 'farmShop', 'flowerStand', 'seedPick', 'sprites', 'tagMapModal', 'trade'].some(id => $(id).style.display === 'flex'); }
+function anyModalOpen() { return ['shop', 'build', 'board', 'namer', 'birds', 'gamesModal', 'results', 'trophies', 'updates', 'music', 'photoModal', 'pets', 'arenaModal', 'taxi', 'wallpaper', 'cafe', 'chatTopics', 'friendReq', 'iceShop', 'shoeShop', 'farmShop', 'flowerStand', 'seedPick', 'sprites', 'tagMapModal', 'trade', 'classModal', 'taskModal', 'babyModal', 'bonkModal', 'howto'].some(id => $(id).style.display === 'flex'); }
 function toggleModal(id, open) {
   const el = $(id); const show = open === undefined ? el.style.display !== 'flex' : open;
   if (show) ['shop', 'build', 'board'].forEach(o => { if (o !== id) $(o).style.display = 'none'; });
@@ -1482,7 +1553,7 @@ function askName(title, text, choices, cb) {
 $('shopBtn').onclick = () => toggleModal('shop'); $('closeShop').onclick = () => toggleModal('shop', false);
 $('buildBtn').onclick = () => toggleModal('build'); $('closeBuild').onclick = () => toggleModal('build', false);
 $('boardBtn').onclick = () => toggleModal('board'); $('closeBoard').onclick = () => toggleModal('board', false);
-$('helpBtn').onclick = () => { const h = $('help'); h.style.display = h.style.display === 'none' ? 'block' : 'none'; };
+$('helpBtn').onclick = () => { renderHowto(0); toggleModal('howto', true); };
 $('babyBtn').onclick = () => hatchBaby();
 $('birdBtn').onclick = () => toggleModal('birds'); $('closeBirds').onclick = () => toggleModal('birds', false);
 $('gamesBtn').onclick = () => toggleModal('gamesModal', true);
@@ -1496,8 +1567,16 @@ $('playSky').onclick = () => { toggleModal('gamesModal', false); startSky(); };
 $('playHide').onclick = () => { toggleModal('gamesModal', false); startHide(); };
 $('playSnail').onclick = () => { toggleModal('gamesModal', false); startSnailRace(); };
 $('playTag').onclick = () => { toggleModal('gamesModal', false); startTag(); };
-$('playSurvive').onclick = () => { toggleModal('gamesModal', false); startSurvive(); };
+$('playSurvive').onclick = () => { toggleModal('gamesModal', false); openClassSelect(); };
 $('closeTrade').onclick = () => toggleModal('trade', false);
+$('closeClass').onclick = () => toggleModal('classModal', false);
+$('taskQuit').onclick = () => taskFail('You gave up');
+$('closeBaby').onclick = () => toggleModal('babyModal', false);
+$('closeHowto').onclick = () => toggleModal('howto', false);
+$('howtoPrev').onclick = () => renderHowto(howtoIdx - 1);
+$('howtoNext').onclick = () => renderHowto(howtoIdx + 1);
+$('bonkYes').onclick = () => { toggleModal('bonkModal', false); if (pendingDuelNpc) startDuel(pendingDuelNpc); pendingDuelNpc = null; };
+$('bonkNo').onclick = () => { toggleModal('bonkModal', false); if (pendingDuelNpc) { duelCool = 45; pendingDuelNpc.line = 'Chicken! 🐔 Just kidding — rematch anytime!'; pendingDuelNpc.bubbleT = 4; } pendingDuelNpc = null; };
 { const rb = $('runBtn'); const dn = e => { e.preventDefault(); if (surv) surv.runHeld = true; }; const up2 = e => { e.preventDefault(); if (surv) surv.runHeld = false; };
   rb.addEventListener('mousedown', dn); rb.addEventListener('touchstart', dn, { passive: false });
   window.addEventListener('mouseup', up2); rb.addEventListener('touchend', up2); rb.addEventListener('touchcancel', up2); }
@@ -1533,18 +1612,19 @@ function hatchBaby() {
 // ---------------------------------------------------------------- INPUT
 const keys = {};
 let camYaw = 0, camDist = 9, camManual = 0, camBoost = 0, dragging = false, lastX = 0;
-const KEYMAP = { w: 'KeyW', a: 'KeyA', s: 'KeyS', d: 'KeyD', e: 'KeyE', b: 'KeyB', p: 'KeyP', l: 'KeyL', h: 'KeyH', x: 'KeyX', ' ': 'Space', shift: 'ShiftLeft', arrowup: 'ArrowUp', arrowdown: 'ArrowDown', arrowleft: 'ArrowLeft', arrowright: 'ArrowRight', escape: 'Escape' };
+const KEYMAP = { w: 'KeyW', a: 'KeyA', s: 'KeyS', d: 'KeyD', e: 'KeyE', q: 'KeyQ', b: 'KeyB', p: 'KeyP', l: 'KeyL', h: 'KeyH', x: 'KeyX', ' ': 'Space', shift: 'ShiftLeft', arrowup: 'ArrowUp', arrowdown: 'ArrowDown', arrowleft: 'ArrowLeft', arrowright: 'ArrowRight', escape: 'Escape' };
 const codeOf = e => e.code || KEYMAP[(e.key || '').toLowerCase()] || '';
 window.addEventListener('keydown', ev => {
   const code = codeOf(ev);
   if (ev.target.tagName === 'INPUT') { if (code === 'Enter' || ev.key === 'Enter') $('namerOk').onclick(); return; }
   keys[code] = true;
   if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(code)) ev.preventDefault();
-  if (code === 'Escape') { ['shop', 'build', 'board', 'birds', 'gamesModal', 'trophies', 'updates', 'music', 'pets', 'arenaModal', 'taxi', 'wallpaper', 'cafe', 'chatTopics', 'iceShop', 'shoeShop', 'farmShop', 'flowerStand', 'seedPick', 'sprites', 'tagMapModal', 'trade'].forEach(id => toggleModal(id, false)); return; }
+  if (code === 'Escape') { ['shop', 'build', 'board', 'birds', 'gamesModal', 'trophies', 'updates', 'music', 'pets', 'arenaModal', 'taxi', 'wallpaper', 'cafe', 'chatTopics', 'iceShop', 'shoeShop', 'farmShop', 'flowerStand', 'seedPick', 'sprites', 'tagMapModal', 'trade', 'classModal', 'babyModal', 'bonkModal', 'howto'].forEach(id => toggleModal(id, false)); return; }
   if (mode === 'race' && race.me.frozenT > 0) { mash(); return; }
   if (/^Digit[1-8]$/.test(code) && save.instruments.length && mode === 'world') { playNote(+code[5] - 1); return; }
   if (anyModalOpen()) return;
   if (code === 'KeyE') interact();
+  if (code === 'KeyQ') bonkToad();
   if (code === 'KeyB') toggleModal('build');
   if (code === 'KeyX') pickUpFort();
   if (code === 'KeyP') toggleModal('shop');
@@ -1573,7 +1653,7 @@ if ('ontouchstart' in window) {
   canvas.addEventListener('touchstart', e => { const t = e.changedTouches[0]; camTouch = t.identifier; lastX = t.clientX; if (mode === 'race' && race.me.frozenT > 0) mash(); }, { passive: true });
   document.querySelectorAll('.tb').forEach(b => {
     const k = b.dataset.k;
-    b.addEventListener('touchstart', e => { e.preventDefault(); keys[k] = true; if (k === 'KeyE') interact(); if (k === 'KeyB') toggleModal('build'); }, { passive: false });
+    b.addEventListener('touchstart', e => { e.preventDefault(); keys[k] = true; if (k === 'KeyE') interact(); if (k === 'KeyQ') bonkToad(); if (k === 'KeyB') toggleModal('build'); }, { passive: false });
     b.addEventListener('touchend', e => { e.preventDefault(); keys[k] = false; }, { passive: false });
   });
 }
@@ -1586,6 +1666,7 @@ function talkTo(n) {
 function nearestInteraction() {
   const p = player.pos, sc = STAGES[save.stage].scale, list = [];
   if (player.inSpace) return spaceInteraction();
+  if (duel) return { label: '⚔️ BONK BATTLE! Press E to SWING! You ❤️' + duel.myHp + ' · ' + duel.n.name + ' ❤️' + duel.npcHp, fn: duelSwing };
   if (fishing) return fishingPrompt();
   if (stealing) return { label: '🥷 Stealing... keep holding E! ' + Math.ceil(4 - stealing.t) + 's', fn: () => {} };
   if (carrying) { const nest = myNest(); return { label: '🥷 Carrying ' + carrying.pet.em + ' · run to your nest 🪺' + (nest ? ' (' + Math.round(Math.sqrt(dist2(nest.mesh.position.x, nest.mesh.position.z, p.x, p.z))) + ' hops)' : ''), fn: () => {} }; }
@@ -1609,10 +1690,11 @@ function nearestInteraction() {
   }
   if (player.inCave) { if (near(CAVE.x + 10, CAVE.z - 8, 4.5)) list.push({ d: 0, label: 'Press E to open the treasure chest! 🧰', fn: openCaveChest }); if (near(CAVE.x, CAVE.z + 18, 3.5)) list.push({ d: 0, label: 'Press E to swim back up to the pond 💦', fn: exitCave }); return list.sort((a, b) => a.d - b.d)[0] || null; }
   if (player.inWater && p.y < -3.5 && near(CAVE.entrance.x, CAVE.entrance.z, 4.5)) list.push({ d: 0, label: 'Press E to dive into the secret cave! 🕳️', fn: enterCave });
-  if (save.stealTarget != null && save.stage > 0) { const n = npcs[save.stealTarget]; if (n && near(n.home.x, n.home.z, 4)) list.push({ d: 0, label: '🥷 Hold E to steal ' + n.name + "'s " + save.npcPets[n.idx].em + ' (4 seconds!)', fn: () => startSteal(n) }); }
+  if (save.stealTarget != null && save.stage > 0) { const n = npcs[save.stealTarget]; if (n && save.npcPets[n.idx] && near(n.home.x, n.home.z, 4)) list.push({ d: 0, label: '🥷 Hold E to steal ' + n.name + "'s " + save.npcPets[n.idx].em + ' (4 seconds!)', fn: () => startSteal(n) }); }
   if (save.rod && !player.inWater && !player.flying && save.stage > 0 && fishSpot()) list.push({ d: 4, label: 'Press E to fish 🎣', fn: startFishing });
   if (!player.inWater && save.stage > 0) {
     if (giftState && near(giftState.x, giftState.z, 3.5)) list.push({ d: 0, label: '🎁 Press E to open the present from ' + giftState.from.name + '!', fn: openGift });
+    if (skyGift && skyGift.landed && near(skyGift.x, skyGift.z, 4)) list.push({ d: 0, label: '🎈 Press E to open the gift from ' + skyGift.from.name + '!', fn: openSkyGift });
     if (near(CAFE.x, CAFE.z, 26)) list.push({ d: 5, label: 'Press E for the Toad Café menu ☕ (walk to a toad to chat!)', fn: () => toggleModal('cafe', true) });
     if (near(ICE_POS.x, ICE_POS.z, 8)) list.push({ d: 1, label: 'Press E for ice cream boosts 🍦', fn: () => toggleModal('iceShop', true) });
     if (near(SHOE_POS.x, SHOE_POS.z, 8)) list.push({ d: 1, label: 'Press E to visit the Shoe Shop 👟', fn: () => toggleModal('shoeShop', true) });
@@ -1624,7 +1706,7 @@ function nearestInteraction() {
   if (bday && near(CAFE.x, CAFE.z + 16, 13)) list.push({ d: 0, label: bday.celebrateCool > 0 ? "🎂 " + bday.npc.name + "'s party! (celebrate again in " + Math.ceil(bday.celebrateCool) + 's)' : "🎉 Press E to celebrate " + bday.npc.name + "'s birthday!", fn: celebrate });
   for (const n of npcs) if (near(n.pos.x, n.pos.z, 5 + sc)) { const qq = n.quest || (save.quest && save.quest.npc === n.idx); const trd = !qq && n.trader; const cchat = !qq && !trd && atCafe(n) && playerAtCafe(); list.push({ d: qq ? 0 : trd ? 1 : cchat ? 1 : 2, label: qq ? 'Press E: ' + n.name + ' has a quest! 📜' : trd ? '💰 Press E to trade with ' + n.name : cchat ? '☕ Press E to chat with ' + n.name + ' at the café' : 'Press E to talk to ' + n.name + ' 💬', fn: () => { if (trd) { tradeNpc = n; renderTrade(); toggleModal('trade', true); } else if (cchat) { chatNpc = n; renderTopics(); toggleModal('chatTopics', true); } else talkTo(n); } }); }
   for (const a of animals) if (near(a.pos.x, a.pos.z, 4 + sc)) list.push({ d: 2, label: 'Press E to talk to ' + a.name + ' the ' + a.kind + ' 💬', fn: () => { talkTo(a); if (a.kind === 'duck' && Math.random() < 0.3) { save.petals++; updateHUD(); showMsg('🌸 ' + a.name + ' gave you a petal!'); } } });
-  for (const b of babies) if (near(b.pos.x, b.pos.z, 3 + sc)) list.push({ d: b.gift ? 1 : 6, label: b.gift ? 'Press E: ' + b.name + ' dug up a treasure! 🎁' : 'Press E to pet ' + b.name + ' 💕', fn: () => { if (b.gift) { babyGift(b); return; } b.line = ['Ribbit! 💕', 'I love you!', '*happy wiggle*', 'Can we play?'][Math.floor(Math.random() * 4)]; b.lines = [b.line]; b.bubbleT = 4; b.talkT = 3; jingle([880, 1100]); showMsg('💕 ' + b.name + ' loves you!'); } });
+  for (const b of babies) if (near(b.pos.x, b.pos.z, 3 + sc)) list.push({ d: b.gift ? 1 : 6, label: b.gift ? 'Press E: ' + b.name + ' dug up a treasure! 🎁' : 'Press E: play with ' + b.name + ' 💕' + ((b.data.xp || 0) >= 900 ? ' (all grown up! 🎓)' : ''), fn: () => { if (b.gift) { babyGift(b); return; } b.line = ['Ribbit! 💕', 'I love you!', '*happy wiggle*', 'Can we play?'][Math.floor(Math.random() * 4)]; b.lines = [b.line]; b.bubbleT = 4; b.talkT = 3; jingle([880, 1100]); openBabyModal(b); } });
   if (friend && near(friend.pos.x, friend.pos.z, 4)) list.push({ d: 7, label: 'Press E to chat with ' + friend.name + ' ✨', fn: () => { friend.line = friend.lines[Math.floor(Math.random() * friend.lines.length)]; friend.bubbleT = 4; beep(900, 0.15, 'triangle'); } });
   list.sort((a, b) => a.d - b.d);
   return list[0] || null;
@@ -1740,7 +1822,7 @@ function setFollowersVisible(vis) { for (const b of babies) b.group.visible = vi
 function enterGame(kind) {
   worldReturn = { pos: player.pos.clone(), inWater: player.inWater };
   player.flying = false; player.inWater = false; player.vy = 0; player.kx = player.kz = 0; player.slowMul = 0; player.frozen = false; player.stunned = true;
-  mode = kind; ['shop', 'build', 'board', 'birds', 'gamesModal', 'cafe', 'chatTopics', 'iceShop', 'shoeShop', 'farmShop', 'flowerStand', 'seedPick', 'sprites', 'tagMapModal', 'trade'].forEach(id => toggleModal(id, false));
+  mode = kind; ['shop', 'build', 'board', 'birds', 'gamesModal', 'cafe', 'chatTopics', 'iceShop', 'shoeShop', 'farmShop', 'flowerStand', 'seedPick', 'sprites', 'tagMapModal', 'trade', 'classModal', 'babyModal', 'bonkModal', 'howto'].forEach(id => toggleModal(id, false));
   document.body.classList.add('ingame'); $('games').style.display = 'none'; $('gamehud').style.display = 'block'; $('buttons').style.display = 'none'; $('babyBtn').style.display = 'none';
   setFollowersVisible(false); spiritShield = !!friend && save.activeSprite === 'ember'; if (spiritShield) showMsg('✨ ' + friend.name + ' will protect you from one hit!', 2000);
 }
@@ -2103,6 +2185,10 @@ function babyGift(b) {
 function updateBabies(dt, t) {
   babies.forEach((b, i) => {
     let moving = false;
+    b.data.xp = (b.data.xp || 0) + dt * (b.data.mode === 'follow' ? 0.5 : 0.3);
+    const bst = babyStageOf(b.data);
+    if (!b.stName) b.stName = bst.name;
+    else if (b.stName !== bst.name) { b.stName = bst.name; b.model.scale.setScalar(bst.scale); spawnStars(b.pos, 0x7cff5a); jingle([659, 784, 988]); showMsg('🎉 ' + b.name + ' grew into a <b>' + bst.name + '</b>!' + (bst.xp >= 900 ? ' They are ready to see the world... 🎓 Press E near them!' : ''), 5000); }
     if (b.giftT == null) b.giftT = rand(40, 80);
     if (!b.gift) { b.giftT -= dt; if (b.giftT <= 0) { b.gift = true; if (!b.giftMesh) { b.giftMesh = new THREE.Mesh(new THREE.OctahedronGeometry(0.35), new THREE.MeshBasicMaterial({ color: 0xffe066 })); b.group.add(b.giftMesh); } b.giftMesh.visible = true; } }
     if (b.giftMesh && b.giftMesh.visible) { b.giftMesh.position.set(0, 2.2 + Math.sin(t * 3) * 0.2, 0); b.giftMesh.rotation.y = t * 3; }
@@ -2937,7 +3023,7 @@ function npcBonk(n, playful) {
   if (carrying && carrying.from === n) { dropCarry(n); const lost = Math.min(3, save.coins); save.coins -= lost; updateHUD(); return; }
   if (stealing && stealing.n === n) { stealing = null; const lost = Math.min(3, save.coins); save.coins -= lost; showMsg('💥 ' + n.name + ' bonked you! The steal FAILED' + (lost ? ' and you dropped ' + lost + ' 🪙' : '') + '. Try again when they are far away!', 4000); n.alert = 0; n.line = 'Hands off my pet! 😤'; n.bubbleT = 4; updateHUD(); }
   else if (n.alert > 0) { showMsg('💥 ' + n.name + ' bonked you! Run!', 1500); }
-  else showMsg('💥 BOINK! ' + n.name + ' bonked you for fun. ' + ['Ha ha!', 'Gotcha!', 'Just playing!'][Math.floor(Math.random() * 3)], 2000);
+  else { showMsg('💥 BOINK! ' + n.name + ' bonked you for fun. ' + ['Ha ha!', 'Gotcha!', 'Just playing!'][Math.floor(Math.random() * 3)], 2000); if (!duel && duelCool <= 0 && mode === 'world' && save.stage > 0 && Math.random() < 0.3) offerDuel(n); }
 }
 function updateNpcHammers(n, dt, t) {
   if (n.swingT > 0) { n.swingT -= dt; n.hammer.rotation.x = -1.5 + (1 - n.swingT / 0.3) * 2.4; } else n.hammer.rotation.x = lerp(n.hammer.rotation.x, -0.6, Math.min(1, dt * 8));
@@ -4012,7 +4098,7 @@ function buildTagProps(g, mapId) {
 
 // ================================================================ UPDATE 9: Survive the Lab, NPC bird flights, birthdays, trading
 // ---------------------------------------------------------------- SURVIVE THE LAB
-const LAB = { x: 700, z: 700, floorY: -160, cs: 7 };
+const LAB = { x: 700, z: 700, floorY: -160, cs: 10 };
 const LAB_GRID = [
   '######################',
   '#........D...#.......#',
@@ -4032,7 +4118,7 @@ const LAB_GRID = [
   '######################',
 ];
 const LAB_COLS = LAB_GRID[0].length, LAB_ROWS = LAB_GRID.length;
-const LAB_BG = new THREE.Color(0x11131f), fogLab = new THREE.Fog(0x11131f, 30, 110);
+const LAB_BG = new THREE.Color(0x11131f), fogLab = new THREE.Fog(0x11131f, 34, 150);
 let labGroup = null, labDoors = [];
 function labOrigin() { return { x: LAB.x - LAB_COLS * LAB.cs / 2, z: LAB.z - LAB_ROWS * LAB.cs / 2 }; }
 function labCellCenter(col, row) { const o = labOrigin(); return { x: o.x + (col + 0.5) * LAB.cs, z: o.z + (row + 0.5) * LAB.cs }; }
@@ -4065,7 +4151,7 @@ function labMove(ent, nx, nz, r) {
 }
 function buildLab() {
   labGroup = new THREE.Group(); labDoors = [];
-  const o = labOrigin(), wallH = 6;
+  const o = labOrigin(), wallH = 8;
   let wallCount = 0;
   for (let row = 0; row < LAB_ROWS; row++) for (let col = 0; col < LAB_COLS; col++) if (LAB_GRID[row][col] === '#') wallCount++;
   const walls = new THREE.InstancedMesh(new THREE.BoxGeometry(LAB.cs, wallH, LAB.cs), M(0x8a94b8), wallCount);
@@ -4076,13 +4162,15 @@ function buildLab() {
     if (ch === 'D') {
       const horiz = labBlocked(col - 1, row) || LAB_GRID[row][col - 1] === '#';
       const hinge = new THREE.Group();
-      const panel = new THREE.Mesh(new THREE.BoxGeometry(LAB.cs - 0.4, 4.5, 0.6), M(0xa0703c));
+      const panel = new THREE.Mesh(new THREE.BoxGeometry(LAB.cs - 0.4, 6.4, 0.26), M(0x9fb4d8));
       panel.position.x = (LAB.cs - 0.4) / 2; hinge.add(panel);
-      const knob = new THREE.Mesh(new THREE.SphereGeometry(0.18, 6, 5), M(0xffd700)); knob.position.set(LAB.cs - 1.4, 0.3, 0.45); hinge.add(knob);
-      hinge.position.set(c.x - (horiz ? (LAB.cs - 0.4) / 2 : 0), LAB.floorY + 2.25, c.z - (horiz ? 0 : (LAB.cs - 0.4) / 2));
+      const stripe = new THREE.Mesh(new THREE.BoxGeometry(LAB.cs - 0.4, 0.5, 0.3), M(0x3b82f6)); stripe.position.set((LAB.cs - 0.4) / 2, -2.2, 0); hinge.add(stripe);
+      const win = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 0.85, 0.32, 16), M(0xbfe9ff, { transparent: true, opacity: 0.7 })); win.rotation.x = Math.PI / 2; win.position.set((LAB.cs - 0.4) / 2, 1.5, 0); hinge.add(win);
+      const knob = new THREE.Mesh(new THREE.SphereGeometry(0.2, 8, 6), M(0xffd700)); knob.position.set(LAB.cs - 1.6, 0, 0.32); hinge.add(knob);
+      hinge.position.set(c.x - (horiz ? (LAB.cs - 0.4) / 2 : 0), LAB.floorY + 3.2, c.z - (horiz ? 0 : (LAB.cs - 0.4) / 2));
       if (!horiz) hinge.rotation.y = Math.PI / 2;
       labGroup.add(hinge);
-      labDoors.push({ col, row, x: c.x, z: c.z, open: true, hinge, baseYaw: horiz ? 0 : Math.PI / 2, cool: 0 });
+      labDoors.push({ col, row, x: c.x, z: c.z, open: false, hinge, panel, baseYaw: horiz ? 0 : Math.PI / 2, cool: 0, flashT: 0 });
     }
   }
   labGroup.add(walls);
@@ -4090,11 +4178,14 @@ function buildLab() {
   // checker tiles
   for (let row = 1; row < LAB_ROWS - 1; row++) for (let col = 1; col < LAB_COLS - 1; col++) if (LAB_GRID[row][col] === '.' && (row + col) % 2 === 0) { const c = labCellCenter(col, row); const tile = new THREE.Mesh(new THREE.BoxGeometry(LAB.cs - 0.2, 0.05, LAB.cs - 0.2), M(0xa6aec8)); tile.position.set(c.x, LAB.floorY + 0.03, c.z); labGroup.add(tile); }
   const ceil = new THREE.Mesh(new THREE.BoxGeometry(LAB_COLS * LAB.cs, 0.4, LAB_ROWS * LAB.cs), M(0x3a3f57)); ceil.position.set(LAB.x, LAB.floorY + wallH + 0.2, LAB.z); labGroup.add(ceil);
-  for (const [c, r] of [[4, 4], [16, 4], [5, 10], [13, 9], [17, 13], [7, 13], [11, 1], [11, 7]]) { const cc = labCellCenter(c, r); const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.4, 8, 6), new THREE.MeshBasicMaterial({ color: 0xfff3a0 })); lamp.position.set(cc.x, LAB.floorY + wallH - 0.7, cc.z); labGroup.add(lamp); const li = new THREE.PointLight(0xfff0c0, 0.9, 26); li.position.set(cc.x, LAB.floorY + wallH - 1.2, cc.z); labGroup.add(li); }
+  for (const [c, r] of [[4, 4], [16, 4], [5, 10], [13, 9], [17, 13], [7, 13], [11, 1], [11, 7]]) { const cc = labCellCenter(c, r); const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.4, 8, 6), new THREE.MeshBasicMaterial({ color: 0xfff3a0 })); lamp.position.set(cc.x, LAB.floorY + wallH - 0.7, cc.z); labGroup.add(lamp); const li = new THREE.PointLight(0xfff0c0, 0.9, 36); li.position.set(cc.x, LAB.floorY + wallH - 1.2, cc.z); labGroup.add(li); }
+  buildLabTasks();
   labGroup.visible = false; scene.add(labGroup);
 }
 function setDoor(d, open, silent) {
   d.open = open; d.cool = 1;
+  if (open) { d.flashT = 1.3; d.panel.material.emissive.setHex(0x8a7a1a); }
+  else ejectFromDoorCell(d);
   if (!silent) beep(open ? 500 : 240, 0.15, 'square', 0.07);
 }
 function nearestDoor(x, z, maxD) { let best = null, bd = (maxD || 4) * (maxD || 4); for (const d of labDoors) { const dd = dist2(d.x, d.z, x, z); if (dd < bd) { bd = dd; best = d; } } return best; }
@@ -4104,26 +4195,39 @@ function startSurvive() {
   enterGame('survive');
   if (!labGroup) buildLab();
   labGroup.visible = true;
-  for (const d of labDoors) { d.open = true; d.cool = 0; }
+  for (const d of labDoors) { d.open = false; d.cool = 0; d.flashT = 0; d.hinge.rotation.y = d.baseYaw; d.panel.material.emissive.setHex(0x000000); }
+  resetLabTasks();
   const meLegend = Math.random() < 0.1;
-  surv = { t: 0, countdown: 4, timer: 120, over: false, toads: [], me: null, legend: null, meLegend, spec: false, specIdx: 0, runHeld: false, stamina: 100, hp: 100, kos: 0 };
-  curGame = { cleanup() { for (const c of surv.toads) if (c.group) scene.remove(c.group); if (surv.legend) scene.remove(surv.legend.group); if (surv.hammerMesh) player.model.remove(surv.hammerMesh); labGroup.visible = false; player.group.visible = true; blob.visible = true; if (bird) bird.group.visible = true; $('survUI').style.display = 'none'; surv = null; }, over: false };
+  surv = { t: 0, countdown: 4, timer: 120, over: false, toads: [], me: null, legend: null, meLegend, spec: false, specIdx: 0, runHeld: false, stamina: 100, hp: 100, kos: 0, cls: meLegend ? null : save.activeClass, medCd: 0, bonkCdP: 0, meStunT: 0, bashT: 0, fx: [], task: null };
+  curGame = { cleanup() { for (const c of surv.toads) if (c.group) scene.remove(c.group); if (surv.legend) scene.remove(surv.legend.group); if (surv.myModel) { player.group.remove(surv.myModel); player.model.visible = true; } if (surv.clsMesh) player.model.remove(surv.clsMesh); if (surv.glowMy) player.group.remove(surv.glowMy); for (const f of surv.fx) scene.remove(f.mesh); if (surv.task) { surv.task = null; toggleModal('taskModal', false); } player.model.scale.setScalar(STAGES[save.stage].scale); labGroup.visible = false; player.group.visible = true; blob.visible = true; if (bird) bird.group.visible = true; $('survUI').style.display = 'none'; surv = null; }, over: false };
   // spawn cells for runners (open floor spots)
   const spawns = [[3, 4], [17, 4], [5, 9], [13, 10], [18, 13], [2, 13], [8, 1], [15, 7], [11, 9]];
-  const mk = (n) => { const r = makeRival(n, false); r.hp = 100; r.alive = true; r.stam = 100; r.runT = 0; r.think = 0; r.dir = rand(0, 6.283); r.doorCool = 0; r.model.scale.setScalar(0.85); return r; };
+  const mk = (n) => { const r = makeRival(n, false); r.hp = 100; r.alive = true; r.stam = 100; r.runT = 0; r.think = 0; r.dir = rand(0, 6.283); r.doorCool = 0; r.model.scale.setScalar(1);
+    r.flask = new THREE.Mesh(new THREE.IcosahedronGeometry(0.28, 0), new THREE.MeshBasicMaterial({ color: 0x35f5e0 })); r.flask.position.y = 3; r.flask.visible = false; r.model.add(r.flask);
+    return r; };
   const opp = pickOpponents(7);
   opp.forEach((n, i) => { const c = surv.toads[i] = mk(n); const sp = labCellCenter(spawns[i][0], spawns[i][1]); c.pos.set(sp.x, LAB.floorY, sp.z); });
-  // the legendary: gold giant with red eyes
+  // two computer toads get classes too
+  const shuffled = surv.toads.slice().sort(() => Math.random() - 0.5);
+  if (shuffled[0]) { shuffled[0].cls = 'medic'; shuffled[0].model.add(makeMedicCross()); }
+  if (shuffled[1]) { shuffled[1].cls = 'bonker'; const bh = makeHammer(0.9); bh.position.set(0.95, 0.7, 0.5); bh.rotation.set(-0.6, 0, -0.3); shuffled[1].model.add(bh); }
+  // the legendary: gold giant with red eyes (and now that's YOU when you're the hunter!)
   if (meLegend) {
-    surv.hammerMesh = makeHammer(1.1); surv.hammerMesh.position.set(0.95, 0.7, 0.5); surv.hammerMesh.rotation.set(-0.6, 0, -0.3); player.model.add(surv.hammerMesh);
+    const lm = makeToadModel(0xffd700); lm.scale.setScalar(2.4);
+    for (const ch of lm.children) if (ch.material && ch.material.color && ch.geometry && ch.geometry.type === 'SphereGeometry' && ch.material.color.getHex() === 0x111111) ch.material = M(0xff2222);
+    surv.hammerMesh = makeHammer(1.6); surv.hammerMesh.position.set(0.95, 0.7, 0.5); surv.hammerMesh.rotation.set(-0.6, 0, -0.3); lm.add(surv.hammerMesh);
+    surv.myModel = lm; player.model.visible = false; player.group.add(lm);
     surv.swingT = 0; surv.cd = 0;
   } else {
-    const lm = makeToadModel(0xffd700); lm.scale.setScalar(2.1);
+    player.model.scale.setScalar(Math.min(STAGES[save.stage].scale, 2.3));
+    if (surv.cls === 'medic') { surv.clsMesh = makeMedicCross(); player.model.add(surv.clsMesh); }
+    if (surv.cls === 'bonker') { surv.clsMesh = makeHammer(1); surv.clsMesh.position.set(0.95, 0.7, 0.5); surv.clsMesh.rotation.set(-0.6, 0, -0.3); player.model.add(surv.clsMesh); }
+    const lm = makeToadModel(0xffd700); lm.scale.setScalar(2.4);
     for (const ch of lm.children) if (ch.material && ch.material.color && ch.geometry && ch.geometry.type === 'SphereGeometry' && ch.material.color.getHex() === 0x111111) ch.material = M(0xff2222);
     const ham = makeHammer(1.6); ham.position.set(0.95, 0.7, 0.5); ham.rotation.set(-0.6, 0, -0.3); lm.add(ham);
     const g = new THREE.Group(); g.add(lm); scene.add(g);
     const sp = labCellCenter(11, 4);
-    surv.legend = { name: 'THE LEGENDARY', model: lm, hammer: ham, group: g, pos: new THREE.Vector3(sp.x, LAB.floorY, sp.z), yaw: 0, hopT: 0, cd: 0, swingT: 0, stuckT: 0, lastX: sp.x, lastZ: sp.z, doorT: 0, freeDir: null, freeT: 0 };
+    surv.legend = { name: 'THE LEGENDARY', model: lm, hammer: ham, group: g, pos: new THREE.Vector3(sp.x, LAB.floorY, sp.z), yaw: 0, hopT: 0, cd: 0, swingT: 0, stuckT: 0, lastX: sp.x, lastZ: sp.z, doorT: 0, freeDir: null, freeT: 0, stunT: 0 };
   }
   const mySp = meLegend ? labCellCenter(11, 4) : labCellCenter(10, 13);
   player.pos.set(mySp.x, LAB.floorY, mySp.z); player.yaw = 0; camYaw = 0; camManual = 0; player.vy = 0;
@@ -4131,7 +4235,7 @@ function startSurvive() {
   camera.position.set(player.pos.x, LAB.floorY + 6, player.pos.z - 8);
   $('survUI').style.display = 'block'; updateSurvBars();
   jingle([262, 220, 196]);
-  showMsg(meLegend ? '👑 YOU are THE LEGENDARY! Hunt the toads (E = swing) and knock them ALL out before time runs out!' : '🏃 SURVIVE! ' + '👑 THE LEGENDARY is hunting! Run (hold the RUN button or Shift), open and close doors with E, and survive 2 minutes!', 7000);
+  showMsg(meLegend ? '👑 YOU are THE LEGENDARY — a giant golden toad! Hunt them ALL (E = swing) and just RUN AT closed doors to SMASH through!' + (save.activeClass ? ' (Your class sits out this round!)' : '') : '🏃 SURVIVE! All doors start CLOSED. ' + (surv.cls === 'medic' ? 'You are the ➕ MEDIC: press E near hurt toads to heal them!' : surv.cls === 'bonker' ? 'You are the 🔨 BONKER: press E near THE LEGENDARY to throw your hammer and STUN it!' : 'Do 🧪 tasks in the corner rooms to make the clock run down faster!') + ' Survive 2 minutes!', 8000);
 }
 function updateSurvBars() {
   $('hpFill').style.width = Math.max(0, surv.hp) + '%';
@@ -4141,18 +4245,29 @@ function updateSurvBars() {
 function surviveAction() {
   if (!surv || surv.over) return;
   if (surv.spec) { const alive = surv.toads.filter(c => c.alive); if (alive.length) { surv.specIdx = (surv.specIdx + 1) % alive.length; showMsg('👻 Now watching ' + alive[surv.specIdx].name, 1200); } return; }
-  if (surv.meLegend) { surviveSwing(); return; }
-  const d = nearestDoor(player.pos.x, player.pos.z, 4.5);
+  if (surv.meLegend) { if (surv.meStunT > 0) return; surviveSwing(); return; }
+  if (surv.cls === 'medic' && surv.medCd <= 0) {
+    let best = null, bd = 6 * 6;
+    for (const c of surv.toads) if (c.alive && c.hp < 100) { const dd = dist2(c.pos.x, c.pos.z, player.pos.x, player.pos.z); if (dd < bd) { bd = dd; best = c; } }
+    if (best) { best.hp = 100; surv.medCd = 8; save.coins += 2; stat('heals'); spawnStars(best.pos, 0x7cff5a); jingle([784, 988]); showMsg('➕ You healed ' + best.name + ' back to full! +2 🪙', 2500); updateHUD(); checkBadges(); return; }
+  }
+  if (surv.cls === 'bonker' && surv.legend && Math.hypot(surv.legend.pos.x - player.pos.x, surv.legend.pos.z - player.pos.z) < 20) {
+    if (surv.bonkCdP > 0) { showMsg('🔨 Hammer recharging... ' + Math.ceil(surv.bonkCdP) + 's', 1200); return; }
+    surv.bonkCdP = 20; stat('stuns'); stunHunter(null); checkBadges(); return;
+  }
+  const ts = surv.cls ? null : nearestTask(player.pos.x, player.pos.z, 4);
+  if (ts) { openTask(ts); return; }
+  const d = nearestDoor(player.pos.x, player.pos.z, 6.5);
   if (d) { setDoor(d, !d.open); showMsg(d.open ? '🚪 Door opened' : '🚪 Door closed!', 800); }
 }
 function surviveSwing() {
   if (surv.cd > 0) return; surv.cd = 1.1; surv.swingT = 0.3; beep(220, 0.08, 'square', 0.06);
-  const dDoor = nearestDoor(player.pos.x, player.pos.z, 3.5); if (dDoor && !dDoor.open) { setDoor(dDoor, true); beep(90, 0.3, 'sawtooth', 0.14); showMsg('💥 You smashed the door open!', 1200); }
-  const reach = 3 + STAGES[save.stage].scale, fx = Math.sin(player.yaw), fz = Math.cos(player.yaw);
+  const dDoor = nearestDoor(player.pos.x, player.pos.z, 5); if (dDoor && !dDoor.open) { setDoor(dDoor, true); beep(90, 0.3, 'sawtooth', 0.14); showMsg('💥 You smashed the door open!', 1200); }
+  const reach = 5 + Math.min(STAGES[save.stage].scale, 2.4), fx = Math.sin(player.yaw), fz = Math.cos(player.yaw);
   for (const c of surv.toads) {
     if (!c.alive) continue;
     const dx = c.pos.x - player.pos.x, dz = c.pos.z - player.pos.z, dd = Math.hypot(dx, dz) || 1;
-    if (dd < reach && (dx * fx + dz * fz) / dd > 0.1) {
+    if (dd < reach && (dx * fx + dz * fz) / dd > -0.2) {
       c.hp -= 50; c.hitT = 0.5; spawnStars(c.pos); beep(110, 0.2, 'sawtooth', 0.1);
       if (c.hp <= 0) { c.alive = false; c.group.visible = false; surv.kos++; showMsg('💥 You caught ' + c.name + '! (' + surv.kos + '/' + surv.toads.length + ')', 2000); jingle([440, 330]); }
     }
@@ -4160,6 +4275,7 @@ function surviveSwing() {
 }
 function surviveDamagePlayer(from) {
   if (spiritShield) { spiritShield = false; spawnStars(player.pos, 0x8ff5ff); showMsg('✨ Your Guard Sprite blocked the hit!', 2000); beep(1200, 0.2, 'triangle'); return; }
+  if (surv.task) taskFail('The Legendary found you mid-task!');
   surv.hp -= 34; updateSurvBars();
   const dx = player.pos.x - from.pos.x, dz = player.pos.z - from.pos.z, dd = Math.hypot(dx, dz) || 1;
   player.kx = dx / dd * 10; player.kz = dz / dd * 10; spawnStars(player.pos); beep(110, 0.25, 'sawtooth', 0.12);
@@ -4172,13 +4288,25 @@ function updateSurvive(dt, t) {
   const s = surv; if (!s) return; s.t += dt; updateFx(dt);
   if (s.countdown > 0) { s.countdown -= dt; player.stunned = true; if (s.countdown <= 0) { player.stunned = false; showMsg(s.meLegend ? 'HUNT! 👑' : 'RUN! 🏃', 1200); beep(880, 0.3); } }
   else if (!s.over) s.timer -= dt;
-  for (const d of labDoors) { d.cool = Math.max(0, d.cool - dt); d.hinge.rotation.y = lerp(d.hinge.rotation.y, d.baseYaw + (d.open ? 1.35 : 0), Math.min(1, dt * 8)); }
+  for (const d of labDoors) { d.cool = Math.max(0, d.cool - dt); d.hinge.rotation.y = lerp(d.hinge.rotation.y, d.baseYaw + (d.open ? 1.35 : 0), Math.min(1, dt * 8)); if (d.flashT > 0) { d.flashT -= dt; if (d.flashT <= 0) d.panel.material.emissive.setHex(0x000000); } }
   // player movement: normalized speed + run + stamina + wall collision
   const running = !s.spec && (s.runHeld || keys.ShiftLeft || keys.ShiftRight) && s.stamina > 0 && player.moving;
-  if (running) { s.stamina = Math.max(0, s.stamina - 26 * dt); } else s.stamina = Math.min(100, s.stamina + 16 * dt);
+  if (running) { s.stamina = Math.max(0, s.stamina - 20 * dt); } else s.stamina = Math.min(100, s.stamina + 16 * dt);
   updateSurvBars();
+  if (s.meStunT > 0) { s.meStunT -= dt; player.stunned = true; if (Math.random() < dt * 8) spawnStars(player.pos, 0xffe066); if (s.meStunT <= 0 && s.countdown <= 0 && !s.spec) player.stunned = false; }
+  if (s.meLegend && s.hammerMesh) { s.cd = Math.max(0, s.cd - dt); if (s.swingT > 0) { s.swingT -= dt; s.hammerMesh.rotation.x = -1.5 + (1 - s.swingT / 0.3) * 2.4; } else s.hammerMesh.rotation.x = lerp(s.hammerMesh.rotation.x, -0.6, Math.min(1, dt * 8)); }
+  s.medCd = Math.max(0, s.medCd - dt); s.bonkCdP = Math.max(0, s.bonkCdP - dt);
+  if (s.task) { s.task.tLeft -= dt; const tb = $('taskTime'); if (tb) tb.style.width = clamp(s.task.tLeft / 14 * 100, 0, 100) + '%'; if (s.task && s.task.tLeft <= 0) taskFail('Too slow!'); }
+  for (let i = s.fx.length - 1; i >= 0; i--) { const f = s.fx[i]; f.t += dt; const k = Math.min(1, f.t / f.dur); f.mesh.position.lerpVectors(f.from, f.to, k); f.mesh.position.y += Math.sin(k * Math.PI) * 2; f.mesh.rotation.x += 14 * dt; if (k >= 1) { scene.remove(f.mesh); s.fx.splice(i, 1); } }
+  if (s.glowMy) s.glowMy.scale.setScalar(1 + Math.sin(t * 6) * 0.15);
+  if (s.glowNpcMesh) s.glowNpcMesh.scale.setScalar(1 + Math.sin(t * 6) * 0.15);
+  if (s.meLegend && !s.over && s.countdown <= 0 && s.meStunT <= 0) {
+    const nd = nearestDoor(player.pos.x + Math.sin(player.yaw) * 4, player.pos.z + Math.cos(player.yaw) * 4, 5.5);
+    if (nd && !nd.open && player.moving) { s.bashT += dt; if (s.bashT > 0.3) { setDoor(nd, true); s.bashT = 0; beep(80, 0.35, 'sawtooth', 0.16); spawnStars(new THREE.Vector3(nd.x, LAB.floorY + 2, nd.z)); showMsg('💥 CRASH! You smashed right through the door!', 1400); } }
+    else s.bashT = 0;
+  }
   const st = STAGES[save.stage];
-  player.slowMul = s.spec ? 0 : (s.meLegend ? 17 : 15.5) / st.speed * (running ? 1.7 : 1);
+  player.slowMul = s.spec || s.meStunT > 0 ? 0 : (s.meLegend ? 21 : 18) / st.speed * (running ? 1.7 : 1);
   if (!s.spec) {
     // wall collision for the player (axis resolve using previous safe pos)
     const r = 1.1;
@@ -4193,29 +4321,30 @@ function updateSurvive(dt, t) {
   // legendary AI
   const L = s.legend;
   if (L && s.countdown <= 0 && !s.over) {
-    L.cd = Math.max(0, L.cd - dt);
+    L.cd = Math.max(0, L.cd - dt); L.stunT = Math.max(0, (L.stunT || 0) - dt);
+    if (L.stunT > 0) { L.model.rotation.z = Math.sin(t * 18) * 0.15; if (Math.random() < dt * 6) spawnStars(L.pos, 0xffe066); } else L.model.rotation.z = 0;
     if (L.swingT > 0) { L.swingT -= dt; L.hammer.rotation.x = -1.5 + (1 - L.swingT / 0.3) * 2.4; } else L.hammer.rotation.x = lerp(L.hammer.rotation.x, -0.6, Math.min(1, dt * 8));
     // target: nearest alive (player weighted closer)
     let tgt = null, bd = 1e9;
     if (!s.spec) { bd = dist2(player.pos.x, player.pos.z, L.pos.x, L.pos.z) * 0.8; tgt = 'me'; }
     for (const c of s.toads) if (c.alive) { const dd = dist2(c.pos.x, c.pos.z, L.pos.x, L.pos.z); if (dd < bd) { bd = dd; tgt = c; } }
-    if (tgt) {
+    if (tgt && !(L.stunT > 0)) {
       const tx = tgt === 'me' ? player.pos.x : tgt.pos.x, tz = tgt === 'me' ? player.pos.z : tgt.pos.z;
       let dx = tx - L.pos.x, dz = tz - L.pos.z; const dd = Math.hypot(dx, dz) || 1;
       // stuck detection → wander sideways for a moment
       if (L.freeT > 0) { L.freeT -= dt; dx = Math.sin(L.freeDir); dz = Math.cos(L.freeDir); }
-      const sp = 19;
+      const sp = 23;
       labMove(L, L.pos.x + dx / (Math.hypot(dx, dz) || 1) * sp * dt, L.pos.z + dz / (Math.hypot(dx, dz) || 1) * sp * dt, 1.4);
       const moved = Math.hypot(L.pos.x - L.lastX, L.pos.z - L.lastZ);
       if (moved < sp * dt * 0.25) { L.stuckT += dt; } else L.stuckT = 0;
       // blocked by a closed door? bash it open
-      const dNear = nearestDoor(L.pos.x + dx / dd * 4, L.pos.z + dz / dd * 4, 4);
+      const dNear = nearestDoor(L.pos.x + dx / dd * 5.5, L.pos.z + dz / dd * 5.5, 5.5);
       if (dNear && !dNear.open) { L.doorT += dt; if (L.doorT > 0.7) { setDoor(dNear, true); L.doorT = 0; beep(90, 0.3, 'sawtooth', 0.14); if (dist2(player.pos.x, player.pos.z, dNear.x, dNear.z) < 30 * 30) showMsg('💥 THE LEGENDARY smashed the door open!', 1500); } }
       else L.doorT = 0;
       if (L.stuckT > 0.9) { L.freeDir = rand(0, 6.283); L.freeT = 0.7; L.stuckT = 0; }
       L.lastX = L.pos.x; L.lastZ = L.pos.z;
       L.yaw = lerpAngle(L.yaw, Math.atan2(tx - L.pos.x, tz - L.pos.z), Math.min(1, dt * 6)); L.hopT += dt;
-      const reach = 3.6;
+      const reach = 4.2;
       if (tgt === 'me' && Math.hypot(player.pos.x - L.pos.x, player.pos.z - L.pos.z) < reach && L.cd <= 0) { L.cd = 1.3; L.swingT = 0.3; surviveDamagePlayer(L); }
       else if (tgt !== 'me' && Math.hypot(tgt.pos.x - L.pos.x, tgt.pos.z - L.pos.z) < reach && L.cd <= 0) {
         L.cd = 1.3; L.swingT = 0.3; tgt.hp -= 40; tgt.hitT = 0.5; spawnStars(tgt.pos); beep(120, 0.18, 'sawtooth', 0.08);
@@ -4232,19 +4361,41 @@ function updateSurvive(dt, t) {
     let moving = false;
     if (s.countdown <= 0 && !s.over) {
       const hd = Math.hypot(c.pos.x - hunterX, c.pos.z - hunterZ);
+      const hunterStunned = s.meLegend ? s.meStunT > 0 : !!(L && L.stunT > 0);
+      c.healCd = Math.max(0, (c.healCd || 0) - dt); c.stunCd = Math.max(0, (c.stunCd || 0) - dt); c.taskCool = Math.max(0, (c.taskCool || 0) - dt);
+      if (c.cls === 'bonker' && c.stunCd <= 0 && hd < 15 && !hunterStunned) { c.stunCd = 25; stunHunter(c); }
       c.think -= dt;
+      let goal = null;
+      if (hd < 38 && !hunterStunned) { c.goalKind = 'flee'; c.doing = 0; }
+      else if (c.cls === 'medic') { const hurt = medicTarget(c); if (hurt) { goal = hurt; c.goalKind = 'heal'; } else c.goalKind = null; }
+      else if (!c.cls) {
+        if (!c.taskStn && c.taskCool <= 0 && Math.random() < dt / 5) { const opts = LAB_TASKS.filter(ts => !ts.done); if (opts.length) c.taskStn = opts[Math.floor(Math.random() * opts.length)]; }
+        if (c.taskStn && c.taskStn.done) c.taskStn = null;
+        if (c.taskStn) { goal = c.taskStn; c.goalKind = 'task'; } else c.goalKind = null;
+      } else c.goalKind = null;
       if (c.think <= 0) {
         c.think = rand(0.3, 0.8);
-        if (hd < 34) c.dir = Math.atan2(c.pos.x - hunterX, c.pos.z - hunterZ) + rand(-0.7, 0.7);
+        if (c.goalKind === 'flee') c.dir = fleeDir(c, hunterX, hunterZ);
+        else if (goal) c.dir = Math.atan2(goal.x - c.pos.x, goal.z - c.pos.z);
         else if (Math.random() < 0.4) c.dir = rand(0, 6.283);
       }
-      const sp = hd < 34 ? 14 : 7;
-      const ox = c.pos.x, oz = c.pos.z;
-      labMove(c, c.pos.x + Math.sin(c.dir) * sp * dt, c.pos.z + Math.cos(c.dir) * sp * dt, 1);
-      if (Math.hypot(c.pos.x - ox, c.pos.z - oz) < sp * dt * 0.3) c.dir = rand(0, 6.283);
-      else { c.yaw = Math.atan2(Math.sin(c.dir), Math.cos(c.dir)); c.hopT += dt; moving = true; }
-      // sneaky door closing
-      if (c.doorCool <= 0) { const d = nearestDoor(c.pos.x, c.pos.z, 3); if (d && d.open && d.cool <= 0 && Math.random() < 0.16 * dt * 10) { setDoor(d, false); c.doorCool = 6; if (dist2(player.pos.x, player.pos.z, d.x, d.z) < 22 * 22) showMsg('😜 ' + c.name + ' closed the door on you!', 1800); } }
+      const gd = goal ? Math.hypot(goal.x - c.pos.x, goal.z - c.pos.z) : 99;
+      if (c.goalKind === 'task' && gd < 3) {
+        c.doing = (c.doing || 0) + dt; moving = false;
+        if (c.flask) c.flask.visible = true;
+        if (c.doing > 4) { c.doing = 0; c.taskCool = 12; const stn = c.taskStn; c.taskStn = null; if (c.flask) c.flask.visible = false; if (!stn.done && Math.random() < 0.7) { finishStation(stn); s.timer = Math.max(1, s.timer - 8); showMsg('🧪 ' + c.name + ' finished a task! ⏱️ -8s', 2000); beep(700, 0.12, 'triangle'); } }
+      } else if (c.goalKind === 'heal' && gd < 3) {
+        if (c.healCd <= 0) { c.healCd = 12; healBy(c, goal); }
+      } else {
+        if (c.flask) c.flask.visible = false; c.doing = 0;
+        const sp = c.goalKind === 'flee' ? 16 : 8;
+        const ox = c.pos.x, oz = c.pos.z;
+        labMove(c, c.pos.x + Math.sin(c.dir) * sp * dt, c.pos.z + Math.cos(c.dir) * sp * dt, 1);
+        if (Math.hypot(c.pos.x - ox, c.pos.z - oz) < sp * dt * 0.3) c.dir = c.goalKind === 'flee' ? fleeDir(c, hunterX, hunterZ) : rand(0, 6.283);
+        else { c.yaw = Math.atan2(Math.sin(c.dir), Math.cos(c.dir)); c.hopT += dt; moving = true; }
+      }
+      // sneaky door closing (extra sneaky when fleeing!)
+      if (c.doorCool <= 0) { const d = nearestDoor(c.pos.x, c.pos.z, 4.5); if (d && d.open && d.cool <= 0 && Math.random() < (c.goalKind === 'flee' ? 0.5 : 0.14) * dt * 10) { setDoor(d, false); c.doorCool = 6; if (dist2(player.pos.x, player.pos.z, d.x, d.z) < 30 * 30) showMsg('😜 ' + c.name + ' closed the door on you!', 1800); } }
     }
     c.group.position.set(c.pos.x, LAB.floorY + (moving ? Math.abs(Math.sin(c.hopT * 9)) * 0.4 : 0), c.pos.z); c.group.rotation.y = c.yaw;
     c.model.rotation.z = c.hitT > 0 ? Math.sin(t * 40) * 0.2 : 0;
@@ -4253,16 +4404,28 @@ function updateSurvive(dt, t) {
   if (s.spec) { const alive = s.toads.filter(c => c.alive); if (alive.length) { const f = alive[Math.min(s.specIdx, alive.length - 1)]; player.pos.set(f.pos.x, LAB.floorY + 2, f.pos.z); } }
   // HUD line
   const aliveN = s.toads.filter(c => c.alive).length + (s.spec || s.meLegend ? 0 : 1);
-  setGameInfo((s.meLegend ? '👑 <b>YOU are THE LEGENDARY!</b> Caught <b>' + s.kos + '/' + s.toads.length + '</b>' : s.spec ? '👻 Spectating · <b>E</b> = next toad' : '🏃 SURVIVE! · ❤️ ' + Math.max(0, Math.ceil(surv.hp)) + ' · toads left <b>' + aliveN + '</b>') + ' · ⏱️ <b>' + Math.max(0, Math.ceil(s.timer)) + 's</b>' + (s.countdown > 0 ? ' · Ready... <b>' + Math.ceil(s.countdown) + '</b>' : ''));
+  setGameInfo((s.meLegend ? '👑 <b>YOU are THE LEGENDARY!</b> Caught <b>' + s.kos + '/' + s.toads.length + '</b>' : s.spec ? '👻 Spectating · <b>E</b> = next toad' : '🏃 SURVIVE! · ❤️ ' + Math.max(0, Math.ceil(surv.hp)) + ' · toads left <b>' + aliveN + '</b>' + ' · 🧪 <b>' + LAB_TASKS.filter(ts => !ts.done).length + '</b>') + ' · ⏱️ <b>' + Math.max(0, Math.ceil(s.timer)) + 's</b>' + (s.countdown > 0 ? ' · Ready... <b>' + Math.ceil(s.countdown) + '</b>' : ''));
   // end conditions
   if (!s.over && s.countdown <= 0) {
     const runnersLeft = s.toads.filter(c => c.alive).length;
-    if (s.meLegend && runnersLeft === 0) { s.over = true; stat('hunterWin'); finishGame({ win: true, title: '👑 THE LEGENDARY WINS! You caught them ALL!', body: '<div style="font-size:20px">' + s.kos + ' toads caught with ' + Math.ceil(s.timer) + 's to spare!</div>', reward: { mush: 30, coins: 25, petals: 10, xp: 80 } }); return; }
+    if (!s.meLegend && !s.spec && runnersLeft === 0 && !s.lastOne) {
+      s.lastOne = true;
+      s.glowMy = new THREE.Mesh(new THREE.SphereGeometry(1.6, 12, 10), new THREE.MeshBasicMaterial({ color: 0xff2222, transparent: true, opacity: 0.32 }));
+      s.glowMy.position.y = 1.2 * Math.min(STAGES[save.stage].scale, 2.3); player.group.add(s.glowMy);
+      showMsg('🚨 YOU ARE THE LAST TOAD! You glow red and THE LEGENDARY knows EXACTLY where you are... RUN!', 5000); jingle([330, 262, 220]);
+    }
+    if (s.meLegend && runnersLeft === 1 && !s.glowNpcMesh) {
+      const last = s.toads.find(c => c.alive);
+      s.glowNpcMesh = new THREE.Mesh(new THREE.SphereGeometry(1.5, 12, 10), new THREE.MeshBasicMaterial({ color: 0xff2222, transparent: true, opacity: 0.32 }));
+      s.glowNpcMesh.position.y = 1; last.group.add(s.glowNpcMesh);
+      showMsg('🚨 Only ' + last.name + ' is left! They glow RED — go get them!', 3500); beep(880, 0.2);
+    }
+    if (s.meLegend && runnersLeft === 0) { s.over = true; stat('hunterWin'); finishGame({ win: true, title: '👑 THE LEGENDARY WINS! You caught them ALL!', body: '<div style="font-size:20px">' + s.kos + ' toads caught with ' + Math.ceil(s.timer) + 's to spare!</div>', reward: { mush: 30, coins: 45, petals: 10, xp: 90 } }); return; }
     if (s.timer <= 0) {
       s.over = true;
-      if (s.meLegend) finishGame({ title: '⏰ Time up! You caught ' + s.kos + ' of ' + s.toads.length, body: '<div>The sneaky toads survived you!</div>', reward: { mush: s.kos * 4, coins: s.kos * 3, xp: s.kos * 10 } });
-      else if (s.spec) finishGame({ title: '💀 The Legendary got you... but ' + runnersLeft + ' toads made it!', body: '<div>Thanks for cheering from ghost-town. Better luck next time!</div>', reward: { mush: 5, coins: 3, xp: 12 } });
-      else finishGame({ win: true, title: '🏆 YOU SURVIVED THE LAB!', body: '<div style="font-size:20px">Two whole minutes and THE LEGENDARY never got you! ' + runnersLeft + ' toad friends survived too.</div>', reward: { mush: 35, coins: 22, petals: 10, xp: 80 } });
+      if (s.meLegend) finishGame({ title: '⏰ Time up! You caught ' + s.kos + ' of ' + s.toads.length, body: '<div>The sneaky toads survived you!</div>', reward: { mush: s.kos * 4, coins: s.kos * 5, xp: s.kos * 10 } });
+      else if (s.spec) finishGame({ title: '💀 The Legendary got you... but ' + runnersLeft + ' toads made it!', body: '<div>Thanks for cheering from ghost-town. Better luck next time!</div>', reward: { mush: 5, coins: 8, xp: 15 } });
+      else { if (s.lastOne) stat('lastSurvive'); finishGame({ win: true, title: s.lastOne ? '🚨🏆 LAST TOAD STANDING! YOU SURVIVED!' : '🏆 YOU SURVIVED THE LAB!', body: '<div style="font-size:20px">Two whole minutes and THE LEGENDARY never got you!' + (runnersLeft ? ' ' + runnersLeft + ' toad friends survived too.' : ' And you did it all ALONE!') + '</div>', reward: { mush: 40, coins: s.lastOne ? 55 : 40, petals: 10, xp: 90 } }); }
       return;
     }
   }
@@ -4270,8 +4433,11 @@ function updateSurvive(dt, t) {
 function surviveInteraction() {
   const s = surv; if (!s) return null;
   if (s.spec) return { label: '👻 Press E to spectate the next toad', fn: () => {} };
-  if (s.meLegend) return { label: '👑 Press E to SWING at a toad!', fn: () => {} };
-  const d = nearestDoor(player.pos.x, player.pos.z, 4.5);
+  if (s.meLegend) return { label: s.meStunT > 0 ? '💫 STUNNED! ' + Math.ceil(s.meStunT) + 's...' : '👑 Press E to SWING at a toad!', fn: () => {} };
+  if (s.cls === 'medic') { for (const c of s.toads) if (c.alive && c.hp < 100 && dist2(c.pos.x, c.pos.z, player.pos.x, player.pos.z) < 36) return { label: s.medCd > 0 ? '➕ Healing ready in ' + Math.ceil(s.medCd) + 's' : '➕ Press E to HEAL ' + c.name + '!', fn: () => {} }; }
+  if (s.cls === 'bonker' && s.legend && dist2(s.legend.pos.x, s.legend.pos.z, player.pos.x, player.pos.z) < 400) return { label: s.bonkCdP > 0 ? '🔨 Hammer ready in ' + Math.ceil(s.bonkCdP) + 's' : '🔨 Press E to THROW your hammer at THE LEGENDARY! 💫', fn: () => {} };
+  if (!s.cls && nearestTask(player.pos.x, player.pos.z, 4)) return { label: '🧪 Press E to do the lab task! (Win: -15s. Fail: +10s!)', fn: () => {} };
+  const d = nearestDoor(player.pos.x, player.pos.z, 6.5);
   if (d) return { label: d.open ? '🚪 Press E to CLOSE the door (slow down the Legendary!)' : '🚪 Press E to OPEN the door', fn: () => {} };
   return null;
 }
@@ -4412,6 +4578,436 @@ function updateTraders(dt) {
   else if (n.tradeMark) n.tradeMark.visible = false;
 }
 
+// ================================================================ UPDATE 10
+// ---------------------------------------------------------------- LAB CLASSES (Medic & Bonker)
+const CLASSES = [
+  { id: 'medic', name: 'Medic', em: '➕', cost: 100, desc: "Press E near a hurt toad to HEAL them back to full (+2 🪙 each). The team's hero! Medics can't do tasks.", btn: 'blue' },
+  { id: 'bonker', name: 'Bonker', em: '🔨', cost: 1000, desc: "Press E to THROW your hammer at THE LEGENDARY and STUN it for 5 whole seconds! Bonkers can't do tasks.", btn: 'red' },
+];
+function openClassSelect() { if (needToad()) return; renderClassSelect(); toggleModal('classModal', true); }
+function pickClassAndGo(id) { save.activeClass = id; writeSave(); toggleModal('classModal', false); startSurvive(); }
+function renderClassSelect() {
+  $('classCoins').textContent = save.coins;
+  const wrap = $('classList'); wrap.innerHTML = '';
+  const mkRow = (em, nm, desc, btnLabel, btnCls, fn, dis) => { const d = document.createElement('div'); d.className = 'gcard'; d.innerHTML = '<div class="em">' + em + '</div><div style="flex:1"><div class="nm">' + nm + '</div><p>' + desc + '</p></div>'; const b = document.createElement('button'); b.className = 'btn ' + btnCls; b.textContent = btnLabel; if (dis) { b.disabled = true; b.style.opacity = 0.5; } b.onclick = fn; d.appendChild(b); wrap.appendChild(d); };
+  mkRow('🏃', 'Runner (no class)', 'Just a quick toad. Runners are the only ones who can do 🧪 lab tasks!', 'Play!', 'green', () => pickClassAndGo(null));
+  for (const cl of CLASSES) {
+    if (save.classes.includes(cl.id)) mkRow(cl.em, cl.name, cl.desc, 'Play as ' + cl.name + '!', cl.btn, () => pickClassAndGo(cl.id));
+    else mkRow(cl.em, cl.name + ' · ' + cl.cost + ' 🪙', cl.desc, 'Buy (' + cl.cost + ' 🪙)', 'blue', () => { if (save.coins < cl.cost) { beep(150, 0.2, 'sawtooth'); showMsg('Not enough coins! Win mini-games and quests to earn 🪙'); return; } save.coins -= cl.cost; save.classes.push(cl.id); jingle([660, 880, 1100]); showMsg('🎉 You bought the ' + cl.em + ' ' + cl.name + ' class! You own it FOREVER.', 3500); writeSave(); updateHUD(); renderClassSelect(); }, save.coins < cl.cost);
+  }
+}
+function makeMedicCross() { const g = new THREE.Group(); const m = M(0xff5252); const a = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.18, 0.18), m); g.add(a); const b = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.56, 0.18), m); g.add(b); const ring = new THREE.Mesh(new THREE.SphereGeometry(0.4, 8, 6), M(0xffffff)); ring.scale.z = 0.3; ring.position.z = -0.05; g.add(ring); g.position.y = 2.7; return g; }
+
+// ---------------------------------------------------------------- LAB TASKS
+const LAB_TASK_CELLS = [[4, 4], [16, 4], [4, 10], [17, 10]];
+const LAB_TASKS = [];
+const TASK_TYPES = ['potion', 'wires', 'simon'];
+const TASK_COLORS = [
+  { n: 'RED', c: '#ff5252' }, { n: 'BLUE', c: '#3b82f6' }, { n: 'GREEN', c: '#2ecc71' }, { n: 'PINK', c: '#ff6fb5' }, { n: 'YELLOW', c: '#ffd700' }, { n: 'PURPLE', c: '#9b59b6' },
+];
+let taskSeq = 0;
+function buildLabTasks() {
+  LAB_TASKS.length = 0;
+  for (const [col, row] of LAB_TASK_CELLS) {
+    const c = labCellCenter(col, row), g = new THREE.Group();
+    const desk = new THREE.Mesh(new THREE.BoxGeometry(3.4, 1.6, 2.2), M(0xcfd6ea)); desk.position.y = 0.8; g.add(desk);
+    const beak = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.45, 0.9, 10), M(0x35f5e0, { transparent: true, opacity: 0.85 })); beak.position.set(-0.7, 2.05, 0); g.add(beak);
+    const beak2 = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.36, 0.7, 10), M(0xff6fb5, { transparent: true, opacity: 0.85 })); beak2.position.set(0.6, 1.95, 0.3); g.add(beak2);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(1.9, 0.14, 8, 24), new THREE.MeshBasicMaterial({ color: 0x35f5e0 })); ring.rotation.x = -Math.PI / 2; ring.position.y = 0.12; g.add(ring);
+    const beam = new THREE.Mesh(new THREE.ConeGeometry(0.4, 1, 4), new THREE.MeshBasicMaterial({ color: 0x35f5e0 })); beam.position.y = 3.6; beam.rotation.x = Math.PI; g.add(beam);
+    g.position.set(c.x, LAB.floorY, c.z); labGroup.add(g);
+    LAB_TASKS.push({ col, row, x: c.x, z: c.z, group: g, ring, beam, done: false });
+  }
+}
+function resetLabTasks() { for (const ts of LAB_TASKS) { ts.done = false; ts.ring.material.color.setHex(0x35f5e0); ts.beam.visible = true; } }
+function finishStation(stn) { stn.done = true; stn.ring.material.color.setHex(0x5a6288); stn.beam.visible = false; }
+function nearestTask(x, z, maxD) { let best = null, bd = maxD * maxD; for (const ts of LAB_TASKS) { if (ts.done) continue; const dd = dist2(ts.x, ts.z, x, z); if (dd < bd) { bd = dd; best = ts; } } return best; }
+function openTask(stn) {
+  const s = surv; if (!s || s.over || s.spec || s.meLegend || s.cls) return;
+  const type = TASK_TYPES[Math.floor(Math.random() * TASK_TYPES.length)];
+  s.task = { stn, type, id: ++taskSeq, tLeft: 14, lock: false };
+  $('taskTime').style.width = '100%';
+  renderTask(s.task);
+  toggleModal('taskModal', true);
+  beep(700, 0.1, 'triangle');
+}
+function taskSuccess() {
+  const s = surv; if (!s || !s.task) return;
+  finishStation(s.task.stn); s.task = null; toggleModal('taskModal', false);
+  s.timer = Math.max(1, s.timer - 15);
+  stat('tasks'); jingle([784, 1047, 1319]);
+  showMsg('🧪 TASK DONE! ⏱️ -15 seconds! (' + LAB_TASKS.filter(ts => !ts.done).length + ' tasks left)', 3000);
+  writeSave(); checkBadges();
+}
+function taskFail(why) {
+  const s = surv; if (!s || !s.task) { toggleModal('taskModal', false); return; }
+  s.task = null; toggleModal('taskModal', false);
+  s.timer += 10;
+  beep(140, 0.4, 'sawtooth', 0.1);
+  showMsg('💥 Task failed! (' + why + ') ⏱️ +10 seconds!', 2600);
+}
+function renderTask(task) {
+  const body = $('taskBody'); body.innerHTML = ''; const hint = $('taskHint');
+  const mkBtn = (html, css) => { const b = document.createElement('button'); b.className = 'btn'; b.style.cssText = 'margin:6px;font-size:24px;padding:14px 18px;min-width:66px;' + (css || ''); b.innerHTML = html; return b; };
+  if (task.type === 'potion') {
+    $('taskTitle').textContent = '🧪 Potion Mixing';
+    const target = TASK_COLORS[Math.floor(Math.random() * TASK_COLORS.length)];
+    hint.innerHTML = 'Quick! Click the <b style="color:' + target.c + '">3 ' + target.n + '</b> potion bottles — and ONLY those!';
+    const bottles = [target, target, target];
+    while (bottles.length < 8) { const o = TASK_COLORS[Math.floor(Math.random() * TASK_COLORS.length)]; if (o !== target) bottles.push(o); }
+    bottles.sort(() => Math.random() - 0.5);
+    let got = 0;
+    for (const col of bottles) {
+      const b = mkBtn('🧪', 'background:' + col.c + ';');
+      b.onclick = () => { if (!surv || !surv.task || surv.task.id !== task.id || b.disabled) return; if (col === target) { b.disabled = true; b.style.opacity = 0.25; got++; beep(600 + got * 120, 0.1, 'triangle'); if (got >= 3) taskSuccess(); } else taskFail('Wrong bottle!'); };
+      body.appendChild(b);
+    }
+  } else if (task.type === 'wires') {
+    $('taskTitle').textContent = '🔌 Fix the Wires';
+    hint.innerHTML = 'Connect each wire to the plug of the SAME color! Click a wire, then its plug.';
+    const cols = TASK_COLORS.slice(0, 4);
+    const left = cols.slice().sort(() => Math.random() - 0.5), right = cols.slice().sort(() => Math.random() - 0.5);
+    const lw = document.createElement('div'), rw = document.createElement('div');
+    lw.style.cssText = rw.style.cssText = 'display:inline-block;vertical-align:top;margin:0 18px';
+    let sel = null, done = 0;
+    for (const col of left) { const b = mkBtn('➰', 'background:' + col.c); b.onclick = () => { if (b.disabled) return; if (sel) sel.btn.style.outline = ''; sel = { col, btn: b }; b.style.outline = '5px solid #234'; beep(500, 0.06); }; lw.appendChild(b); lw.appendChild(document.createElement('br')); }
+    for (const col of right) { const b = mkBtn('🔌', 'background:' + col.c); b.onclick = () => { if (!surv || !surv.task || surv.task.id !== task.id || b.disabled) return; if (sel && sel.col === col) { b.disabled = sel.btn.disabled = true; b.style.opacity = sel.btn.style.opacity = 0.3; sel.btn.style.outline = ''; sel = null; done++; beep(700 + done * 100, 0.1, 'triangle'); if (done >= 4) taskSuccess(); } else { beep(150, 0.2, 'sawtooth', 0.08); if (sel) { sel.btn.style.outline = ''; sel = null; } } }; rw.appendChild(b); rw.appendChild(document.createElement('br')); }
+    body.appendChild(lw); body.appendChild(rw);
+  } else {
+    $('taskTitle').textContent = '⚗️ Beaker Pattern';
+    hint.innerHTML = 'Watch the beakers flash... then click them in the SAME order!';
+    const cols = TASK_COLORS.slice(0, 4), seq = [], btns = [];
+    for (let i = 0; i < 4; i++) seq.push(Math.floor(Math.random() * 4));
+    task.lock = true; let at = 0;
+    cols.forEach((col, ci) => {
+      const b = mkBtn('⚗️', 'background:' + col.c);
+      b.onclick = () => { if (!surv || !surv.task || surv.task.id !== task.id || task.lock) return; if (seq[at] === ci) { at++; b.style.outline = '5px solid #fff'; setTimeout(() => b.style.outline = '', 160); beep(400 + ci * 140, 0.12, 'triangle'); if (at >= seq.length) taskSuccess(); } else taskFail('Wrong beaker!'); };
+      btns.push(b); body.appendChild(b);
+    });
+    seq.forEach((ci, i) => setTimeout(() => { if (!surv || !surv.task || surv.task.id !== task.id) return; const b = btns[ci]; b.style.outline = '6px solid #234'; beep(400 + ci * 140, 0.18, 'triangle', 0.08); setTimeout(() => { b.style.outline = ''; if (i === seq.length - 1) { task.lock = false; hint.innerHTML = 'Your turn! Click the beakers in the order they flashed!'; } }, 380); }, 700 + i * 560));
+  }
+}
+
+// ---------------------------------------------------------------- LAB HELPERS (stuns, heals, smarter AI, door safety)
+function throwHammerFx(from, to) {
+  const s = surv; if (!s) return; if (!s.fx) s.fx = [];
+  const m = makeHammer(0.9); m.position.set(from.x, LAB.floorY + 2, from.z); scene.add(m);
+  s.fx.push({ mesh: m, from: new THREE.Vector3(from.x, LAB.floorY + 1.5, from.z), to: new THREE.Vector3(to.x, LAB.floorY + 1.5, to.z), t: 0, dur: 0.35 });
+}
+function stunHunter(byC) {
+  const s = surv; if (!s) return;
+  const from = byC ? byC.pos : player.pos;
+  const to = s.meLegend ? player.pos : (s.legend ? s.legend.pos : null); if (!to) return;
+  throwHammerFx(from, to);
+  if (s.meLegend) { s.meStunT = 5; showMsg('💫 ' + (byC ? byC.name : '?') + ' threw a hammer and STUNNED you for 5 seconds!', 3000); beep(220, 0.4, 'square', 0.1); }
+  else { s.legend.stunT = 5; showMsg('💫 ' + (byC ? byC.name : 'You') + ' STUNNED THE LEGENDARY for 5 seconds!', 3000); beep(1100, 0.3, 'triangle', 0.1); }
+}
+function medicTarget(c) {
+  const s = surv; let best = null, bd = 45 * 45;
+  if (!s.meLegend && !s.spec && s.hp < 100) { const dd = dist2(player.pos.x, player.pos.z, c.pos.x, c.pos.z); if (dd < bd) { bd = dd; best = { x: player.pos.x, z: player.pos.z, me: true }; } }
+  for (const o of s.toads) if (o.alive && o !== c && o.hp < 100) { const dd = dist2(o.pos.x, o.pos.z, c.pos.x, c.pos.z); if (dd < bd) { bd = dd; best = { x: o.pos.x, z: o.pos.z, ent: o }; } }
+  return best;
+}
+function healBy(c, goal) {
+  spawnStars(c.pos, 0x7cff5a); beep(980, 0.15, 'triangle', 0.08);
+  if (goal.me) { surv.hp = 100; updateSurvBars(); showMsg('➕ ' + c.name + ' the Medic healed you back to full! 💚', 2500); }
+  else if (goal.ent) { goal.ent.hp = 100; if (dist2(player.pos.x, player.pos.z, c.pos.x, c.pos.z) < 26 * 26) showMsg('➕ ' + c.name + ' healed ' + goal.ent.name + '!', 1600); }
+}
+function fleeDir(c, hx, hz) {
+  const base = Math.atan2(c.pos.x - hx, c.pos.z - hz);
+  for (const off of [0, 0.6, -0.6, 1.2, -1.2, 1.9, -1.9, Math.PI]) {
+    const a = base + off;
+    if (!labCollide(c.pos.x + Math.sin(a) * 3.4, c.pos.z + Math.cos(a) * 3.4, 1)) return a + rand(-0.25, 0.25);
+  }
+  return rand(0, 6.283);
+}
+function ejectFromDoorCell(d) {
+  // nobody gets squished inside a closing door anymore!
+  const c = labCellCenter(d.col, d.row);
+  const alongZ = LAB_GRID[d.row][d.col - 1] === '#';
+  const half = LAB.cs / 2;
+  const push = (p, r) => {
+    if (Math.abs(p.x - c.x) > half + r || Math.abs(p.z - c.z) > half + r) return;
+    if (alongZ) p.z = c.z + (p.z >= c.z ? (half + r + 0.15) : -(half + r + 0.15));
+    else p.x = c.x + (p.x >= c.x ? (half + r + 0.15) : -(half + r + 0.15));
+  };
+  if (!surv) return;
+  if (!surv.spec) { push(player.pos, 1.15); surv.safeX = player.pos.x; surv.safeZ = player.pos.z; }
+  if (surv.legend) push(surv.legend.pos, 1.45);
+  for (const cc of surv.toads) if (cc.alive) push(cc.pos, 1.05);
+}
+
+// ---------------------------------------------------------------- BABY TOADS GROW UP
+const BABY_STAGES = [
+  { name: 'Tiny Baby', xp: 0, scale: 0.42 },
+  { name: 'Little Hopper', xp: 100, scale: 0.52 },
+  { name: 'Junior Toad', xp: 260, scale: 0.63 },
+  { name: 'Big Kid', xp: 520, scale: 0.76 },
+  { name: 'All Grown Up', xp: 900, scale: 0.88 },
+];
+function babyStageOf(b) { let s = BABY_STAGES[0]; for (const st of BABY_STAGES) if ((b.xp || 0) >= st.xp) s = st; return s; }
+let curBaby = null;
+const BABY_PAINTS = ['#8fd66a', '#6db33f', '#ffd700', '#ff9f43', '#ff6fb5', '#74b9ff', '#9b59b6', '#e8f0b5', '#ff6b6b', '#5cd1c9'];
+function openBabyModal(b) { curBaby = b; renderBabyModal(); toggleModal('babyModal', true); }
+function renderBabyModal() {
+  const b = curBaby; if (!b) return;
+  const bst = babyStageOf(b.data), next = BABY_STAGES[BABY_STAGES.indexOf(bst) + 1];
+  $('babyTitle').textContent = '🐸 ' + b.name + ' · ' + bst.name;
+  $('babyInfo').innerHTML = next ? 'Growing up: <b>' + Math.floor(b.data.xp || 0) + '</b> / ' + next.xp + ' — babies grow while you play, and petting helps!' : '🎓 <b>All grown up!</b> When you are ready, send ' + b.name + ' off into the big world. They will send you gift balloons from the sky forever! 🎈';
+  $('babyFill').style.width = (next ? clamp(((b.data.xp || 0) - bst.xp) / (next.xp - bst.xp) * 100, 0, 100) : 100) + '%';
+  const acts = $('babyActions'); acts.innerHTML = '';
+  const mk = (label, cls, fn) => { const btn = document.createElement('button'); btn.className = 'btn ' + cls; btn.textContent = label; btn.onclick = fn; acts.appendChild(btn); return btn; };
+  mk('💕 Pet (+10 grow)', 'pink', () => { b.data.xp = (b.data.xp || 0) + 10; jingle([880, 1100]); spawnStars(b.pos, 0xff9ff3); writeSave(); renderBabyModal(); });
+  mk('🎨 Paint', 'blue', () => { const pr = $('paintRow'); pr.style.display = pr.style.display === 'none' ? 'block' : 'none'; });
+  if (!next) { const sb = mk('🎓 Send off...', 'red', () => { if (sb.dataset.sure) sendOffBaby(b); else { sb.dataset.sure = '1'; sb.textContent = '💚 Really say goodbye? Tap again!'; } }); }
+  const pr = $('paintRow'); pr.style.display = 'none'; pr.innerHTML = '<div style="margin:6px 0">Pick a new skin color:</div>';
+  for (const col of BABY_PAINTS) { const sw = document.createElement('button'); sw.className = 'btn'; sw.style.cssText = 'width:46px;height:46px;margin:4px;background:' + col; sw.onclick = () => { b.data.color = new THREE.Color(col).getHex(); repaintBaby(curBaby); beep(700, 0.1, 'triangle'); showMsg('🎨 ' + b.name + ' has a brand new look!', 2000); }; pr.appendChild(sw); }
+}
+function repaintBaby(b) {
+  const idx = babies.indexOf(b); if (idx < 0) return;
+  scene.remove(b.group); babies.splice(idx, 1);
+  const nb = spawnBaby(b.data); nb.pos.copy(b.pos); nb.stName = b.stName;
+  if (curBaby === b) curBaby = nb;
+  if ($('babyModal').style.display === 'flex') renderBabyModal();
+  writeSave();
+}
+function sendOffBaby(b) {
+  toggleModal('babyModal', false);
+  const bi = save.babies.indexOf(b.data); if (bi >= 0) save.babies.splice(bi, 1);
+  save.sentBabies.push({ name: b.name, color: b.data.color });
+  const ei = babies.findIndex(x => x === b || x.data === b.data); if (ei >= 0) { const be = babies[ei]; spawnStars(be.pos, 0xff9ff3); spawnStars(be.pos, 0x7cff5a); scene.remove(be.group); babies.splice(ei, 1); }
+  stat('sentOff'); jingle([784, 659, 523, 659, 784, 1047]);
+  showMsg('🎓💚 ' + b.name + ' hops off into the big wide world!<br>"I will NEVER forget your face. Watch the sky for my gifts! 🎈"', 7000);
+  writeSave(); updateHUD(); checkBadges();
+}
+
+// ---------------------------------------------------------------- GIFTS FROM THE SKY
+let skyGift = null, giftDropT = 240;
+function updateSkyGift(dt, t) {
+  if (!skyGift) {
+    if (mode !== 'world' || save.stage === 0 || !save.sentBabies.length || player.inCave || player.inHouse || player.inSpace) return;
+    giftDropT -= dt; if (giftDropT > 0) return;
+    giftDropT = rand(200, 340);
+    const from = save.sentBabies[Math.floor(Math.random() * save.sentBabies.length)];
+    const a = rand(0, 6.283), r = rand(14, 26);
+    const x = clamp(player.pos.x + Math.cos(a) * r, -WORLD + 10, WORLD - 10), z = clamp(player.pos.z + Math.sin(a) * r, -WORLD + 10, WORLD - 10);
+    const g = new THREE.Group();
+    const bal = new THREE.Mesh(new THREE.SphereGeometry(1.1, 12, 10), M(new THREE.Color().setHSL(rand(0, 1), 0.85, 0.6))); bal.scale.y = 1.25; bal.position.y = 4.4; g.add(bal);
+    const str = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 3, 4), M(0xffffff)); str.position.y = 2.2; g.add(str);
+    const box = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1, 1.2), M(0xff9f43)); box.position.y = 0.5; g.add(box);
+    const rib = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.25, 0.3), M(0xe53935)); rib.position.y = 1; g.add(rib);
+    g.position.set(x, H(x, z) + 55, z); scene.add(g);
+    skyGift = { group: g, x, z, y: H(x, z) + 55, from, landed: false, life: 95 };
+    showMsg('🎈 Look up! A gift balloon from <b>' + from.name + '</b> is floating down! (🎈 on the map)', 5000); beep(880, 0.2, 'triangle');
+  } else {
+    const g = skyGift, gy = H(g.x, g.z) + 0.2;
+    if (!g.landed) { g.y -= 6.5 * dt; g.group.position.y = g.y; g.group.rotation.y = t * 0.6; if (g.y <= gy) { g.y = gy; g.landed = true; } }
+    else { g.life -= dt; g.group.position.y = gy + Math.sin(t * 2) * 0.12; if (g.life <= 0) { scene.remove(g.group); skyGift = null; } }
+  }
+}
+function openSkyGift() {
+  const g = skyGift; if (!g) return;
+  scene.remove(g.group); skyGift = null; spawnStars(player.pos, 0xff9ff3);
+  const r = Math.random(); let text;
+  if (r < 0.15) { save.stars++; text = 'a whole ⭐ STAR'; }
+  else if (r < 0.45) { const cn = 6 + Math.floor(Math.random() * 7); save.coins += cn; text = cn + ' coins 🪙'; }
+  else if (r < 0.7) { save.petals += 8; text = '8 petals 🌸'; }
+  else { save.mush += 12; text = '12 mushrooms 🍄'; }
+  jingle([784, 988, 1175, 1568]); stat('babyGifts');
+  showMsg('🎈 A gift from <b>' + g.from.name + '</b>: ' + text + '! The note says: "I will NEVER forget your face. Love you! 💚"', 6000);
+  writeSave(); updateHUD();
+}
+
+// ---------------------------------------------------------------- FUN BONKS & BONK BATTLES
+let duel = null, duelCool = 0, bonkCool = 0, pendingDuelNpc = null;
+const BONK_LINES = ['Hey!! 😆', 'BOING! Do it again!', 'Ha! My turn next!', 'Oof! Nice bonk!', 'You call THAT a bonk? 😜'];
+function squashNpc(n) { n.squashT = 0.9; }
+function myBestPet() { return save.pets.slice().sort((a, b) => b.rarity - a.rarity)[0] || null; }
+function bonkToad() {
+  if (duel) return duelSwing();
+  if (mode !== 'world' || save.stage === 0 || player.inWater || player.flying || anyModalOpen() || stealing || carrying || player.inCave || player.inHouse || player.inSpace) return;
+  if (bonkCool > 0) { showMsg('🔨 Your bonking arm needs a rest! (' + Math.ceil(bonkCool) + 's)', 1500); return; }
+  const sc = STAGES[save.stage].scale; let best = null, bd = (4 + sc) * (4 + sc);
+  for (const n of npcs) { if (n.thief || n.alert || n.flight) continue; const dd = dist2(n.pos.x, n.pos.z, player.pos.x, player.pos.z); if (dd < bd) { bd = dd; best = n; } }
+  if (!best) { showMsg('🔨 No toad friend close enough to bonk! Hop right up to one.', 1600); return; }
+  bonkCool = 8; stat('funBonks');
+  squashNpc(best); spawnStars(best.pos); beep(140, 0.18, 'sawtooth', 0.1); setTimeout(() => beep(500, 0.12, 'sine', 0.08), 90);
+  best.line = BONK_LINES[Math.floor(Math.random() * BONK_LINES.length)]; best.bubbleT = 4; best.talkT = 2.5;
+  if (duelCool <= 0 && Math.random() < 0.15 && !best.cafe && !best.trader) offerDuel(best);
+  else showMsg('💥 BOINK! You bonked ' + best.name + ' for fun. "' + best.line + '"', 2000);
+}
+function offerDuel(n) {
+  pendingDuelNpc = n; n.talkT = 8; n.line = 'BONK BATTLE! Me and you, RIGHT NOW! ⚔️'; n.bubbleT = 6;
+  const mine = myBestPet(), theirs = save.npcPets[n.idx];
+  const stake = mine && theirs ? "Winner takes the loser's BEST pet!<br><br>Your " + mine.em + ' <b>' + mine.name + '</b> ' + petStars(mine.rarity) + ' &nbsp;VS&nbsp; their ' + theirs.em + ' <b>' + theirs.type + '</b> ' + petStars(theirs.rarity) : 'The winner gets <b>10 🪙</b> from the loser!';
+  $('bonkText').innerHTML = '<div style="font-size:17px"><b>' + n.name + '</b> wants a BONK BATTLE!<br><br>' + stake + '<br><br>First toad to land <b>3 bonks</b> wins. Swing with <b>E</b> (or the 🔨 button)!</div>';
+  toggleModal('bonkModal', true);
+}
+function startDuel(n) {
+  duel = { n, myHp: 3, npcHp: 3, t: 0, cd: 0, ncd: rand(1.2, 2) };
+  duelCool = 60; n.target = null; n.talkT = 0;
+  jingle([392, 523, 659]); showMsg('⚔️ BONK BATTLE vs ' + n.name + '! Press E to SWING. First to 3 bonks wins!', 4000);
+}
+function duelSwing() {
+  if (!duel || duel.cd > 0) return;
+  duel.cd = 0.9; const n = duel.n, sc = STAGES[save.stage].scale;
+  beep(220, 0.08, 'square', 0.06);
+  if (dist2(n.pos.x, n.pos.z, player.pos.x, player.pos.z) < (3.2 + sc) * (3.2 + sc)) {
+    duel.npcHp--; squashNpc(n); spawnStars(n.pos); beep(110, 0.2, 'sawtooth', 0.1);
+    showMsg('🔨 BONK! ' + n.name + ' has ❤️ ' + Math.max(0, duel.npcHp) + ' left!', 1400);
+    if (duel.npcHp <= 0) endDuel(true);
+  } else showMsg('Swoosh... you missed! Get closer!', 1100);
+}
+function updateDuelNpc(n, dt, t) {
+  const d = Math.hypot(player.pos.x - n.pos.x, player.pos.z - n.pos.z) || 1;
+  if (n.swingT > 0) { n.swingT -= dt; n.hammer.rotation.x = -1.5 + (1 - n.swingT / 0.3) * 2.4; } else n.hammer.rotation.x = lerp(n.hammer.rotation.x, -0.6, Math.min(1, dt * 8));
+  n.moving = false;
+  if (d > 2.6) { const dx = player.pos.x - n.pos.x, dz = player.pos.z - n.pos.z; n.pos.x += dx / d * 10.5 * dt; n.pos.z += dz / d * 10.5 * dt; n.yaw = Math.atan2(dx, dz); n.hopT += dt; n.moving = true; }
+  else if (duel.ncd <= 0) {
+    duel.ncd = rand(1.1, 1.8); n.swingT = 0.3; duel.myHp--;
+    const dx = player.pos.x - n.pos.x, dz = player.pos.z - n.pos.z, dd = Math.hypot(dx, dz) || 1;
+    player.kx = dx / dd * 12; player.kz = dz / dd * 12; player.vy = 5; spawnStars(player.pos); beep(110, 0.2, 'sawtooth', 0.1);
+    showMsg('💥 ' + n.name + ' bonked you! You have ❤️ ' + Math.max(0, duel.myHp) + ' left!', 1400);
+    if (duel.myHp <= 0) endDuel(false);
+  }
+}
+function updateDuel(dt) {
+  bonkCool = Math.max(0, bonkCool - dt); duelCool = Math.max(0, duelCool - dt);
+  if (!duel) return;
+  duel.t += dt; duel.cd = Math.max(0, duel.cd - dt); duel.ncd -= dt;
+  if (mode !== 'world') { endDuel(null); return; }
+  if (duel.t > 60 || dist2(duel.n.pos.x, duel.n.pos.z, player.pos.x, player.pos.z) > 45 * 45) endDuel(null);
+}
+function endDuel(won) {
+  const n = duel.n; duel = null; duelCool = 90;
+  if (won === true) {
+    stat('duelWins');
+    const theirs = save.npcPets[n.idx];
+    if (theirs) { save.pets.push(theirs); save.npcPets[n.idx] = null; if (save.stealTarget === n.idx) save.stealTarget = null; refreshNestPet(n); showMsg('🏆 YOU WIN THE BONK BATTLE! ' + n.name + ' hands over ' + theirs.em + ' <b>' + theirs.type + '</b> ' + petStars(theirs.rarity) + " — it's on your pet shelf!", 5500); }
+    else { save.coins += 10; showMsg('🏆 YOU WIN THE BONK BATTLE! ' + n.name + ' pays up 10 🪙!', 4000); }
+    n.line = 'You are the bonk champion... THIS time! 😤'; n.bubbleT = 5;
+    jingle([523, 659, 784, 1047]);
+  } else if (won === false) {
+    const mine = myBestPet();
+    if (mine) {
+      save.pets.splice(save.pets.indexOf(mine), 1);
+      if (save.activePet === mine.id) { save.activePet = null; spawnActivePet(); }
+      save.npcPets[n.idx] = mine; refreshNestPet(n); refreshPlayerNest();
+      showMsg('💔 You lost the BONK BATTLE... ' + n.name + ' carried ' + mine.em + ' <b>' + mine.name + '</b> to their nest! Win a rematch, trade, or sneak a 🥷 steal to get them back!', 6500);
+    } else { const lost = Math.min(10, save.coins); save.coins -= lost; showMsg('💔 You lost the BONK BATTLE' + (lost ? ' and paid ' + lost + ' 🪙' : '') + '. Rematch when you are ready!', 4000); }
+    n.line = 'I am the BONK CHAMPION! 🏆'; n.bubbleT = 5;
+    beep(180, 0.5, 'sine');
+  } else showMsg('⚔️ The bonk battle fizzled out. Rematch any time!', 2500);
+  renderPetsIfOpen(); writeSave(); updateHUD(); checkBadges();
+}
+
+// ---------------------------------------------------------------- TOAD FRIENDS GET FAMILIES, SPRITES & FORTS
+function buildNpcFamilies() {
+  for (const n of npcs) {
+    if (n.idx % 4 === 2) {
+      const bm = makeToadModel(new THREE.Color(n.color).offsetHSL(0.04, 0, 0.16).getHex()); bm.scale.setScalar(0.32);
+      const g = new THREE.Group(); g.add(bm); scene.add(g);
+      n.npcBaby = { group: g, pos: n.pos.clone(), hopT: rand(0, 5) };
+    }
+    if (n.idx % 5 === 3) {
+      const cols = [0x8ff5ff, 0xffb2e6, 0xc5ff8f, 0xffe38f, 0xd0b2ff];
+      n.npcSprite = makeSprite(cols[n.idx % cols.length]); scene.add(n.npcSprite);
+    }
+  }
+}
+function buildNpcForts() {
+  for (const i of [0, 5, 9, 14, 18, 23, 27, 32]) {
+    const n = npcs[i]; if (!n) continue;
+    let bx = n.home.x + 8, bz = n.home.z + 5;
+    if (pondAt(bx, bz)) { bx = n.home.x - 10; bz = n.home.z - 6; if (pondAt(bx, bz)) continue; }
+    const put = (id, dx, dz, ry) => { const m = makeFurniture(id); m.position.set(bx + dx, H(bx + dx, bz + dz), bz + dz); if (ry) m.rotation.y = ry; scene.add(m); };
+    put('wall', 0, -1.6); put('wall', -1.6, 0, Math.PI / 2); put(i % 2 ? 'bed' : 'table', 0.6, 0.6, rand(0, 6.3)); put('lamp', 1.8, -1.2); put('roof', 0, 0);
+  }
+}
+function updateNpcExtras(n, dt, t) {
+  const vis = mode === 'world';
+  if (n.npcBaby) {
+    const b = n.npcBaby, tx = n.pos.x - Math.sin(n.yaw) * 2.6, tz = n.pos.z - Math.cos(n.yaw) * 2.6;
+    const dx = tx - b.pos.x, dz = tz - b.pos.z, d = Math.hypot(dx, dz);
+    if (d > 30) { b.pos.x = tx; b.pos.z = tz; }
+    else if (d > 1.2) { const sp = Math.min(d * 3, 12); b.pos.x += dx / d * sp * dt; b.pos.z += dz / d * sp * dt; b.group.rotation.y = Math.atan2(dx, dz); b.hopT += dt; }
+    b.pos.y = H(b.pos.x, b.pos.z);
+    b.group.position.set(b.pos.x, b.pos.y + (d > 1.2 ? Math.abs(Math.sin(b.hopT * 10)) * 0.35 : 0), b.pos.z);
+    b.group.visible = vis;
+  }
+  if (n.npcSprite) {
+    n.npcSprite.position.set(n.pos.x + Math.cos(n.yaw) * 2, n.pos.y + 2.7 + Math.sin(t * 2.5 + n.idx) * 0.3, n.pos.z - Math.sin(n.yaw) * 2);
+    n.npcSprite.visible = vis;
+  }
+  if (n.squashT > 0) {
+    n.squashT -= dt;
+    const base = Math.max(0.7, STAGES[Math.max(0, n.stage)].scale) * 0.95;
+    n.model.scale.y = base * (n.squashT > 0 ? 0.35 + 0.65 * (1 - n.squashT / 0.9) : 1);
+  }
+}
+
+// ---------------------------------------------------------------- TUTORIAL & HOW TO PLAY
+const TUT_STEPS = [
+  { em: '🕹️', text: 'Move around! Use WASD, the arrow keys, or the joystick.', test: (t) => t.moved > 8 },
+  { em: '🟢', text: 'Eat 3 of the green snacks floating in the pond. Yum!', init: (t) => t.base = save.snacks, test: (t) => save.snacks >= t.base + 3 },
+  { em: '🌸', text: 'Swim up to the surface and grab 2 pink petals!', init: (t) => t.base = save.petals, test: (t) => save.petals >= t.base + 2 },
+  { em: '🐸', text: 'Keep eating until your XP bar (top left) is full, then find the glowing burrow at the pond edge and press E to become a MINI TOAD!', test: () => save.stage >= 1 },
+  { em: '🍄', text: 'Welcome to the world! Collect 3 mushrooms — the ➜ compass (top right) points to the nearest one!', init: (t) => t.base = save.mush, test: (t) => save.mush >= t.base + 3 },
+  { em: '🛍️', text: 'See the red dot on the map? That is the Mushroom Shop! Walk there and press E to peek at the clothes.', test: () => $('shop').style.display === 'flex' },
+  { em: '🎮', text: 'Last one! Press the pink Play Your Games button on the left to see all 10 mini-games!', test: () => $('gamesModal').style.display === 'flex' },
+];
+let tutState = { last: -1, moved: 0, lastX: 0, lastZ: 0, base: 0 };
+function updateTutorial(dt) {
+  const el = $('tut');
+  if (save.tutStep == null || save.tutStep >= TUT_STEPS.length) { if (el.style.display !== 'none') el.style.display = 'none'; return; }
+  if (mode !== 'world') { el.style.display = 'none'; return; }
+  const step = TUT_STEPS[save.tutStep];
+  if (tutState.last !== save.tutStep) {
+    tutState.last = save.tutStep; tutState.moved = 0; tutState.lastX = player.pos.x; tutState.lastZ = player.pos.z;
+    if (step.init) step.init(tutState);
+    el.innerHTML = '<b>📖 TUTORIAL ' + (save.tutStep + 1) + '/' + TUT_STEPS.length + '</b> · ' + step.em + ' ' + step.text + ' <button class="btn red" id="tutSkip" style="font-size:11px;padding:2px 8px">Skip</button>';
+    $('tutSkip').onclick = () => { save.tutStep = TUT_STEPS.length; writeSave(); $('tut').style.display = 'none'; showMsg('📖 Tutorial skipped. Open the ❓ How to Play book any time!', 3000); };
+  }
+  el.style.display = 'block';
+  tutState.moved += Math.hypot(player.pos.x - tutState.lastX, player.pos.z - tutState.lastZ);
+  tutState.lastX = player.pos.x; tutState.lastZ = player.pos.z;
+  let ok = false; try { ok = step.test(tutState); } catch (e) {}
+  if (ok) {
+    save.tutStep++;
+    if (save.tutStep >= TUT_STEPS.length) { save.coins += 10; stat('tutDone'); jingle([523, 659, 784, 1047]); showMsg('🎓 TUTORIAL COMPLETE! +10 🪙 You know everything a young toad needs. Have fun!', 5000); checkBadges(); }
+    else { jingle([659, 880]); showMsg('✅ Nice! Next tip is at the top of the screen.', 2000); }
+    writeSave(); updateHUD();
+  }
+}
+let howtoIdx = 0;
+const HOWTO_PAGES = [
+  { t: '🕹️ Moving Around', h: '<b>Keyboard:</b> WASD or arrow keys to move · Space to jump or swim up · Shift to swim or fly down · drag the mouse to look around · scroll to zoom.<br><br><b>iPad:</b> the round joystick moves you, and the buttons on the right jump, go down, press E, build, and BONK!<br><br><b>E is the magic button:</b> talk, pet, feed, ride, fish, open, celebrate... when something is near, a message at the bottom tells you what E will do!' },
+  { t: '🐸 Growing Up', h: 'You start as a teeny <b>tadpole</b>. Eat green snacks and grab 🌸 petals in the pond until your XP bar fills, then find the glowing burrow at the pond edge and press E!<br><br>On land, eat 🪰 flies and collect 🍄 mushrooms to keep growing: Mini Toad → Toad → Big Toad → <b>Legendary Toad</b> 👑 → all the way to <b>GALAXY TOAD</b> 🌌. Eleven evolutions!' },
+  { t: '💰 All the Treasures', h: '🍄 <b>Mushrooms</b> buy clothes · 🌸 <b>Petals</b> buy fancy clothes · 🪨 <b>Stones</b> build your fort · 🪙 <b>Coins</b> come from winning games and quests · ⭐ <b>Stars</b> hatch pets · 🥕 <b>Carrot coins</b> come from the farm · 💎 gems hide in space!<br><br>✨ <b>Golden mushrooms</b> give free clothes. Watch for the sparkle!' },
+  { t: '🎮 The 10 Games', h: 'Press the pink <b>Play Your Games</b> button! Hamash 🔨, Runny Race 🏁, Boss Race 👑, Fly Catch 👅, Lily Pad Hop 🪷, Sky Ring Race ☁️, <b>Survive the Lab</b> 🔦, Tag 🏷️, Snail Race 🐌, and Hide &amp; Seek 🙈.<br><br>In the Lab: do 🧪 tasks, slam doors, and RUN from THE LEGENDARY. You can buy the ➕ Medic or 🔨 Bonker class with coins!' },
+  { t: '🐾 Pets, Birds & Babies', h: '⭐ stars hatch surprise <b>pets</b> (build a Pet Nest first!). Toad friends keep pets on nests too — trade for them, win them in ⚔️ BONK BATTLES, or sneak a 🥷 steal!<br><br>Find the 5 <b>magic bird</b> eggs, feed them petals, and FLY. The ⚡ Thunder Bird flies all the way to SPACE!<br><br>Big toads hatch <b>baby toads</b>. Babies grow up, and grown-up babies can be sent off — they mail you gift balloons 🎈 forever!' },
+  { t: '🏗️ Building & Friends', h: 'Press <b>B</b> to build a fort: walls, beds, lamps, a Toad House you can walk inside, a Trophy Shelf, and a Pet Nest.<br><br>Chat with toads at the ☕ <b>Toad Café</b> to make real friends (they send presents!). Grow crops at the 🥕 farm, buy shoes 👟 and ice cream 🍦 in town, and press <b>Q</b> to BONK a toad just for fun... sometimes it becomes a ⚔️ BONK BATTLE for pets!' },
+  { t: '🗺️ Secrets!', h: 'A secret cave hides under the home pond 🕳️ · sky islands float above ☁️ · 10 glowing sprites wait to be found ✨ · the heron 🦩 hunts at the pond (hide!) · winter freezes the ponds for ice skating ⛸️ · toads throw birthday parties 🎂 · and the moon has ALIENS 👽.<br><br>Check the 🏆 Trophies button to see everything left to do. Have fun, toad!' },
+];
+function renderHowto(i) {
+  howtoIdx = clamp(i, 0, HOWTO_PAGES.length - 1);
+  const p = HOWTO_PAGES[howtoIdx];
+  $('howtoTitle').textContent = '📖 ' + p.t;
+  $('howtoBody').innerHTML = '<div style="font-size:15px;line-height:1.55">' + p.h + '</div>';
+  $('howtoPage').textContent = (howtoIdx + 1) + ' / ' + HOWTO_PAGES.length;
+  $('howtoPrev').style.visibility = howtoIdx === 0 ? 'hidden' : 'visible';
+  $('howtoNext').style.visibility = howtoIdx === HOWTO_PAGES.length - 1 ? 'hidden' : 'visible';
+}
+BADGES.push(
+  { id: 'scientist', em: '🧪', name: 'Lab Scientist', desc: 'Finished 5 lab tasks', test: () => (save.stats.tasks || 0) >= 5 },
+  { id: 'toadmedic', em: '➕', name: 'Toad Medic', desc: 'Healed 3 toads in the lab', test: () => (save.stats.heals || 0) >= 3 },
+  { id: 'stunner', em: '💫', name: 'Legendary Stunner', desc: 'Stunned THE LEGENDARY with a hammer throw', test: () => (save.stats.stuns || 0) >= 1 },
+  { id: 'lastone', em: '🚨', name: 'Last Toad Standing', desc: 'Won Survive as the very last toad', test: () => (save.stats.lastSurvive || 0) >= 1 },
+  { id: 'gradparent', em: '🎓', name: 'Proud Parent', desc: 'Raised a baby toad and sent it off', test: () => (save.sentBabies || []).length >= 1 },
+  { id: 'bonkchamp', em: '⚔️', name: 'Bonk Battle Champion', desc: 'Won a bonk battle', test: () => (save.stats.duelWins || 0) >= 1 },
+  { id: 'readytoad', em: '📖', name: 'Ready Toad', desc: 'Finished the tutorial', test: () => (save.stats.tutDone || 0) >= 1 }
+);
+
 // ---------------------------------------------------------------- GAME LOOP
 let running = false, lastT = 0, saveT = 0;
 const mapCtx = $('minimap').getContext('2d');
@@ -4538,7 +5134,7 @@ function update(dt, t) {
   updateNight(dt, t); updateHeron(dt, t); updateQuest(dt, t); updateSeason(dt, t); updatePetSnail(dt, t); updateCave(dt, t);
   updateDiscover(dt); updateSteal(dt); updateCarry(dt, t); updateThieves(dt, t); updateWeather(dt, t); updateTaxi(dt, t); updateFishing(dt, t); updateHouse(dt); updateActivePet(dt, t);
   updateCafe(dt, t); updateFarm(dt, t); updateBoosts(dt); updateWildFlowers(dt, t); updateSpriteSpots(dt, t); updateSpaceStuff(dt, t);
-  updateBirthday(dt, t); updateTraders(dt);
+  updateBirthday(dt, t); updateTraders(dt); updateSkyGift(dt, t); updateDuel(dt); updateTutorial(dt);
   for (const pd of PONDS) pd.water.material.opacity = 0.5 + Math.sin(t * 1.3 + pd.x) * 0.05;
 
   // ---- camera, sun, sky follow the player
@@ -4585,7 +5181,7 @@ function drawBubbles() {
     if (show) {
       if (!n.bubble) { n.bubble = document.createElement('div'); n.bubble.className = 'bubble'; wrap.appendChild(n.bubble); n.lineT = 0; }
       n.lineT = (n.lineT || 0) + 1; if (isNpc && n.lineT % 600 === 1 && !(n.talkT > 0)) n.line = n.lines[Math.floor(Math.random() * n.lines.length)];
-      const label = n.kind === 'me' ? '🐸 You' : n.kind === 'toad' ? n.name + ' (' + STAGES[n.stage].name + ')' : n.kind === 'baby' ? n.name + ' (baby toad)' : n.kind === 'friend' ? n.name + ' ✨' : n.name + ' the ' + n.kind;
+      const label = n.kind === 'me' ? '🐸 You' : n.kind === 'toad' ? n.name + ' (' + STAGES[n.stage].name + ')' : n.kind === 'baby' ? n.name + ' (' + babyStageOf(n.data).name + ')' : n.kind === 'friend' ? n.name + ' ✨' : n.name + ' the ' + n.kind;
       n.bubble.innerHTML = '<b>' + label + '</b>' + (n.line || '');
       tmpV.set(n.pos.x, n.pos.y + (n.kind === 'me' ? 2.6 * STAGES[save.stage].scale : n.kind === 'toad' ? 2.4 * n.model.scale.x : n.kind === 'alien' ? 2.8 : n.kind === 'baby' ? 1.5 : 1.5), n.pos.z); tmpV.project(camera);
       const vis = tmpV.z < 1; n.bubble.style.display = vis ? 'block' : 'none';
@@ -4600,11 +5196,12 @@ function drawMap() {
     for (let row = 0; row < LAB_ROWS; row++) for (let col = 0; col < LAB_COLS; col++) {
       const ch = LAB_GRID[row][col];
       if (ch === '#') c.fillStyle = '#5a6288';
-      else if (ch === 'D') { const d = labDoors.find(dd => dd.col === col && dd.row === row); c.fillStyle = d && !d.open ? '#a0703c' : '#3a4b3a'; }
+      else if (ch === 'D') { const d = labDoors.find(dd => dd.col === col && dd.row === row); c.fillStyle = d && d.flashT > 0 ? '#ffe066' : d && !d.open ? '#a0703c' : '#3a4b3a'; }
       else c.fillStyle = '#2b3048';
       c.fillRect(off + col * cw, offR + row * cw, cw, cw);
     }
     const o = labOrigin(), px = x => off + (x - o.x) / LAB.cs * cw, pz = z => offR + (z - o.z) / LAB.cs * cw;
+    for (const ts of LAB_TASKS) if (!ts.done) { c.fillStyle = '#35f5e0'; c.fillRect(px(ts.x) - 2, pz(ts.z) - 2, 5, 5); }
     for (const t2 of surv.toads) if (t2.alive) { c.fillStyle = '#7cff5a'; c.fillRect(px(t2.pos.x) - 2, pz(t2.pos.z) - 2, 4, 4); }
     if (surv.legend) { c.fillStyle = '#ff2222'; c.beginPath(); c.arc(px(surv.legend.pos.x), pz(surv.legend.pos.z), 4, 0, 6.3); c.fill(); }
     if (!surv.spec) { c.fillStyle = surv.meLegend ? '#ff2222' : '#fff'; c.strokeStyle = '#000'; c.beginPath(); c.arc(px(player.pos.x), pz(player.pos.z), 4, 0, 6.3); c.fill(); c.stroke(); }
@@ -4626,7 +5223,7 @@ function drawMap() {
   if (save.quest && save.quest.type === 'visit' && !save.quest.have) { const lm = LANDMARKS.find(l => l.id === save.quest.target); c.fillText('📍', (lm.x + WORLD) * k, (lm.z + WORLD) * k + 4); }
   if (heron) { c.fillText('🦩', (heron.pos.x + WORLD) * k, (heron.pos.z + WORLD) * k + 4); }
   if (save.stealTarget != null && npcs[save.stealTarget]) { const n = npcs[save.stealTarget]; c.fillText('🎯', (n.home.x + WORLD) * k, (n.home.z + WORLD) * k + 4); }
-  { const nest = myNest(); if (nest) c.fillText('🪺', (nest.mesh.position.x + WORLD) * k, (nest.mesh.position.z + WORLD) * k + 4); const th = npcs.find(n => n.thief); if (th) c.fillText('🥷', (th.pos.x + WORLD) * k, (th.pos.z + WORLD) * k + 4); c.fillText('☕', (160 + WORLD) * k, (108 + WORLD) * k + 4); c.fillText('🥕', (-1050 + WORLD) * k, (-10 + WORLD) * k + 4); if (bday) c.fillText('🎂', (CAFE.x + WORLD) * k, (CAFE.z + 16 + WORLD) * k + 4); for (const n2 of npcs) if (n2.trader) c.fillText('💰', (n2.pos.x + WORLD) * k, (n2.pos.z + WORLD) * k + 4); if (giftState) c.fillText('🎁', (giftState.x + WORLD) * k, (giftState.z + WORLD) * k + 4); }
+  { const nest = myNest(); if (nest) c.fillText('🪺', (nest.mesh.position.x + WORLD) * k, (nest.mesh.position.z + WORLD) * k + 4); const th = npcs.find(n => n.thief); if (th) c.fillText('🥷', (th.pos.x + WORLD) * k, (th.pos.z + WORLD) * k + 4); c.fillText('☕', (160 + WORLD) * k, (108 + WORLD) * k + 4); c.fillText('🥕', (-1050 + WORLD) * k, (-10 + WORLD) * k + 4); if (bday) c.fillText('🎂', (CAFE.x + WORLD) * k, (CAFE.z + 16 + WORLD) * k + 4); for (const n2 of npcs) if (n2.trader) c.fillText('💰', (n2.pos.x + WORLD) * k, (n2.pos.z + WORLD) * k + 4); if (giftState) c.fillText('🎁', (giftState.x + WORLD) * k, (giftState.z + WORLD) * k + 4); if (skyGift) c.fillText('🎈', (skyGift.x + WORLD) * k, (skyGift.z + WORLD) * k + 4); }
   c.fillStyle = '#fff'; c.strokeStyle = '#000'; c.beginPath(); c.arc((player.pos.x + WORLD) * k, (player.pos.z + WORLD) * k, 4, 0, 6.3); c.fill(); c.stroke();
 }
 function frame(now) {
@@ -4657,10 +5254,10 @@ function startGame() {
   showMsg(save.stage === 0 ? '🐟 You are a tiny tadpole! Swim around (WASD) and eat the snacks.' : '🐸 Welcome back, ' + STAGES[save.stage].name + '!', 4000);
 }
 loadSave();
-buildSky(); buildGround(); buildIslands(); buildScenery(); buildMushrooms(); buildFood(); buildBurrow(); buildNPCs(); buildAnimals(); buildArena(); buildTrack(); buildEggs(); buildNight(); buildCave(); assignNpcPets(); buildNests(); buildHouse(); buildBiomes(); buildTown(); buildFarm(); buildWildFlowers(); buildSpace(); buildSpriteSpots();
+buildSky(); buildGround(); buildIslands(); buildScenery(); buildMushrooms(); buildFood(); buildBurrow(); buildNPCs(); buildAnimals(); buildArena(); buildTrack(); buildEggs(); buildNight(); buildCave(); assignNpcPets(); buildNests(); buildNpcForts(); buildNpcFamilies(); buildHouse(); buildBiomes(); buildTown(); buildFarm(); buildWildFlowers(); buildSpace(); buildSpriteSpots();
 $('playBtn').onclick = () => { $('start').style.display = 'none'; beep(660, 0.1); startGame(); };
 $('resetBtn').onclick = () => { if (confirm('Start a brand new game? Your toad will go back to being a tadpole!')) { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} location.reload(); } };
-window.TA = { player, mush, npcs, animals, babies, makeClothing, CLOTHES, equipVisual, hatchPet, startSteal, myNest, startTag, startTagWith, startSurvive, get surv() { return surv; }, frame, LAB, LAB_GRID, labDoors2: () => labDoors, labCellCenter, startBirthday, get bday() { return bday; }, set bdayT(v) { bdayT = v; }, celebrate, refreshTraders, set traderT(v) { traderT = v; }, renderTrade, set tradeNpc(n) { tradeNpc = n; }, surviveAction, surviveSwing, setDoor, nearestDoor, BIOMES, SPRITES, SPACE, CAFE, FARM, SEEDS, SHOES, FLAVORS, aliens, enterSpace, exitSpace, meetSprite, spriteSpots, seatNpc, startChat, finishChat, acceptFriend, inviteFriend, harvestPlot, sellBouquets, cropStage, plotPos, TOPICS, get chatSeq() { return chatSeq; }, get giftState() { return giftState; }, set giftT(v) { giftT = v; }, set visitorT(v) { visitorT = v; }, set pairT(v) { pairT = v; }, get cafeSeats() { return cafeSeats; }, talkToAlien, biomeAt, H2: H, tagAction, bonkThief, get carrying() { return carrying; }, set thiefT(v) { thiefT = v; }, startHamashWith, enterHouse, exitHouse, callTaxi, startFishing, fishAction, renderPets, addStar, get fishing() { return fishing; }, get stealing() { return stealing; }, get taxi() { return taxi; }, get wx() { return wx; }, set rainT(v) { wx.t = v; }, HOUSE, ARENAS, DISCOVER, TAXI_STOPS, startSnailRace, snailCheer, togglePhoto, snapPhoto, setPose, enterCave, exitCave, openCaveChest, playNote, applySeason, get season() { return season; }, get petSnail() { return petSnail; }, CAVE, SEASONS, get photoMode() { return photoMode; }, get curGame() { return curGame; }, get heron() { return heron; }, get friend() { return friend; }, startFlyCatch, startLily, startSky, startHide, finishGame, questTalk, offerQuests, babyGift, checkBadges, earnedBadges, applyReward, GEAR, BADGES, dayFactor, set heronT(v) { heronT = v; }, set questOfferT(v) { questOfferT = v; }, get mode() { return mode; }, get worldReturn() { return worldReturn; }, get hamash() { return hamash; }, get race() { return race; }, startHamash, startRace, endGame, leaveGame, usePower, swingHammer, applyEffect, eggs, BIRDS, get bird() { return bird; }, get save() { return save; }, get camYaw() { return camYaw; }, set camYaw(v) { camYaw = v; camManual = 5; }, get running() { return running; }, keys, H, gainXP, adoptBird, hatchBaby, meetFriend, feedBird, startFlying, updateHUD };
+window.TA = { player, mush, npcs, animals, babies, makeClothing, CLOTHES, equipVisual, hatchPet, startSteal, myNest, startTag, startTagWith, startSurvive, get surv() { return surv; }, frame, LAB, LAB_GRID, labDoors2: () => labDoors, labCellCenter, startBirthday, get bday() { return bday; }, set bdayT(v) { bdayT = v; }, celebrate, refreshTraders, set traderT(v) { traderT = v; }, renderTrade, set tradeNpc(n) { tradeNpc = n; }, surviveAction, surviveSwing, setDoor, nearestDoor, BIOMES, SPRITES, SPACE, CAFE, FARM, SEEDS, SHOES, FLAVORS, aliens, enterSpace, exitSpace, meetSprite, spriteSpots, seatNpc, startChat, finishChat, acceptFriend, inviteFriend, harvestPlot, sellBouquets, cropStage, plotPos, TOPICS, get chatSeq() { return chatSeq; }, get giftState() { return giftState; }, set giftT(v) { giftT = v; }, set visitorT(v) { visitorT = v; }, set pairT(v) { pairT = v; }, get cafeSeats() { return cafeSeats; }, talkToAlien, biomeAt, H2: H, tagAction, bonkThief, get carrying() { return carrying; }, set thiefT(v) { thiefT = v; }, startHamashWith, enterHouse, exitHouse, callTaxi, startFishing, fishAction, renderPets, addStar, get fishing() { return fishing; }, get stealing() { return stealing; }, get taxi() { return taxi; }, get wx() { return wx; }, set rainT(v) { wx.t = v; }, HOUSE, ARENAS, DISCOVER, TAXI_STOPS, startSnailRace, snailCheer, togglePhoto, snapPhoto, setPose, enterCave, exitCave, openCaveChest, playNote, applySeason, get season() { return season; }, get petSnail() { return petSnail; }, CAVE, SEASONS, get photoMode() { return photoMode; }, get curGame() { return curGame; }, get heron() { return heron; }, get friend() { return friend; }, startFlyCatch, startLily, startSky, startHide, finishGame, questTalk, offerQuests, babyGift, checkBadges, earnedBadges, applyReward, GEAR, BADGES, dayFactor, set heronT(v) { heronT = v; }, set questOfferT(v) { questOfferT = v; }, get mode() { return mode; }, get worldReturn() { return worldReturn; }, get hamash() { return hamash; }, get race() { return race; }, startHamash, startRace, endGame, leaveGame, usePower, swingHammer, applyEffect, eggs, BIRDS, get bird() { return bird; }, get save() { return save; }, get camYaw() { return camYaw; }, set camYaw(v) { camYaw = v; camManual = 5; }, get running() { return running; }, keys, H, gainXP, adoptBird, hatchBaby, meetFriend, feedBird, startFlying, updateHUD, openClassSelect, pickClassAndGo, CLASSES, labTasks: () => LAB_TASKS, openTask, taskSuccess, taskFail, nearestTask, bonkToad, get duel() { return duel; }, set duelCool(v) { duelCool = v; }, set bonkCool(v) { bonkCool = v; }, offerDuel, startDuel, duelSwing, endDuel, openBabyModal, sendOffBaby, BABY_STAGES, babyStageOf, get skyGift() { return skyGift; }, set giftDropT(v) { giftDropT = v; }, openSkyGift, updateTutorial, renderHowto, get bonkPending() { return pendingDuelNpc; }, stunHunter, ejectFromDoorCell, resetLabTasks, spawnBaby, babies2: () => babies };
 requestAnimationFrame(frame);
 })();
 </script>
