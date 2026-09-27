@@ -10,7 +10,7 @@ When you've eaten enough, swim to the glowing burrow at the edge of the pond and
 You come out as a **mini toad** and discover the pond was only **1%** of a colossal world!
 
 Out in the world you'll find:
-- 🍄 **1,000 spotted mushrooms** scattered over rolling hills. Every time you collect one, a new one spawns somewhere random.
+- 🍄 **2,000 spotted mushrooms** scattered over rolling hills. Every time you collect one, a new one spawns somewhere random.
 - ✨ **Golden mushrooms** that give you free clothes.
 - 🌸 **Petals** floating on the lakes. They buy the fanciest shop gear and feed your bird.
 - 🏪 The **Mushroom Shop** (a giant mushroom house near the pond): 23 hats, glasses, capes, scarves, and a tutu.
@@ -58,6 +58,7 @@ Out in the world you'll find:
 - ⚔️ **Bonk battles**: press Q (or the BONK button) to bonk a toad for fun. Sometimes it becomes a duel — first to 3 bonks wins, and the winner takes the loser's best pet.
 - 🐸 Toad friends have their own baby toads, glowing sprites, and little forts.
 - 📖 A **tutorial** for new players and a How to Play book behind the ❓ button.
+- ⚖️ **Judgemental**: all 40 toad friends split onto the ☀️ LIGHT and 🌑 DARK sides and battle with hammers until one side is fully bonked out. You test your luck to see which side you land on — win by wiping out the other side AND surviving. One toad is the JUDGE on a floating throne, summoning 👹 toad bosses, ⚡ side boosts, and 💥 lightning zaps. 1 game in 5, YOU are the Judge and spend coins on the chaos.
 - 🎂 **Birthday parties** at the café with balloons and cake. Celebrate for coins, double while wearing a 🎉 Party Hat.
 - 🔄 **Trading** with 💰-marked toads: mushrooms, petals, coins, stones, flowers, carrots, stars, and sometimes full pet swaps.
 - 📋 An in-game **Update Log** with everything that's new.
