@@ -50,15 +50,15 @@ Out in the world you'll find:
 - 🍦 **Ice Cream Shop** boosts (speed, jump, magnet) and a 👟 **Shoe Shop** where pricier shoes make you faster everywhere, even in games.
 - ✨ **10 glowing sprites** hidden across the world, each with a unique power; equip one at a time.
 - 🏷️ Tag maps: Meadow, Playground, School, and City.
-- 🔦 **Survive the Lab**: a big fully-walled lab of hallways, rooms, and slammable metal doors (they all start CLOSED and flash yellow when opened). THE LEGENDARY hunts everyone for 2 minutes. Health bar, stamina bar, a big RUN button, and ghost-spectating when you're out. 1 game in 10, YOU are the giant golden Legendary — and you smash through doors just by running at them.
+- 🔦 **Survive the Lab**: a big fully-walled lab of hallways, rooms, and slammable metal doors (they all start CLOSED and flash yellow — visible through walls!). THE LEGENDARY stalks slower than a toad with its own stamina, but flies into a RAGE speed boost the moment it SEES you, and every toad it catches adds 30 seconds to the clock. RUN and ability buttons sit in the bottom-right corner (J / F on a keyboard). 1 game in 10, YOU are the giant golden Legendary with three powers: 💥 Hammer Slam shockwave, 📢 Sonic Croak freeze, and 👅 Magnet Tongue.
 - 🧪 **Lab tasks** in the corner rooms: mix potions, fix wires, repeat beaker patterns. Winning drops the clock 15 seconds, failing adds 10. Computer toads do tasks too.
-- ➕🔨 **Lab classes**: buy the Medic (heals hurt toads) or the Bonker (throws a hammer to stun the Legendary for 5 seconds) and pick a class before every game. Computer toads can have classes too.
+- ➕🔨👀🪤🛡️ **Five lab classes**: Medic (heals), Bonker (hammer-throw stun), Scout (sees the Legendary through walls + super dash), Shieldy (bubble shields that block a hit), and Trapper (sticky goo that stops the Legendary for 3 seconds). Abilities on F; computer toads can have classes too.
 - 🚨 Last toad standing glows **red** — the Legendary knows exactly where you are.
 - 🎓 **Baby toads grow up** through five stages. Grown babies can be painted any color and sent off into the world; they send gift balloons 🎈 from the sky forever.
 - ⚔️ **Bonk battles**: press Q (or the BONK button) to bonk a toad for fun. Sometimes it becomes a duel — first to 3 bonks wins, and the winner takes the loser's best pet.
 - 🐸 Toad friends have their own baby toads, glowing sprites, and little forts.
 - 📖 A **tutorial** for new players and a How to Play book behind the ❓ button.
-- ⚖️ **Judgemental**: all 40 toad friends split onto the ☀️ LIGHT and 🌑 DARK sides and battle with hammers until one side is fully bonked out. You test your luck to see which side you land on — win by wiping out the other side AND surviving. One toad is the JUDGE on a floating throne, summoning 👹 toad bosses, ⚡ side boosts, and 💥 lightning zaps. 1 game in 5, YOU are the Judge and spend coins on the chaos.
+- ⚖️ **Judgemental**: all 40 toad friends LINE UP before the JUDGE, who sorts everyone onto the ☀️ LIGHT or 🌑 DARK side — usually uneven teams! — then: Ready... FIGHT! Teams glow gold and purple, Q throws a MEGA POWER BONK, and you must wipe out the other side AND survive. The Judge meddles from a floating throne with 👹 toad bosses, ⚡ boosts, and 💥 zaps. 1 game in 5, YOU are the Judge and spend coins on the chaos.
 - 🎂 **Birthday parties** at the café with balloons and cake. Celebrate for coins, double while wearing a 🎉 Party Hat.
 - 🔄 **Trading** with 💰-marked toads: mushrooms, petals, coins, stones, flowers, carrots, stars, and sometimes full pet swaps.
 - 📋 An in-game **Update Log** with everything that's new.

@@ -119,6 +119,13 @@
   #tut { position: absolute; left: 50%; top: 86px; transform: translateX(-50%); max-width: 640px; font-size: 15px; pointer-events: auto; border-color: #ffe66d; text-align: center; z-index: 5; }
   #tut b { color: #ffe66d; }
   body.touch #tut { top: auto; bottom: 150px; max-width: 68%; font-size: 13px; }
+  #abilityUI { position: fixed; right: 14px; bottom: 14px; display: none; align-items: flex-end; gap: 10px; z-index: 6; pointer-events: auto; }
+  #abilityUI .ab { width: 68px; height: 68px; border-radius: 50%; border: 3px solid #fff; font: inherit; font-weight: bold; font-size: 12px; line-height: 1.15; color: #3b1d00; background: rgba(255,159,67,.92); box-shadow: 0 4px 0 rgba(0,0,0,.3); cursor: pointer; touch-action: none; user-select: none; -webkit-user-select: none; }
+  #abilityUI .ab:active { transform: translateY(2px); }
+  #abilityUI .ab.run { background: rgba(124,255,90,.92); }
+  #abilityUI .ab.cd { opacity: .45; }
+  #abilityUI .ab small { display: block; font-size: 9px; color: #234; }
+  #abilityBtns { display: flex; gap: 10px; }
   @media (max-width: 700px) {
     #help, #maplabel { display: none; }
     #topleft { min-width: 0; width: 52%; padding: 6px 10px; } #quest { font-size: 12px; } #stage { font-size: 17px; }
@@ -135,6 +142,8 @@
     #minimap { width: 100px; height: 100px; } #msg { font-size: 18px; top: 24%; } #prompt { font-size: 15px; bottom: 130px; white-space: normal; max-width: 90%; text-align: center; }
     #stick { bottom: 130px; left: 20px; } #tbtns { bottom: 70px; right: 14px; gap: 8px; } .tb { width: 58px; height: 58px; font-size: 12px; }
     #tut { top: auto; bottom: 200px; font-size: 12px; max-width: 92%; }
+    body.touch.ingame #tbtns { bottom: 160px; }
+    #abilityUI .ab { width: 58px; height: 58px; font-size: 11px; }
   }
 </style>
 </head>
@@ -174,7 +183,7 @@
     <button class="btn pink" id="gamesBtn">🎮 Play Your<br>Games</button>
     <div class="title" style="margin:6px 0 0">11 games inside!</div>
   </div>
-  <div id="gamehud" class="panel"><div id="gameinfo"></div><div id="survUI" style="display:none"><div id="hpWrap" class="sbar"><div id="hpFill" style="background:linear-gradient(90deg,#ff6b6b,#ff9f43)"></div></div><div class="sbar"><div id="stFill" style="background:linear-gradient(90deg,#ffe66d,#7cff5a)"></div></div><button class="btn green" id="runBtn" style="font-size:20px;padding:10px 26px">🏃 RUN!</button></div><div id="judgeUI" style="display:none"><div style="font-size:13px;margin:4px 0">⚖️ JUDGE POWERS · you have <b id="judgeCoins">0</b> 🪙</div><button class="btn red" id="jBoss" style="font-size:13px">👹 Boss 12🪙</button> <button class="btn" id="jBoostL" style="font-size:13px">⚡☀️ 6🪙</button> <button class="btn blue" id="jBoostD" style="font-size:13px">⚡🌑 6🪙</button> <button class="btn" id="jZapL" style="font-size:13px">💥☀️ 4🪙</button> <button class="btn blue" id="jZapD" style="font-size:13px">💥🌑 4🪙</button></div><button class="btn red" id="quitGame">🏳️ Quit game</button></div>
+  <div id="gamehud" class="panel"><div id="gameinfo"></div><div id="survUI" style="display:none"><div id="hpWrap" class="sbar"><div id="hpFill" style="background:linear-gradient(90deg,#ff6b6b,#ff9f43)"></div></div><div class="sbar"><div id="stFill" style="background:linear-gradient(90deg,#ffe66d,#7cff5a)"></div></div></div><div id="judgeUI" style="display:none"><div style="font-size:13px;margin:4px 0">⚖️ JUDGE POWERS · you have <b id="judgeCoins">0</b> 🪙</div><button class="btn red" id="jBoss" style="font-size:13px">👹 Boss 12🪙</button> <button class="btn" id="jBoostL" style="font-size:13px">⚡☀️ 6🪙</button> <button class="btn blue" id="jBoostD" style="font-size:13px">⚡🌑 6🪙</button> <button class="btn" id="jZapL" style="font-size:13px">💥☀️ 4🪙</button> <button class="btn blue" id="jZapD" style="font-size:13px">💥🌑 4🪙</button></div><button class="btn red" id="quitGame">🏳️ Quit game</button></div>
   <div id="photoUI" class="panel">
     <div style="margin-bottom:4px">📸 Drag to look around · scroll to zoom · pick a pose</div>
     <button class="btn pose" data-pose="happy">😊 Happy</button><button class="btn pose" data-pose="dance">🕺 Dance</button><button class="btn pose" data-pose="wave">👋 Wave</button><br>
@@ -182,6 +191,7 @@
   </div>
   <div id="msg"></div>
   <div id="tut" class="panel" style="display:none"></div>
+  <div id="abilityUI"><div id="abilityBtns"></div><button class="ab run" id="runBtn">🏃<br>RUN<small>J</small></button></div>
   <div id="prompt"></div>
   <div id="bubbles"></div>
   <div id="maplabel">🗺️ World map (the pond is the tiny blue dot!)</div>
@@ -192,6 +202,7 @@
     <b>E:</b> talk, pet, feed, sit, ride, use, hatch...<br>
     <b>B:</b> build menu &nbsp; <b>X:</b> pick up a fort piece<br>
     <b>Q:</b> bonk a toad, just for fun! 🔨<br>
+    <b>J / F:</b> run / your ability in the Lab 🔦<br>
     <b>P:</b> shop &nbsp; <b>L:</b> race &nbsp; <b>H:</b> hide this<br>
     <b>Look around:</b> drag mouse &nbsp; <b>Zoom:</b> scroll
   </div>
@@ -263,8 +274,8 @@
     <div class="gcard"><div class="em">👅</div><div style="flex:1"><div class="nm">Fly Catch</div><p>60 seconds to eat more flies than 4 toad friends. Run into flies, or press <b>E</b> to shoot your tongue at far ones!</p></div><button class="btn green" id="playFly">Play</button></div>
     <div class="gcard"><div class="em">🪷</div><div style="flex:1"><div class="nm">Lily Pad Hop</div><p>Hop across wobbly, moving lily pads all the way across the pond to the golden pad. Fall in and you start over!</p></div><button class="btn pink" id="playLily">Play</button></div>
     <div class="gcard"><div class="em">☁️</div><div style="flex:1"><div class="nm">Sky Ring Race</div><p>Ride your grown-up magic bird through 12 rings in the sky before the other toads on their birds. Needs a bird that can fly.</p></div><button class="btn" id="playSky">Play</button></div>
-    <div class="gcard"><div class="em">🔦</div><div style="flex:1"><div class="nm">Survive the Lab</div><p>Locked inside a big spooky lab with 7 toad friends... and <b>THE LEGENDARY</b>! All doors start CLOSED. Do 🧪 tasks in the corner rooms to make the clock run down faster (fail and it grows!), slam doors, heal toads as a ➕ Medic or stun the Legendary as a 🔨 Bonker, and survive 2 minutes. And 1 game in 10, YOU are the giant golden Legendary!</p></div><button class="btn red" id="playSurvive">Play</button></div>
-    <div class="gcard"><div class="em">⚖️</div><div style="flex:1"><div class="nm">Judgemental</div><p>All 40 toad friends split onto the ☀️ LIGHT and 🌑 DARK sides — and you test your luck to see where you land! Everyone gets a hammer: wipe out the other side and SURVIVE to win. One toad is the JUDGE on a floating throne, summoning 👹 toad bosses, ⚡ boosts, and 💥 lightning zaps... and 1 game in 5, the Judge is YOU (powers cost coins)!</p></div><button class="btn" id="playJudge">Play</button></div>
+    <div class="gcard"><div class="em">🔦</div><div style="flex:1"><div class="nm">Survive the Lab</div><p>Locked inside a big spooky lab with 7 toad friends... and <b>THE LEGENDARY</b>! It stalks slowly, but when it SEES you it flies into a RAGE — and every toad it catches adds 30 seconds to the clock. Do 🧪 tasks, slam doors, and pick from FIVE classes (➕ Medic, 🔨 Bonker, 👀 Scout, 🪤 Trapper, 🛡️ Shieldy) with abilities on the F button. And 1 game in 10, YOU are the golden Legendary with three powers: 💥 Hammer Slam, 📢 Sonic Croak, and 👅 Magnet Tongue!</p></div><button class="btn red" id="playSurvive">Play</button></div>
+    <div class="gcard"><div class="em">⚖️</div><div style="flex:1"><div class="nm">Judgemental</div><p>All 40 toad friends line up before the JUDGE, who sorts everyone onto the ☀️ LIGHT or 🌑 DARK side — usually UNEVEN teams! — then... Ready... FIGHT! Teams glow gold and purple so you can't mix them up. Swing with E, or press Q for a MEGA POWER BONK. Wipe out the other side and SURVIVE to win. The Judge meddles with 👹 bosses, ⚡ boosts, and 💥 zaps... and 1 game in 5, the Judge is YOU!</p></div><button class="btn" id="playJudge">Play</button></div>
     <div class="gcard"><div class="em">🏷️</div><div style="flex:1"><div class="nm">Tag</div><p>9 toads in a huge fenced meadow. One 30-second clock keeps ticking. Whoever is IT when it hits zero is OUT, then a new round starts. Tag with <b>E</b>, and no tagging back the toad who just tagged you. Last toad standing wins!</p></div><button class="btn red" id="playTag">Play</button></div>
     <div class="gcard"><div class="em">🐌</div><div style="flex:1"><div class="nm">Snail Race</div><p>Your pet snail races 3 other snails. Very. Slowly. Mash <b>E</b> to cheer and make it crawl faster! (The first time, you adopt and name your snail.)</p></div><button class="btn green" id="playSnail">Play</button></div>
     <div class="gcard"><div class="em">🙈</div><div style="flex:1"><div class="nm">Hide and Seek</div><p>6 toad friends hide around the world. Follow the hot-and-cold arrow and find them all in 2 minutes!</p></div><button class="btn red" id="playHide">Play</button></div>
@@ -293,7 +304,17 @@
   <div class="card">
     <h2>📋 Update Log</h2>
     <div>Everything new in Toad Adventure, newest first. Ideas by Sasha!</div>
-    <div class="upd"><h3>🆕 Update 11 · September 27, 2026</h3><ul>
+    <div class="upd"><h3>🆕 Update 12 · September 28, 2026</h3><ul>
+      <li>🔦 <b>THE LEGENDARY got scarier AND fairer:</b> it now walks a bit slower than a toad and has its own stamina... but the moment a toad is in its SIGHT it flies into a 😡 RAGE — a big speed boost that costs no stamina at all. And every toad it catches adds ⏱️ 30 seconds to the clock!</li>
+      <li>🎮 <b>New controls:</b> the RUN button lives in the bottom-right corner with your ability button right beside it, same size. Keyboard: <b>J</b> = run, <b>F</b> = ability.</li>
+      <li>➕🔨👀🪤🛡️ <b>Three NEW classes</b> join Medic and Bonker: the <b>Scout</b> (300 🪙) sees THE LEGENDARY through every wall and gets a super dash, the <b>Shieldy</b> (400 🪙) pops bubble shields that block a hit, and the <b>Trapper</b> (600 🪙) plants sticky goo that STOPS the Legendary for 3 seconds. Computer toads can have them all too!</li>
+      <li>👑 <b>Legendary POWERS</b> (when YOU are the hunter): 💥 <b>Hammer Slam</b> (F) sends a shockwave ring toads must JUMP over, 📢 <b>Sonic Croak</b> (G) freezes everyone nearby in fear, and 👅 <b>Magnet Tongue</b> (H) yanks a toad right into your claws!</li>
+      <li>💡 The yellow door flashes and the red last-toad glow now shine <b>through the walls</b> — you can see them from anywhere in the lab.</li>
+      <li>⚖️ <b>Judgemental is better:</b> bonking opponents is much easier, and <b>Q = MEGA POWER BONK</b> (extra damage, huge knockback). Light and dark toads glow ☀️ gold and 🌑 purple so you never mix them up. And no more random spawns — all the toads LINE UP in front of the Judge, who sorts them onto sides one by one (mostly UNEVEN teams, sometimes fair)... then: Ready... FIGHT!</li>
+      <li>⭐ <b>Fixed:</b> quest stars on the map sometimes vanished — it turned out toads were wandering off to the café and dropping their quests! Now they keep the quest (and the star) wherever they go.</li>
+      <li>🏆 4 new trophies.</li>
+    </ul></div>
+    <div class="upd"><h3>Update 11 · September 27, 2026</h3><ul>
       <li>⚖️ <b>NEW GAME: Judgemental!</b> All 40 toad friends split onto the ☀️ LIGHT and 🌑 DARK sides, everyone gets a hammer, and the battle rages until one whole side is bonked out. You test your luck to see which side you land on — wipe out the other side AND survive yourself to win!</li>
       <li>🏛️ One toad is the <b>JUDGE</b> on a floating golden throne: they summon 👹 TOAD BOSSES both sides must fight, ⚡ bless a side with speed and power, and 💥 ZAP toads with lightning. They ARE the judge.</li>
       <li>⚖️ 1 game in 5, <b>YOU are the Judge</b>: fly around as a friendly ghost and spend your coins on bosses (12 🪙), boosts (6 🪙), and zaps (4 🪙)!</li>
@@ -880,7 +901,7 @@ function loadSave() {
   if (!save.sentBabies) save.sentBabies = [];
   if (typeof save.tutStep !== 'number') save.tutStep = save.xp > 30 ? 999 : 0;
 }
-const GAME_VERSION = 11;
+const GAME_VERSION = 12;
 function curBird() { return save.activeBird ? save.birds[save.activeBird] : null; }
 function curBirdSpec() { return BIRDS.find(b => b.id === save.activeBird) || BIRDS[0]; }
 function writeSave() {
@@ -1628,7 +1649,7 @@ function hatchBaby() {
 // ---------------------------------------------------------------- INPUT
 const keys = {};
 let camYaw = 0, camDist = 9, camManual = 0, camBoost = 0, dragging = false, lastX = 0;
-const KEYMAP = { w: 'KeyW', a: 'KeyA', s: 'KeyS', d: 'KeyD', e: 'KeyE', q: 'KeyQ', b: 'KeyB', p: 'KeyP', l: 'KeyL', h: 'KeyH', x: 'KeyX', ' ': 'Space', shift: 'ShiftLeft', arrowup: 'ArrowUp', arrowdown: 'ArrowDown', arrowleft: 'ArrowLeft', arrowright: 'ArrowRight', escape: 'Escape' };
+const KEYMAP = { w: 'KeyW', a: 'KeyA', s: 'KeyS', d: 'KeyD', e: 'KeyE', q: 'KeyQ', j: 'KeyJ', f: 'KeyF', g: 'KeyG', b: 'KeyB', p: 'KeyP', l: 'KeyL', h: 'KeyH', x: 'KeyX', ' ': 'Space', shift: 'ShiftLeft', arrowup: 'ArrowUp', arrowdown: 'ArrowDown', arrowleft: 'ArrowLeft', arrowright: 'ArrowRight', escape: 'Escape' };
 const codeOf = e => e.code || KEYMAP[(e.key || '').toLowerCase()] || '';
 window.addEventListener('keydown', ev => {
   const code = codeOf(ev);
@@ -1641,13 +1662,16 @@ window.addEventListener('keydown', ev => {
   if (anyModalOpen()) return;
   if (code === 'KeyE') interact();
   if (code === 'KeyQ') bonkToad();
+  if (code === 'KeyJ' && surv && !surv.spec) surv.runHeld = true;
+  if (code === 'KeyF') useAbilityKey('f');
+  if (code === 'KeyG') useAbilityKey('g');
   if (code === 'KeyB') toggleModal('build');
   if (code === 'KeyX') pickUpFort();
   if (code === 'KeyP') toggleModal('shop');
   if (code === 'KeyL') toggleModal('board');
-  if (code === 'KeyH') $('helpBtn').onclick();
+  if (code === 'KeyH') { if (mode === 'survive' && surv && surv.meLegend) useAbility('tongue'); else if (mode === 'world') $('helpBtn').onclick(); }
 });
-window.addEventListener('keyup', ev => { keys[codeOf(ev)] = false; });
+window.addEventListener('keyup', ev => { const kc = codeOf(ev); keys[kc] = false; if (kc === 'KeyJ' && surv) surv.runHeld = false; });
 window.addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
 canvas.addEventListener('mousedown', e => { dragging = true; lastX = e.clientX; });
 window.addEventListener('mouseup', () => dragging = false);
@@ -3684,7 +3708,6 @@ function seatNpc(n, sitT, teleport) {
   const seat = freeSeat(); if (!seat) return false;
   seat.npc = n; n.cafe = { seat, phase: teleport ? 'sit' : 'walk', sitT: sitT || rand(35, 70) };
   if (teleport || dist2(n.pos.x, n.pos.z, CAFE.x, CAFE.z) > 190 * 190) { n.pos.set(seat.x, H(seat.x, seat.z), seat.z); n.cafe.phase = 'sit'; }
-  n.quest = null; if (n.marker) n.marker.visible = false;
   return true;
 }
 function updateCafeNpc(n, dt, t) {
@@ -4187,7 +4210,9 @@ function buildLab() {
       hinge.position.set(c.x - (horiz ? (LAB.cs - 0.4) / 2 : 0), LAB.floorY + 3.2, c.z - (horiz ? 0 : (LAB.cs - 0.4) / 2));
       if (!horiz) hinge.rotation.y = Math.PI / 2;
       labGroup.add(hinge);
-      labDoors.push({ col, row, x: c.x, z: c.z, open: false, hinge, panel, baseYaw: horiz ? 0 : Math.PI / 2, cool: 0, flashT: 0 });
+      const beacon = new THREE.Mesh(new THREE.SphereGeometry(0.55, 8, 6), new THREE.MeshBasicMaterial({ color: 0xffe066, transparent: true, opacity: 0.95, depthTest: false }));
+      beacon.renderOrder = 999; beacon.visible = false; beacon.position.set(c.x, LAB.floorY + 7.4, c.z); labGroup.add(beacon);
+      labDoors.push({ col, row, x: c.x, z: c.z, open: false, hinge, panel, beacon, baseYaw: horiz ? 0 : Math.PI / 2, cool: 0, flashT: 0 });
     }
   }
   labGroup.add(walls);
@@ -4212,11 +4237,11 @@ function startSurvive() {
   enterGame('survive');
   if (!labGroup) buildLab();
   labGroup.visible = true;
-  for (const d of labDoors) { d.open = false; d.cool = 0; d.flashT = 0; d.hinge.rotation.y = d.baseYaw; d.panel.material.emissive.setHex(0x000000); }
+  for (const d of labDoors) { d.open = false; d.cool = 0; d.flashT = 0; d.hinge.rotation.y = d.baseYaw; d.panel.material.emissive.setHex(0x000000); d.beacon.visible = false; }
   resetLabTasks();
   const meLegend = Math.random() < 0.1;
-  surv = { t: 0, countdown: 4, timer: 120, over: false, toads: [], me: null, legend: null, meLegend, spec: false, specIdx: 0, runHeld: false, stamina: 100, hp: 100, kos: 0, cls: meLegend ? null : save.activeClass, medCd: 0, bonkCdP: 0, meStunT: 0, bashT: 0, fx: [], task: null };
-  curGame = { cleanup() { for (const c of surv.toads) if (c.group) scene.remove(c.group); if (surv.legend) scene.remove(surv.legend.group); if (surv.myModel) { player.group.remove(surv.myModel); player.model.visible = true; } if (surv.clsMesh) player.model.remove(surv.clsMesh); if (surv.glowMy) player.group.remove(surv.glowMy); for (const f of surv.fx) scene.remove(f.mesh); if (surv.task) { surv.task = null; toggleModal('taskModal', false); } player.model.scale.setScalar(STAGES[save.stage].scale); labGroup.visible = false; player.group.visible = true; blob.visible = true; if (bird) bird.group.visible = true; $('survUI').style.display = 'none'; surv = null; }, over: false };
+  surv = { t: 0, countdown: 4, timer: 120, over: false, toads: [], me: null, legend: null, meLegend, spec: false, specIdx: 0, runHeld: false, stamina: 100, hp: 100, kos: 0, cls: meLegend ? null : save.activeClass, medCd: 0, bonkCdP: 0, meStunT: 0, bashT: 0, fx: [], task: null, abCd: {}, pfx: [], traps: [], yank: null, dashT: 0, meGooT: 0, rage: false, myShield: false };
+  curGame = { cleanup() { for (const c of surv.toads) if (c.group) scene.remove(c.group); if (surv.legend) scene.remove(surv.legend.group); if (surv.myModel) { player.group.remove(surv.myModel); player.model.visible = true; } if (surv.clsMesh) player.model.remove(surv.clsMesh); if (surv.glowMy) player.group.remove(surv.glowMy); for (const f of surv.fx) scene.remove(f.mesh); for (const p of surv.pfx) scene.remove(p.mesh); for (const tr of surv.traps) scene.remove(tr.mesh); if (surv.myBubble) player.group.remove(surv.myBubble); $('abilityUI').style.display = 'none'; if (surv.task) { surv.task = null; toggleModal('taskModal', false); } player.model.scale.setScalar(STAGES[save.stage].scale); labGroup.visible = false; player.group.visible = true; blob.visible = true; if (bird) bird.group.visible = true; $('survUI').style.display = 'none'; surv = null; }, over: false };
   // spawn cells for runners (open floor spots)
   const spawns = [[3, 4], [17, 4], [5, 9], [12, 10], [18, 13], [2, 13], [8, 1], [15, 7], [10, 9]];
   const mk = (n) => { const r = makeRival(n, false); r.hp = 100; r.alive = true; r.stam = 100; r.runT = 0; r.think = 0; r.dir = rand(0, 6.283); r.doorCool = 0; r.model.scale.setScalar(1);
@@ -4232,10 +4257,10 @@ function startSurvive() {
     const sp = labCellCenter(col, row);
     c.pos.set(sp.x, LAB.floorY, sp.z);
   });
-  // two computer toads get classes too
+  // three computer toads get classes too — any of the five!
   const shuffled = surv.toads.slice().sort(() => Math.random() - 0.5);
-  if (shuffled[0]) { shuffled[0].cls = 'medic'; shuffled[0].model.add(makeMedicCross()); }
-  if (shuffled[1]) { shuffled[1].cls = 'bonker'; const bh = makeHammer(0.9); bh.position.set(0.95, 0.7, 0.5); bh.rotation.set(-0.6, 0, -0.3); shuffled[1].model.add(bh); }
+  const clsPool = ['medic', 'bonker', 'scout', 'trapper', 'shieldy'].sort(() => Math.random() - 0.5);
+  for (let ci = 0; ci < 3 && shuffled[ci]; ci++) { shuffled[ci].cls = clsPool[ci]; shuffled[ci].model.add(makeClassMark(clsPool[ci])); }
   // the legendary: gold giant with red eyes (and now that's YOU when you're the hunter!)
   if (meLegend) {
     const lm = makeToadModel(0xffd700); lm.scale.setScalar(2.4);
@@ -4245,22 +4270,23 @@ function startSurvive() {
     surv.swingT = 0; surv.cd = 0;
   } else {
     player.model.scale.setScalar(Math.min(STAGES[save.stage].scale, 2.3));
-    if (surv.cls === 'medic') { surv.clsMesh = makeMedicCross(); player.model.add(surv.clsMesh); }
-    if (surv.cls === 'bonker') { surv.clsMesh = makeHammer(1); surv.clsMesh.position.set(0.95, 0.7, 0.5); surv.clsMesh.rotation.set(-0.6, 0, -0.3); player.model.add(surv.clsMesh); }
+    if (surv.cls) { surv.clsMesh = makeClassMark(surv.cls); player.model.add(surv.clsMesh); }
     const lm = makeToadModel(0xffd700); lm.scale.setScalar(2.4);
     for (const ch of lm.children) if (ch.material && ch.material.color && ch.geometry && ch.geometry.type === 'SphereGeometry' && ch.material.color.getHex() === 0x111111) ch.material = M(0xff2222);
     const ham = makeHammer(1.6); ham.position.set(0.95, 0.7, 0.5); ham.rotation.set(-0.6, 0, -0.3); lm.add(ham);
     const g = new THREE.Group(); g.add(lm); scene.add(g);
     const sp = labCellCenter(11, 4);
-    surv.legend = { name: 'THE LEGENDARY', model: lm, hammer: ham, group: g, pos: new THREE.Vector3(sp.x, LAB.floorY, sp.z), yaw: 0, hopT: 0, cd: 0, swingT: 0, stuckT: 0, lastX: sp.x, lastZ: sp.z, doorT: 0, freeDir: null, freeT: 0, stunT: 0 };
+    surv.legend = { name: 'THE LEGENDARY', model: lm, hammer: ham, group: g, pos: new THREE.Vector3(sp.x, LAB.floorY, sp.z), yaw: 0, hopT: 0, cd: 0, swingT: 0, stuckT: 0, lastX: sp.x, lastZ: sp.z, doorT: 0, freeDir: null, freeT: 0, stunT: 0, stam: 100, gooT: 0, rageMsgT: 0 };
+    surv.legendAura = new THREE.Mesh(new THREE.SphereGeometry(3.4, 12, 10), new THREE.MeshBasicMaterial({ color: 0xff2222, transparent: true, opacity: 0.28, depthTest: false }));
+    surv.legendAura.renderOrder = 985; surv.legendAura.position.y = 2.6; surv.legendAura.visible = false; g.add(surv.legendAura);
   }
   const mySp = meLegend ? labCellCenter(11, 4) : labCellCenter(10, 13);
   player.pos.set(mySp.x, LAB.floorY, mySp.z); player.yaw = 0; camYaw = 0; camManual = 0; player.vy = 0;
   if (bird) bird.group.visible = false;
   camera.position.set(player.pos.x, LAB.floorY + 6, player.pos.z - 8);
-  $('survUI').style.display = 'block'; updateSurvBars();
+  $('survUI').style.display = 'block'; $('abilityUI').style.display = 'flex'; renderAbilityBtns(); updateSurvBars();
   jingle([262, 220, 196]);
-  showMsg(meLegend ? '👑 YOU are THE LEGENDARY — a giant golden toad! Hunt them ALL (E = swing) and just RUN AT closed doors to SMASH through!' + (save.activeClass ? ' (Your class sits out this round!)' : '') : '🏃 SURVIVE! All doors start CLOSED. ' + (surv.cls === 'medic' ? 'You are the ➕ MEDIC: press E near hurt toads to heal them!' : surv.cls === 'bonker' ? 'You are the 🔨 BONKER: press E near THE LEGENDARY to throw your hammer and STUN it!' : 'Do 🧪 tasks in the corner rooms to make the clock run down faster!') + ' Survive 2 minutes!', 8000);
+  showMsg(meLegend ? '👑 YOU are THE LEGENDARY! When a toad is in your SIGHT you get 😡 RAGE speed for free. Your powers are bottom-right: 💥 SLAM (F), 📢 CROAK (G), 👅 TONGUE (H). Every catch adds 30 seconds!' + (save.activeClass ? ' (Your class sits out this round!)' : '') : '🏃 SURVIVE! All doors start CLOSED. RUN with the bottom-right button (or J).' + (surv.cls ? ' Your ' + surv.cls.toUpperCase() + ' ability is the button beside it (or F)!' : ' Do 🧪 tasks in the corner rooms to speed up the clock!') + ' Careful: every toad THE LEGENDARY catches adds ⏱️ 30 seconds!', 9000);
 }
 function updateSurvBars() {
   $('hpFill').style.width = Math.max(0, surv.hp) + '%';
@@ -4271,15 +4297,6 @@ function surviveAction() {
   if (!surv || surv.over) return;
   if (surv.spec) { const alive = surv.toads.filter(c => c.alive); if (alive.length) { surv.specIdx = (surv.specIdx + 1) % alive.length; showMsg('👻 Now watching ' + alive[surv.specIdx].name, 1200); } return; }
   if (surv.meLegend) { if (surv.meStunT > 0) return; surviveSwing(); return; }
-  if (surv.cls === 'medic' && surv.medCd <= 0) {
-    let best = null, bd = 6 * 6;
-    for (const c of surv.toads) if (c.alive && c.hp < 100) { const dd = dist2(c.pos.x, c.pos.z, player.pos.x, player.pos.z); if (dd < bd) { bd = dd; best = c; } }
-    if (best) { best.hp = 100; surv.medCd = 8; save.coins += 2; stat('heals'); spawnStars(best.pos, 0x7cff5a); jingle([784, 988]); showMsg('➕ You healed ' + best.name + ' back to full! +2 🪙', 2500); updateHUD(); checkBadges(); return; }
-  }
-  if (surv.cls === 'bonker' && surv.legend && Math.hypot(surv.legend.pos.x - player.pos.x, surv.legend.pos.z - player.pos.z) < 20) {
-    if (surv.bonkCdP > 0) { showMsg('🔨 Hammer recharging... ' + Math.ceil(surv.bonkCdP) + 's', 1200); return; }
-    surv.bonkCdP = 20; stat('stuns'); stunHunter(null); checkBadges(); return;
-  }
   const ts = surv.cls ? null : nearestTask(player.pos.x, player.pos.z, 4);
   if (ts) { openTask(ts); return; }
   const d = nearestDoor(player.pos.x, player.pos.z, 6.5);
@@ -4293,8 +4310,7 @@ function surviveSwing() {
     if (!c.alive) continue;
     const dx = c.pos.x - player.pos.x, dz = c.pos.z - player.pos.z, dd = Math.hypot(dx, dz) || 1;
     if (dd < reach && (dx * fx + dz * fz) / dd > -0.2) {
-      c.hp -= 50; c.hitT = 0.5; spawnStars(c.pos); beep(110, 0.2, 'sawtooth', 0.1);
-      if (c.hp <= 0) { c.alive = false; c.group.visible = false; surv.kos++; showMsg('💥 You caught ' + c.name + '! (' + surv.kos + '/' + surv.toads.length + ')', 2000); jingle([440, 330]); }
+      hurtRunner(c, 50, true);
     }
   }
 }
@@ -4305,6 +4321,7 @@ function surviveDamagePlayer(from) {
   const dx = player.pos.x - from.pos.x, dz = player.pos.z - from.pos.z, dd = Math.hypot(dx, dz) || 1;
   player.kx = dx / dd * 10; player.kz = dz / dd * 10; spawnStars(player.pos); beep(110, 0.25, 'sawtooth', 0.12);
   if (surv.hp <= 0) {
+    surv.timer += 30;
     surv.spec = true; player.group.visible = false; blob.visible = false; player.stunned = true;
     showMsg('💀 THE LEGENDARY got you! You are a friendly ghost now — press E to watch a different toad. 👻', 5000); beep(160, 0.6, 'sine');
   } else showMsg('💥 THE LEGENDARY hit you! HP ' + surv.hp + ' — RUN!', 1500);
@@ -4313,14 +4330,27 @@ function updateSurvive(dt, t) {
   const s = surv; if (!s) return; s.t += dt; updateFx(dt);
   if (s.countdown > 0) { s.countdown -= dt; player.stunned = true; if (s.countdown <= 0) { player.stunned = false; showMsg(s.meLegend ? 'HUNT! 👑' : 'RUN! 🏃', 1200); beep(880, 0.3); } }
   else if (!s.over) s.timer -= dt;
-  for (const d of labDoors) { d.cool = Math.max(0, d.cool - dt); d.hinge.rotation.y = lerp(d.hinge.rotation.y, d.baseYaw + (d.open ? 1.35 : 0), Math.min(1, dt * 8)); if (d.flashT > 0) { d.flashT -= dt; if (d.flashT <= 0) d.panel.material.emissive.setHex(0x000000); } }
+  for (const d of labDoors) { d.cool = Math.max(0, d.cool - dt); d.hinge.rotation.y = lerp(d.hinge.rotation.y, d.baseYaw + (d.open ? 1.35 : 0), Math.min(1, dt * 8)); if (d.flashT > 0) { d.flashT -= dt; d.beacon.visible = true; d.beacon.scale.setScalar(1 + Math.sin(t * 10) * 0.35); if (d.flashT <= 0) { d.panel.material.emissive.setHex(0x000000); d.beacon.visible = false; } } }
   // player movement: normalized speed + run + stamina + wall collision
-  const running = !s.spec && (s.runHeld || keys.ShiftLeft || keys.ShiftRight) && s.stamina > 0 && player.moving;
-  if (running) { s.stamina = Math.max(0, s.stamina - 20 * dt); } else s.stamina = Math.min(100, s.stamina + 16 * dt);
+  const wantRun = !s.spec && (s.runHeld || keys.ShiftLeft || keys.ShiftRight) && player.moving;
+  let spd;
+  if (s.meLegend) {
+    s.rage = !s.over && s.countdown <= 0 && s.meGooT <= 0 && s.toads.some(c => c.alive && labSight(player.pos.x, player.pos.z, c.pos.x, c.pos.z, 42));
+    if (s.rage) { spd = 27; s.stamina = Math.min(100, s.stamina + 4 * dt); }
+    else if (wantRun && s.stamina > 0) { spd = 24; s.stamina = Math.max(0, s.stamina - 20 * dt); }
+    else { spd = 16; s.stamina = Math.min(100, s.stamina + 12 * dt); }
+  } else {
+    const running = wantRun && s.stamina > 0;
+    if (running) { s.stamina = Math.max(0, s.stamina - 20 * dt); } else s.stamina = Math.min(100, s.stamina + 16 * dt);
+    spd = 18 * (running ? 1.7 : 1);
+    if (s.dashT > 0) spd = Math.max(spd, 27);
+  }
+  if (s.meGooT > 0) { s.meGooT -= dt; spd = 0; }
   updateSurvBars();
   if (s.meStunT > 0) { s.meStunT -= dt; player.stunned = true; if (Math.random() < dt * 8) spawnStars(player.pos, 0xffe066); if (s.meStunT <= 0 && s.countdown <= 0 && !s.spec) player.stunned = false; }
   if (s.meLegend && s.hammerMesh) { s.cd = Math.max(0, s.cd - dt); if (s.swingT > 0) { s.swingT -= dt; s.hammerMesh.rotation.x = -1.5 + (1 - s.swingT / 0.3) * 2.4; } else s.hammerMesh.rotation.x = lerp(s.hammerMesh.rotation.x, -0.6, Math.min(1, dt * 8)); }
   s.medCd = Math.max(0, s.medCd - dt); s.bonkCdP = Math.max(0, s.bonkCdP - dt);
+  updateSurvExtras(dt, t);
   if (s.task) { s.task.tLeft -= dt; const tb = $('taskTime'); if (tb) tb.style.width = clamp(s.task.tLeft / 14 * 100, 0, 100) + '%'; if (s.task && s.task.tLeft <= 0) taskFail('Too slow!'); }
   for (let i = s.fx.length - 1; i >= 0; i--) { const f = s.fx[i]; f.t += dt; const k = Math.min(1, f.t / f.dur); f.mesh.position.lerpVectors(f.from, f.to, k); f.mesh.position.y += Math.sin(k * Math.PI) * 2; f.mesh.rotation.x += 14 * dt; if (k >= 1) { scene.remove(f.mesh); s.fx.splice(i, 1); } }
   if (s.glowMy) s.glowMy.scale.setScalar(1 + Math.sin(t * 6) * 0.15);
@@ -4331,7 +4361,7 @@ function updateSurvive(dt, t) {
     else s.bashT = 0;
   }
   const st = STAGES[save.stage];
-  player.slowMul = s.spec || s.meStunT > 0 ? 0 : (s.meLegend ? 21 : 18) / st.speed * (running ? 1.7 : 1);
+  player.slowMul = s.spec || s.meStunT > 0 ? 0 : spd / st.speed;
   if (!s.spec) {
     // wall collision for the player (axis resolve using previous safe pos)
     const r = 1.1;
@@ -4358,7 +4388,13 @@ function updateSurvive(dt, t) {
       let dx = tx - L.pos.x, dz = tz - L.pos.z; const dd = Math.hypot(dx, dz) || 1;
       // stuck detection → wander sideways for a moment
       if (L.freeT > 0) { L.freeT -= dt; dx = Math.sin(L.freeDir); dz = Math.cos(L.freeDir); }
-      const sp = 23;
+      const sight = labSight(L.pos.x, L.pos.z, tx, tz, 42);
+      let sp;
+      if (sight) { sp = 27; L.stam = Math.min(100, L.stam + 4 * dt); if (tgt === 'me' && L.rageMsgT <= 0) { L.rageMsgT = 8; showMsg('😡 THE LEGENDARY SEES YOU! RUN!', 2000); beep(140, 0.3, 'sawtooth', 0.1); } }
+      else if (L.stam > 25) { sp = 24; L.stam = Math.max(0, L.stam - 16 * dt); }
+      else { sp = 16; L.stam = Math.min(100, L.stam + 12 * dt); }
+      L.rageMsgT = Math.max(0, L.rageMsgT - dt);
+      if (L.gooT > 0) { L.gooT -= dt; sp = 0; if (Math.random() < dt * 5) spawnStars(L.pos, 0x5fd44a); }
       labMove(L, L.pos.x + dx / (Math.hypot(dx, dz) || 1) * sp * dt, L.pos.z + dz / (Math.hypot(dx, dz) || 1) * sp * dt, 1.4);
       const moved = Math.hypot(L.pos.x - L.lastX, L.pos.z - L.lastZ);
       if (moved < sp * dt * 0.25) { L.stuckT += dt; } else L.stuckT = 0;
@@ -4372,8 +4408,7 @@ function updateSurvive(dt, t) {
       const reach = 4.2;
       if (tgt === 'me' && Math.hypot(player.pos.x - L.pos.x, player.pos.z - L.pos.z) < reach && L.cd <= 0) { L.cd = 1.3; L.swingT = 0.3; surviveDamagePlayer(L); }
       else if (tgt !== 'me' && Math.hypot(tgt.pos.x - L.pos.x, tgt.pos.z - L.pos.z) < reach && L.cd <= 0) {
-        L.cd = 1.3; L.swingT = 0.3; tgt.hp -= 40; tgt.hitT = 0.5; spawnStars(tgt.pos); beep(120, 0.18, 'sawtooth', 0.08);
-        if (tgt.hp <= 0) { tgt.alive = false; tgt.group.visible = false; showMsg('💀 ' + tgt.name + ' was caught by THE LEGENDARY!', 2200); beep(180, 0.4, 'sine'); }
+        L.cd = 1.3; L.swingT = 0.3; hurtRunner(tgt, 40, false);
       }
     }
     L.group.position.set(L.pos.x, LAB.floorY + Math.abs(Math.sin(L.hopT * 7)) * 0.5, L.pos.z); L.group.rotation.y = L.yaw;
@@ -4385,13 +4420,16 @@ function updateSurvive(dt, t) {
     c.hitT = Math.max(0, (c.hitT || 0) - dt); c.doorCool = Math.max(0, c.doorCool - dt);
     let moving = false;
     if (s.countdown <= 0 && !s.over) {
+      c.frozenT = Math.max(0, (c.frozenT || 0) - dt);
+      if (c.frozenT > 0) { c.group.position.set(c.pos.x, LAB.floorY, c.pos.z); c.group.rotation.y = c.yaw; c.model.rotation.z = Math.sin(t * 30) * 0.12; continue; }
       const hd = Math.hypot(c.pos.x - hunterX, c.pos.z - hunterZ);
       const hunterStunned = s.meLegend ? s.meStunT > 0 : !!(L && L.stunT > 0);
-      c.healCd = Math.max(0, (c.healCd || 0) - dt); c.stunCd = Math.max(0, (c.stunCd || 0) - dt); c.taskCool = Math.max(0, (c.taskCool || 0) - dt);
+      c.healCd = Math.max(0, (c.healCd || 0) - dt); c.stunCd = Math.max(0, (c.stunCd || 0) - dt); c.taskCool = Math.max(0, (c.taskCool || 0) - dt); c.trapCd = Math.max(0, (c.trapCd || 0) - dt); c.shCd = Math.max(0, (c.shCd || 0) - dt);
       if (c.cls === 'bonker' && c.stunCd <= 0 && hd < 15 && !hunterStunned) { c.stunCd = 25; stunHunter(c); }
+      if (c.cls === 'shieldy' && c.shCd <= 0) { let sb = null, sbd = 6 * 6; for (const o of s.toads) if (o.alive && !o.shielded && o.hp < 100) { const dd2 = dist2(o.pos.x, o.pos.z, c.pos.x, c.pos.z); if (dd2 < sbd) { sbd = dd2; sb = o; } } if (sb) { c.shCd = 22; sb.shielded = true; sb.bubble = makeBubble(1.6); sb.bubble.position.y = 1; sb.model.add(sb.bubble); spawnStars(sb.pos, 0x9be7ff); } }
       c.think -= dt;
       let goal = null;
-      if (hd < 38 && !hunterStunned) { c.goalKind = 'flee'; c.doing = 0; }
+      if (hd < (c.cls === 'scout' ? 50 : 38) && !hunterStunned) { c.goalKind = 'flee'; c.doing = 0; if (c.cls === 'trapper' && c.trapCd <= 0) { c.trapCd = 15; dropGoo(c.pos.x, c.pos.z, false); } }
       else if (c.cls === 'medic') { const hurt = medicTarget(c); if (hurt) { goal = hurt; c.goalKind = 'heal'; } else c.goalKind = null; }
       else if (!c.cls) {
         if (!c.taskStn && c.taskCool <= 0 && Math.random() < dt / 5) { const opts = LAB_TASKS.filter(ts => !ts.done); if (opts.length) c.taskStn = opts[Math.floor(Math.random() * opts.length)]; }
@@ -4429,19 +4467,19 @@ function updateSurvive(dt, t) {
   if (s.spec) { const alive = s.toads.filter(c => c.alive); if (alive.length) { const f = alive[Math.min(s.specIdx, alive.length - 1)]; player.pos.set(f.pos.x, LAB.floorY + 2, f.pos.z); } }
   // HUD line
   const aliveN = s.toads.filter(c => c.alive).length + (s.spec || s.meLegend ? 0 : 1);
-  setGameInfo((s.meLegend ? '👑 <b>YOU are THE LEGENDARY!</b> Caught <b>' + s.kos + '/' + s.toads.length + '</b>' : s.spec ? '👻 Spectating · <b>E</b> = next toad' : '🏃 SURVIVE! · ❤️ ' + Math.max(0, Math.ceil(surv.hp)) + ' · toads left <b>' + aliveN + '</b>' + ' · 🧪 <b>' + LAB_TASKS.filter(ts => !ts.done).length + '</b>') + ' · ⏱️ <b>' + Math.max(0, Math.ceil(s.timer)) + 's</b>' + (s.countdown > 0 ? ' · Ready... <b>' + Math.ceil(s.countdown) + '</b>' : ''));
+  setGameInfo((s.meLegend ? '👑 <b>YOU are THE LEGENDARY!</b>' + (s.rage ? ' 😡RAGE' : '') + ' Caught <b>' + s.kos + '/' + s.toads.length + '</b>' : s.spec ? '👻 Spectating · <b>E</b> = next toad' : '🏃 SURVIVE! · ❤️ ' + Math.max(0, Math.ceil(surv.hp)) + ' · toads left <b>' + aliveN + '</b>' + ' · 🧪 <b>' + LAB_TASKS.filter(ts => !ts.done).length + '</b>') + ' · ⏱️ <b>' + Math.max(0, Math.ceil(s.timer)) + 's</b>' + (s.countdown > 0 ? ' · Ready... <b>' + Math.ceil(s.countdown) + '</b>' : ''));
   // end conditions
   if (!s.over && s.countdown <= 0) {
     const runnersLeft = s.toads.filter(c => c.alive).length;
     if (!s.meLegend && !s.spec && runnersLeft === 0 && !s.lastOne) {
       s.lastOne = true;
-      s.glowMy = new THREE.Mesh(new THREE.SphereGeometry(1.6, 12, 10), new THREE.MeshBasicMaterial({ color: 0xff2222, transparent: true, opacity: 0.32 }));
+      s.glowMy = new THREE.Mesh(new THREE.SphereGeometry(1.6, 12, 10), new THREE.MeshBasicMaterial({ color: 0xff2222, transparent: true, opacity: 0.32, depthTest: false })); s.glowMy.renderOrder = 998;
       s.glowMy.position.y = 1.2 * Math.min(STAGES[save.stage].scale, 2.3); player.group.add(s.glowMy);
       showMsg('🚨 YOU ARE THE LAST TOAD! You glow red and THE LEGENDARY knows EXACTLY where you are... RUN!', 5000); jingle([330, 262, 220]);
     }
     if (s.meLegend && runnersLeft === 1 && !s.glowNpcMesh) {
       const last = s.toads.find(c => c.alive);
-      s.glowNpcMesh = new THREE.Mesh(new THREE.SphereGeometry(1.5, 12, 10), new THREE.MeshBasicMaterial({ color: 0xff2222, transparent: true, opacity: 0.32 }));
+      s.glowNpcMesh = new THREE.Mesh(new THREE.SphereGeometry(1.5, 12, 10), new THREE.MeshBasicMaterial({ color: 0xff2222, transparent: true, opacity: 0.32, depthTest: false })); s.glowNpcMesh.renderOrder = 998;
       s.glowNpcMesh.position.y = 1; last.group.add(s.glowNpcMesh);
       showMsg('🚨 Only ' + last.name + ' is left! They glow RED — go get them!', 3500); beep(880, 0.2);
     }
@@ -4458,9 +4496,7 @@ function updateSurvive(dt, t) {
 function surviveInteraction() {
   const s = surv; if (!s) return null;
   if (s.spec) return { label: '👻 Press E to spectate the next toad', fn: () => {} };
-  if (s.meLegend) return { label: s.meStunT > 0 ? '💫 STUNNED! ' + Math.ceil(s.meStunT) + 's...' : '👑 Press E to SWING at a toad!', fn: () => {} };
-  if (s.cls === 'medic') { for (const c of s.toads) if (c.alive && c.hp < 100 && dist2(c.pos.x, c.pos.z, player.pos.x, player.pos.z) < 36) return { label: s.medCd > 0 ? '➕ Healing ready in ' + Math.ceil(s.medCd) + 's' : '➕ Press E to HEAL ' + c.name + '!', fn: () => {} }; }
-  if (s.cls === 'bonker' && s.legend && dist2(s.legend.pos.x, s.legend.pos.z, player.pos.x, player.pos.z) < 400) return { label: s.bonkCdP > 0 ? '🔨 Hammer ready in ' + Math.ceil(s.bonkCdP) + 's' : '🔨 Press E to THROW your hammer at THE LEGENDARY! 💫', fn: () => {} };
+  if (s.meLegend) return { label: s.meStunT > 0 ? '💫 STUNNED! ' + Math.ceil(s.meStunT) + 's...' : s.meGooT > 0 ? '🪤 STUCK IN GOO!' : (s.rage ? '😡 RAGE! ' : '') + '👑 E = SWING · powers: 💥F 📢G 👅H', fn: () => {} };
   if (!s.cls && nearestTask(player.pos.x, player.pos.z, 4)) return { label: '🧪 Press E to do the lab task! (Win: -15s. Fail: +10s!)', fn: () => {} };
   const d = nearestDoor(player.pos.x, player.pos.z, 6.5);
   if (d) return { label: d.open ? '🚪 Press E to CLOSE the door (slow down the Legendary!)' : '🚪 Press E to OPEN the door', fn: () => {} };
@@ -4606,8 +4642,8 @@ function updateTraders(dt) {
 // ================================================================ UPDATE 10
 // ---------------------------------------------------------------- LAB CLASSES (Medic & Bonker)
 const CLASSES = [
-  { id: 'medic', name: 'Medic', em: '➕', cost: 100, desc: "Press E near a hurt toad to HEAL them back to full (+2 🪙 each). The team's hero! Medics can't do tasks.", btn: 'blue' },
-  { id: 'bonker', name: 'Bonker', em: '🔨', cost: 1000, desc: "Press E to THROW your hammer at THE LEGENDARY and STUN it for 5 whole seconds! Bonkers can't do tasks.", btn: 'red' },
+  { id: 'medic', name: 'Medic', em: '➕', cost: 100, desc: "Press F near a hurt toad to HEAL them back to full (+2 🪙 each). The team's hero! Medics can't do tasks.", btn: 'blue' },
+  { id: 'bonker', name: 'Bonker', em: '🔨', cost: 1000, desc: "Press F to THROW your hammer at THE LEGENDARY and STUN it for 5 whole seconds! Bonkers can't do tasks.", btn: 'red' },
 ];
 function openClassSelect() { if (needToad()) return; renderClassSelect(); toggleModal('classModal', true); }
 function pickClassAndGo(id) { save.activeClass = id; writeSave(); toggleModal('classModal', false); startSurvive(); }
@@ -4849,6 +4885,7 @@ const BONK_LINES = ['Hey!! 😆', 'BOING! Do it again!', 'Ha! My turn next!', 'O
 function squashNpc(n) { n.squashT = 0.9; }
 function myBestPet() { return save.pets.slice().sort((a, b) => b.rarity - a.rarity)[0] || null; }
 function bonkToad() {
+  if (mode === 'judge') return judgePowerSwing();
   if (duel) return duelSwing();
   if (mode !== 'world' || save.stage === 0 || player.inWater || player.flying || anyModalOpen() || stealing || carrying || player.inCave || player.inHouse || player.inSpace) return;
   if (bonkCool > 0) { showMsg('🔨 Your bonking arm needs a rest! (' + Math.ceil(bonkCool) + 's)', 1500); return; }
@@ -5006,7 +5043,7 @@ function updateTutorial(dt) {
 }
 let howtoIdx = 0;
 const HOWTO_PAGES = [
-  { t: '🕹️ Moving Around', h: '<b>Keyboard:</b> WASD or arrow keys to move · Space to jump or swim up · Shift to swim or fly down · drag the mouse to look around · scroll to zoom.<br><br><b>iPad:</b> the round joystick moves you, and the buttons on the right jump, go down, press E, build, and BONK!<br><br><b>E is the magic button:</b> talk, pet, feed, ride, fish, open, celebrate... when something is near, a message at the bottom tells you what E will do!' },
+  { t: '🕹️ Moving Around', h: '<b>Keyboard:</b> WASD or arrow keys to move · Space to jump or swim up · Shift to swim or fly down · drag the mouse to look around · scroll to zoom · in the Lab: <b>J</b> = run, <b>F</b> = your ability!<br><br><b>iPad:</b> the round joystick moves you, and the buttons on the right jump, go down, press E, build, and BONK!<br><br><b>E is the magic button:</b> talk, pet, feed, ride, fish, open, celebrate... when something is near, a message at the bottom tells you what E will do!' },
   { t: '🐸 Growing Up', h: 'You start as a teeny <b>tadpole</b>. Eat green snacks and grab 🌸 petals in the pond until your XP bar fills, then find the glowing burrow at the pond edge and press E!<br><br>On land, eat 🪰 flies and collect 🍄 mushrooms to keep growing: Mini Toad → Toad → Big Toad → <b>Legendary Toad</b> 👑 → all the way to <b>GALAXY TOAD</b> 🌌. Eleven evolutions!' },
   { t: '💰 All the Treasures', h: '🍄 <b>Mushrooms</b> buy clothes · 🌸 <b>Petals</b> buy fancy clothes · 🪨 <b>Stones</b> build your fort · 🪙 <b>Coins</b> come from winning games and quests · ⭐ <b>Stars</b> hatch pets · 🥕 <b>Carrot coins</b> come from the farm · 💎 gems hide in space!<br><br>✨ <b>Golden mushrooms</b> give free clothes. Watch for the sparkle!' },
   { t: '🎮 The 11 Games', h: 'Press the pink <b>Play Your Games</b> button! Hamash 🔨, Runny Race 🏁, Boss Race 👑, Fly Catch 👅, Lily Pad Hop 🪷, Sky Ring Race ☁️, <b>Survive the Lab</b> 🔦, <b>Judgemental</b> ⚖️ (light side vs dark side!), Tag 🏷️, Snail Race 🐌, and Hide &amp; Seek 🙈.<br><br>In the Lab: do 🧪 tasks, slam doors, and RUN from THE LEGENDARY. You can buy the ➕ Medic or 🔨 Bonker class with coins!' },
@@ -5067,8 +5104,8 @@ function startJudgemental() {
   if (!judgeGroup) buildJudgeArena();
   judgeGroup.visible = true;
   const meJudge = Math.random() < 0.2;
-  judge = { t: 0, countdown: 4, over: false, meJudge, fighters: [], boss: null, boostSide: null, boostT: 0, judgeName: 'YOU', npcActT: rand(7, 11), spec: false, specIdx: 0, zapFx: [], myHearts: 8, cd: 0, swingT: 0, mySide: null, flyY: JUDGE.floorY + 12 };
-  curGame = { cleanup() { for (const c of judge.fighters) if (c.group) scene.remove(c.group); if (judge.boss) scene.remove(judge.boss.group); if (judge.judgeNpcMesh) judgeGroup.userData.throne.remove(judge.judgeNpcMesh); if (judge.hammerMesh) player.model.remove(judge.hammerMesh); for (const z of judge.zapFx) scene.remove(z.mesh); player.model.scale.setScalar(STAGES[save.stage].scale); judgeGroup.visible = false; player.group.visible = true; blob.visible = true; if (bird) bird.group.visible = true; $('judgeUI').style.display = 'none'; judge = null; }, over: false };
+  judge = { t: 0, countdown: 999, over: false, meJudge, fighters: [], boss: null, boostSide: null, boostT: 0, judgeName: 'YOU', npcActT: rand(7, 11), spec: false, specIdx: 0, zapFx: [], myHearts: 8, cd: 0, swingT: 0, powerCd: 0, mySide: null, flyY: JUDGE.floorY + 12, phase: 'sort', sortT: 0.8, readyT: 0, sortQueue: [], quota: null, meSpot: null };
+  curGame = { cleanup() { for (const c of judge.fighters) if (c.group) scene.remove(c.group); if (judge.boss) scene.remove(judge.boss.group); if (judge.judgeNpcMesh) judgeGroup.userData.throne.remove(judge.judgeNpcMesh); if (judge.hammerMesh) player.model.remove(judge.hammerMesh); if (judge.myRing) player.group.remove(judge.myRing); for (const z of judge.zapFx) scene.remove(z.mesh); player.model.scale.setScalar(STAGES[save.stage].scale); judgeGroup.visible = false; player.group.visible = true; blob.visible = true; if (bird) bird.group.visible = true; $('judgeUI').style.display = 'none'; judge = null; }, over: false };
   const j = judge;
   let pool = npcs.slice();
   if (!meJudge) {
@@ -5077,48 +5114,50 @@ function startJudgemental() {
     j.judgeNpcMesh = makeToadModel(jn.color); j.judgeNpcMesh.scale.setScalar(1.1); j.judgeNpcMesh.position.set(0, 0.6, -0.3);
     const gavel = makeHammer(0.7); gavel.position.set(0.9, 1.2, 0.4); gavel.rotation.set(-0.6, 0, -0.3); j.judgeNpcMesh.add(gavel);
     judgeGroup.userData.throne.add(j.judgeNpcMesh);
-    j.mySide = Math.random() < 0.5 ? 'light' : 'dark';
   }
   pool.sort(() => Math.random() - 0.5);
-  const mySideN = meJudge ? 20 : 19;
   pool.forEach((n, i) => {
     const c = makeRival(n, false);
-    c.side = meJudge ? (i < 20 ? 'light' : 'dark') : (i < mySideN ? j.mySide : (j.mySide === 'light' ? 'dark' : 'light'));
+    c.side = null;
     c.hearts = 5; c.alive = true; c.cd = rand(1, 2.2); c.swingT = 0; c.think = rand(0, 0.6); c.kx = 0; c.kz = 0; c.hitT = 0; c.hopT = rand(0, 5); c.tx = 0; c.tz = 0;
     c.model.scale.setScalar(clamp(c.model.scale.x, 0.75, 1.6));
     const h = makeHammer(0.8); h.position.set(0.95, 0.7, 0.5); h.rotation.set(-0.6, 0, -0.3); c.model.add(h); c.hammer = h;
-    const a = rand(-1.1, 1.1) + (c.side === 'light' ? Math.PI : 0);
-    const rr = rand(10, JUDGE.r - 6);
-    c.pos.set(JUDGE.x + Math.cos(a) * rr, JUDGE.floorY, JUDGE.z + Math.sin(a) * rr * 0.9);
-    c.yaw = Math.atan2(JUDGE.x - c.pos.x, JUDGE.z - c.pos.z);
+    // everyone lines up in front of the Judge to hear their fate
+    c.pos.set(JUDGE.x - 15 + (i % 8) * 4.2, JUDGE.floorY, JUDGE.z + 14 + Math.floor(i / 8) * 4);
+    c.yaw = Math.atan2(JUDGE.x - c.pos.x, (JUDGE.z - 20) - c.pos.z);
     j.fighters.push(c);
   });
+  // the Judge decides the sides — mostly UNEVEN, sometimes fair!
+  const total = j.fighters.length + (meJudge ? 0 : 1);
+  const nl = clamp(Math.round(total / 2 + (Math.random() - 0.5) * 14), 8, total - 8);
+  j.quota = { light: nl, dark: total - nl };
+  j.sortQueue = j.fighters.slice();
+  if (!meJudge) j.sortQueue.splice(Math.floor(Math.random() * (j.sortQueue.length + 1)), 0, 'me');
   if (meJudge) {
     player.pos.set(JUDGE.x, j.flyY, JUDGE.z - JUDGE.r - 4); blob.visible = false;
     $('judgeUI').style.display = 'block'; updateJudgeUI();
   } else {
     player.model.scale.setScalar(Math.min(STAGES[save.stage].scale, 2));
     j.hammerMesh = makeHammer(1); j.hammerMesh.position.set(0.95, 0.7, 0.5); j.hammerMesh.rotation.set(-0.6, 0, -0.3); player.model.add(j.hammerMesh);
-    const px = JUDGE.x + (j.mySide === 'light' ? -1 : 1) * (JUDGE.r - 10);
-    player.pos.set(px, JUDGE.floorY, JUDGE.z);
-    player.yaw = Math.atan2(JUDGE.x - px, 0.001); camYaw = player.yaw; camManual = 0;
+    player.pos.set(JUDGE.x, JUDGE.floorY, JUDGE.z + 14 + Math.ceil(pool.length / 8) * 4 + 3);
+    player.yaw = Math.PI; camYaw = Math.PI; camManual = 0;
   }
   player.vy = 0; if (bird) bird.group.visible = false;
   camera.position.set(player.pos.x, player.pos.y + 7, player.pos.z - 10);
   jingle([330, 392, 494]);
-  showMsg(meJudge ? '⚖️ YOU are THE JUDGE! Fly around (Space/Shift = up/down) and use your JUDGE POWERS: summon bosses, boost a side, or ZAP a toad. You ARE the law!' : '🎲 The Judge flips the coin... you fight for the ' + (j.mySide === 'light' ? '☀️ LIGHT SIDE' : '🌑 DARK SIDE') + '! Knock out ALL the ' + (j.mySide === 'light' ? '🌑 dark' : '☀️ light') + ' toads (E = swing) — and SURVIVE, or the win doesn\'t count!', 8000);
+  showMsg(meJudge ? '⚖️ YOU are THE JUDGE! Watch your royal sorting from the sky, then meddle: 👹 bosses, ⚡ boosts, and 💥 ZAPS. You ARE the law!' : '⚖️ All the toads line up before the Judge... wait to hear YOUR side! (E = swing · Q = MEGA POWER BONK · teams glow ☀️ gold and 🌑 purple)', 8000);
 }
 function updateJudgeUI() { $('judgeCoins').textContent = save.coins; }
 function judgeAlive(side) { return judge.fighters.filter(c => c.alive && c.side === side).length + (!judge.meJudge && !judge.spec && judge.mySide === side ? 1 : 0); }
 function judgeSwing() {
   const j = judge; if (!j || j.over || j.countdown > 0 || j.spec || j.meJudge || j.cd > 0) return;
   j.cd = 0.8; j.swingT = 0.3; beep(220, 0.08, 'square', 0.05);
-  const reach = 2.6 + player.model.scale.x * 1.7, fx2 = Math.sin(player.yaw), fz2 = Math.cos(player.yaw);
+  const reach = 4 + player.model.scale.x * 1.7, fx2 = Math.sin(player.yaw), fz2 = Math.cos(player.yaw);
   const dmg = hammerDmg(save.stage) + (j.boostSide === j.mySide ? 1 : 0);
   for (const o of j.fighters) {
     if (!o.alive || o.side === j.mySide) continue;
     const dx = o.pos.x - player.pos.x, dz = o.pos.z - player.pos.z, dd = Math.hypot(dx, dz) || 1;
-    if (dd < reach + o.model.scale.x && (dx * fx2 + dz * fz2) / dd > 0.05) judgeHit(o, dmg, dx / dd, dz / dd, true);
+    if (dd < reach + o.model.scale.x && (dx * fx2 + dz * fz2) / dd > -0.2) judgeHit(o, dmg, dx / dd, dz / dd, true);
   }
   const b = j.boss;
   if (b && b.alive) {
@@ -5126,9 +5165,10 @@ function judgeSwing() {
     if (dd < reach + 3 && (dx * fx2 + dz * fz2) / dd > 0.05) { b.hearts -= dmg; b.hitT = 0.4; spawnStars(b.pos); beep(90, 0.2, 'sawtooth', 0.1); showMsg('🔨 You hit the BOSS! ' + Math.max(0, b.hearts) + ' ❤️ left!', 900); if (b.hearts <= 0) killJudgeBoss(); }
   }
 }
-function judgeHit(o, dmg, nx, nz, byPlayer) {
+function judgeHit(o, dmg, nx, nz, byPlayer, kb) {
   if (o.hitT > 0) return;
-  o.hearts -= dmg; o.hitT = 0.55; o.kx = nx * 13; o.kz = nz * 13; spawnStars(o.pos); beep(110, 0.18, 'sawtooth', 0.08);
+  kb = kb || 13;
+  o.hearts -= dmg; o.hitT = 0.55; o.kx = nx * kb; o.kz = nz * kb; spawnStars(o.pos); beep(110, 0.18, 'sawtooth', 0.08);
   if (byPlayer) showMsg('🔨 BONK! You hit ' + o.name + ' for ' + dmg + '!', 900);
   if (o.hearts <= 0) { o.alive = false; o.group.visible = false; if (byPlayer) { showMsg('💥 You knocked out ' + o.name + '!', 1400); beep(300, 0.25, 'triangle'); } }
 }
@@ -5150,7 +5190,7 @@ function spawnJudgeBoss(byPlayer) {
   const m = makeToadModel(0x8b1a1a); m.scale.setScalar(3);
   for (const ch of m.children) if (ch.material && ch.material.color && ch.geometry && ch.geometry.type === 'SphereGeometry' && ch.material.color.getHex() === 0x111111) ch.material = M(0xffe066);
   const h = makeHammer(2); h.position.set(0.95, 0.7, 0.5); h.rotation.set(-0.6, 0, -0.3); m.add(h);
-  const g = new THREE.Group(); g.add(m); scene.add(g);
+  const g = new THREE.Group(); g.add(m); const bring = sideRing('light', 3); bring.material = new THREE.MeshBasicMaterial({ color: 0xff2222, transparent: true, opacity: 0.85, depthTest: false }); g.add(bring); scene.add(g);
   j.boss = { group: g, model: m, hammer: h, pos: new THREE.Vector3(JUDGE.x, JUDGE.floorY, JUDGE.z), yaw: 0, hearts: 15, alive: true, cd: 1, swingT: 0, hitT: 0, hopT: 0 };
   jingle([196, 165, 131]); showMsg('👹 The Judge summons a TOAD BOSS! BOTH sides have to fight it!', 4000);
 }
@@ -5182,8 +5222,46 @@ function judgeZap(side, byPlayer) {
 }
 function updateJudge(dt, t) {
   const j = judge; if (!j) return; j.t += dt; updateFx(dt);
-  if (j.countdown > 0) { j.countdown -= dt; player.stunned = true; if (j.countdown <= 0) { player.stunned = false; showMsg('FIGHT! ⚔️', 1200); beep(880, 0.3); } }
-  j.cd = Math.max(0, j.cd - dt);
+  if (j.phase === 'sort') {
+    if (!j.meJudge) player.stunned = true;
+    j.sortT -= dt;
+    if (j.sortT <= 0 && j.sortQueue.length) {
+      j.sortT = 0.22;
+      const pick = j.sortQueue.shift();
+      const side = Math.random() * (j.quota.light + j.quota.dark) < j.quota.light ? 'light' : 'dark';
+      if (side === 'light') j.quota.light--; else j.quota.dark--;
+      beep(side === 'light' ? 740 : 300, 0.09, 'triangle', 0.06);
+      if (pick === 'me') {
+        j.mySide = side;
+        j.myRing = sideRing(side, Math.min(STAGES[save.stage].scale, 2)); player.group.add(j.myRing);
+        j.meSpot = { x: JUDGE.x + (side === 'light' ? -1 : 1) * (JUDGE.r - 14), z: JUDGE.z };
+        showMsg('⚖️ The Judge points at YOU... ' + (side === 'light' ? '☀️ LIGHT SIDE!' : '🌑 DARK SIDE!'), 3000); jingle(side === 'light' ? [659, 880] : [330, 262]);
+      } else {
+        pick.side = side;
+        pick.ring = sideRing(side, pick.model.scale.x); pick.group.add(pick.ring);
+        pick.sortTo = { x: JUDGE.x + (side === 'light' ? -1 : 1) * rand(10, JUDGE.r - 8), z: JUDGE.z + rand(-22, 22) };
+      }
+    }
+    if (!j.sortQueue.length && !j.fighters.some(c => c.sortTo)) { j.phase = 'ready'; j.readyT = 1.4; showMsg('⚔️ Ready...', 1300); beep(440, 0.35); }
+  } else if (j.phase === 'ready') {
+    if (!j.meJudge) player.stunned = true;
+    j.readyT -= dt;
+    if (j.readyT <= 0) {
+      j.phase = 'fight'; j.countdown = 0; player.stunned = false;
+      showMsg('FIGHT!! ⚔️ ☀️ ' + judgeAlive('light') + ' vs 🌑 ' + judgeAlive('dark') + ' — wipe out the other side' + (j.meJudge ? '!' : ' and SURVIVE!'), 3500); jingle([392, 523, 659, 880]);
+    }
+  }
+  for (const c of j.fighters) if (c.sortTo) {
+    const dx = c.sortTo.x - c.pos.x, dz = c.sortTo.z - c.pos.z, dd = Math.hypot(dx, dz);
+    if (dd < 1) { c.sortTo = null; c.yaw = Math.atan2(JUDGE.x - c.pos.x, JUDGE.z - c.pos.z); }
+    else { c.pos.x += dx / dd * 16 * dt; c.pos.z += dz / dd * 16 * dt; c.yaw = Math.atan2(dx, dz); c.hopT += dt; }
+  }
+  if (j.meSpot && !j.meJudge) {
+    const dx = j.meSpot.x - player.pos.x, dz = j.meSpot.z - player.pos.z, dd = Math.hypot(dx, dz);
+    if (dd < 1.5) { if (j.phase === 'fight') j.meSpot = null; }
+    else { player.pos.x += dx / dd * 16 * dt; player.pos.z += dz / dd * 16 * dt; player.yaw = Math.atan2(dx, dz); }
+  }
+  j.cd = Math.max(0, j.cd - dt); j.powerCd = Math.max(0, (j.powerCd || 0) - dt);
   if (j.hammerMesh) { if (j.swingT > 0) { j.swingT -= dt; j.hammerMesh.rotation.x = -1.5 + (1 - j.swingT / 0.3) * 2.4; } else j.hammerMesh.rotation.x = lerp(j.hammerMesh.rotation.x, -0.6, Math.min(1, dt * 8)); }
   if (j.boostT > 0) { j.boostT -= dt; if (j.boostT <= 0) j.boostSide = null; }
   for (let i = j.zapFx.length - 1; i >= 0; i--) { const z = j.zapFx[i]; z.life -= dt; z.mesh.scale.x = z.mesh.scale.z = Math.max(0.1, z.life * 2); if (z.life <= 0) { scene.remove(z.mesh); j.zapFx.splice(i, 1); } }
@@ -5276,7 +5354,7 @@ function updateJudge(dt, t) {
   }
   // HUD
   const la = judgeAlive('light'), da = judgeAlive('dark');
-  setGameInfo('⚖️ Judge: <b>' + j.judgeName + '</b> · ☀️ <b>' + la + '</b> vs 🌑 <b>' + da + '</b>' + (j.meJudge ? '' : j.spec ? ' · 👻 spectating' : ' · you: ' + (j.mySide === 'light' ? '☀️' : '🌑') + ' ❤️ <b>' + j.myHearts + '</b>') + (b && b.alive ? ' · 👹 <b>' + b.hearts + '</b>' : '') + (j.boostSide ? ' · ⚡' + (j.boostSide === 'light' ? '☀️' : '🌑') : '') + (j.countdown > 0 ? ' · Ready... <b>' + Math.ceil(j.countdown) + '</b>' : ''));
+  setGameInfo('⚖️ Judge: <b>' + j.judgeName + '</b> · ☀️ <b>' + la + '</b> vs 🌑 <b>' + da + '</b>' + (j.meJudge ? '' : j.spec ? ' · 👻 spectating' : ' · you: ' + (j.mySide === 'light' ? '☀️' : '🌑') + ' ❤️ <b>' + j.myHearts + '</b>') + (b && b.alive ? ' · 👹 <b>' + b.hearts + '</b>' : '') + (j.boostSide ? ' · ⚡' + (j.boostSide === 'light' ? '☀️' : '🌑') : '') + (j.phase === 'sort' ? ' · ⚖️ choosing sides...' : j.phase === 'ready' ? ' · ⚔️ READY...' : ''));
   // end conditions
   if (!j.over && j.countdown <= 0) {
     if (j.meJudge) {
@@ -5319,6 +5397,230 @@ BADGES.push(
   { id: 'judgewin', em: '⚖️', name: 'Light or Dark', desc: 'Won Judgemental and survived', test: () => (save.wins.judge || 0) >= 1 },
   { id: 'chaosjudge', em: '👹', name: 'Chaos Judge', desc: 'Summoned a Toad Boss as the Judge', test: () => (save.stats.bossSpawns || 0) >= 1 },
   { id: 'honorable', em: '🏛️', name: 'The Honorable Toad', desc: 'Judged a full battle', test: () => (save.stats.judged || 0) >= 1 }
+);
+
+// ================================================================ UPDATE 12
+// ---------------------------------------------------------------- LAB: SIGHT, ABILITIES, POWERS, NEW CLASSES
+function labSight(ax, az, bx, bz, maxD) {
+  const dx = bx - ax, dz = bz - az, d = Math.hypot(dx, dz);
+  if (d > (maxD || 42)) return false;
+  const steps = Math.max(1, Math.ceil(d / 2));
+  for (let i = 1; i < steps; i++) { const c = labCellAt(ax + dx * (i / steps), az + dz * (i / steps)); if (labBlocked(c.col, c.row)) return false; }
+  return true;
+}
+function makeClassMark(cls) {
+  const g = new THREE.Group();
+  if (cls === 'medic') return makeMedicCross();
+  if (cls === 'scout') { const m = M(0x111111); for (const sx of [-1, 1]) { const t2 = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.07, 6, 12), m); t2.position.set(sx * 0.26, 0, 0); g.add(t2); } const band = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.1, 0.1), m); g.add(band); g.position.set(0, 2.55, 0.35); return g; }
+  if (cls === 'trapper') { const box = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.7, 0.5), M(0x8d5524)); g.add(box); const rim = new THREE.Mesh(new THREE.BoxGeometry(0.86, 0.16, 0.55), M(0x5a3818)); rim.position.y = 0.32; g.add(rim); g.position.set(0, 1.5, -0.95); return g; }
+  if (cls === 'shieldy') { const sh = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.12, 14), M(0x74b9ff)); sh.rotation.x = Math.PI / 2; g.add(sh); const boss2 = new THREE.Mesh(new THREE.SphereGeometry(0.16, 8, 6), M(0xffd700)); boss2.position.z = 0.1; g.add(boss2); g.position.set(0, 1.6, -1); return g; }
+  const h = makeHammer(0.9); h.position.set(0.95, 0.7, 0.5); h.rotation.set(-0.6, 0, -0.3); return h;
+}
+function makeBubble(r) {
+  const b = new THREE.Mesh(new THREE.SphereGeometry(r, 12, 10), new THREE.MeshBasicMaterial({ color: 0x9be7ff, transparent: true, opacity: 0.3, depthTest: false }));
+  b.renderOrder = 900; return b;
+}
+function hurtRunner(c, dmg, byPlayer, viaSlam) {
+  const s = surv; if (!s || !c.alive) return;
+  if (c.shielded) { c.shielded = false; if (c.bubble) { c.model.remove(c.bubble); c.bubble = null; } spawnStars(c.pos, 0x9be7ff); beep(1200, 0.2, 'triangle'); if (dist2(player.pos.x, player.pos.z, c.pos.x, c.pos.z) < 30 * 30) showMsg('🛡️ ' + c.name + "'s bubble shield popped and saved them!", 1800); return; }
+  c.hp -= dmg; c.hitT = 0.5; spawnStars(c.pos); beep(110, 0.2, 'sawtooth', 0.1);
+  if (c.hp <= 0) {
+    c.alive = false; c.group.visible = false;
+    s.timer += 30;
+    if (viaSlam) stat('slamKos');
+    if (byPlayer) { s.kos++; showMsg('💥 You caught ' + c.name + '! (' + s.kos + '/' + s.toads.length + ') ⏱️ +30 seconds!', 2200); jingle([440, 330]); }
+    else showMsg('💀 ' + c.name + ' was caught by THE LEGENDARY! ⏱️ +30 seconds on the clock!', 2500);
+  }
+}
+const SURV_AB_CD = { slam: 9, croak: 15, tongue: 12, heal: 8, throw: 20, dash: 15, trap: 12, shield: 20 };
+function useAbility(kind) {
+  const s = surv; if (!s || s.over || s.spec || s.countdown > 0 || s.meStunT > 0) return;
+  if (s.meLegend && !['slam', 'croak', 'tongue'].includes(kind)) return;
+  if (!s.meLegend && ['slam', 'croak', 'tongue'].includes(kind)) return;
+  if (!s.abCd) s.abCd = {};
+  if ((s.abCd[kind] || 0) > 0) { beep(180, 0.1, 'sawtooth', 0.05); showMsg('⏳ ' + kind.toUpperCase() + ' ready in ' + Math.ceil(s.abCd[kind]) + 's', 900); return; }
+  if (kind === 'slam') {
+    s.abCd.slam = SURV_AB_CD.slam; s.swingT = 0.4; beep(70, 0.5, 'sawtooth', 0.18); stat('slams');
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(1, 0.35, 8, 32), new THREE.MeshBasicMaterial({ color: 0xff9f43, transparent: true, opacity: 0.9 }));
+    ring.rotation.x = -Math.PI / 2; ring.position.set(player.pos.x, LAB.floorY + 0.4, player.pos.z); scene.add(ring);
+    if (!s.pfx) s.pfx = [];
+    s.pfx.push({ type: 'slam', mesh: ring, r: 2.5, x: player.pos.x, z: player.pos.z, hit: [] });
+    for (const c of s.toads) if (c.alive && dist2(c.pos.x, c.pos.z, player.pos.x, player.pos.z) < 15 * 15) c.dodgeSlam = Math.random() < 0.55;
+    showMsg('💥 HAMMER SLAM! A shockwave rolls across the floor!', 1800);
+  } else if (kind === 'croak') {
+    s.abCd.croak = SURV_AB_CD.croak; beep(90, 0.7, 'square', 0.16); beep(60, 0.9, 'sawtooth', 0.12); stat('croaks');
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(1, 0.25, 8, 32), new THREE.MeshBasicMaterial({ color: 0x35f5e0, transparent: true, opacity: 0.7 }));
+    ring.rotation.x = -Math.PI / 2; ring.position.set(player.pos.x, LAB.floorY + 1.2, player.pos.z); scene.add(ring);
+    if (!s.pfx) s.pfx = [];
+    s.pfx.push({ type: 'croak', mesh: ring, r: 1 });
+    let n2 = 0;
+    for (const c of s.toads) if (c.alive && dist2(c.pos.x, c.pos.z, player.pos.x, player.pos.z) < 16 * 16) { c.frozenT = 1.5; spawnStars(c.pos, 0x35f5e0); n2++; }
+    showMsg('📢 SONIC CROAK!! ' + (n2 ? n2 + ' toad' + (n2 > 1 ? 's' : '') + ' froze in fear!' : 'The lab shakes... but nobody heard it.'), 1800);
+  } else if (kind === 'tongue') {
+    let best = null, bd = 22 * 22;
+    for (const c of s.toads) if (c.alive) { const dd = dist2(c.pos.x, c.pos.z, player.pos.x, player.pos.z); if (dd < bd && labSight(player.pos.x, player.pos.z, c.pos.x, c.pos.z, 24)) { bd = dd; best = c; } }
+    if (!best) { showMsg('👅 No toad in tongue range (they must be in sight)!', 1200); return; }
+    s.abCd.tongue = SURV_AB_CD.tongue; beep(500, 0.12, 'square', 0.08); beep(240, 0.25, 'square', 0.1); stat('tongues');
+    const dx = best.pos.x - player.pos.x, dz = best.pos.z - player.pos.z, dd = Math.hypot(dx, dz) || 1;
+    const tx = player.pos.x + dx / dd * 3, tz = player.pos.z + dz / dd * 3;
+    const len = Math.hypot(best.pos.x - player.pos.x, best.pos.z - player.pos.z);
+    const tng = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, len, 6), new THREE.MeshBasicMaterial({ color: 0xff6b8a }));
+    tng.position.set((player.pos.x + best.pos.x) / 2, LAB.floorY + 1.4, (player.pos.z + best.pos.z) / 2);
+    tng.rotation.z = Math.PI / 2; tng.rotation.y = -Math.atan2(best.pos.z - player.pos.z, best.pos.x - player.pos.x); scene.add(tng);
+    if (!s.pfx) s.pfx = [];
+    s.pfx.push({ type: 'tongue', mesh: tng, life: 0.3 });
+    s.yank = { c: best, tx, tz, t: 0 }; best.frozenT = 0.9;
+    showMsg('👅 MAGNET TONGUE! You yank ' + best.name + ' right to you!', 1800);
+  } else if (kind === 'heal') {
+    let best = null, bd = 6 * 6;
+    for (const c of s.toads) if (c.alive && c.hp < 100) { const dd = dist2(c.pos.x, c.pos.z, player.pos.x, player.pos.z); if (dd < bd) { bd = dd; best = c; } }
+    if (!best) { showMsg('➕ No hurt toad close enough to heal!', 1200); return; }
+    s.abCd.heal = SURV_AB_CD.heal;
+    best.hp = 100; save.coins += 2; stat('heals'); spawnStars(best.pos, 0x7cff5a); jingle([784, 988]);
+    showMsg('➕ You healed ' + best.name + ' back to full! +2 🪙', 2500); updateHUD(); checkBadges();
+  } else if (kind === 'throw') {
+    if (!s.legend || Math.hypot(s.legend.pos.x - player.pos.x, s.legend.pos.z - player.pos.z) > 20) { showMsg('🔨 THE LEGENDARY is too far away to hit!', 1200); return; }
+    s.abCd.throw = SURV_AB_CD.throw;
+    stat('stuns'); stunHunter(null); checkBadges();
+  } else if (kind === 'dash') {
+    s.abCd.dash = SURV_AB_CD.dash; s.dashT = 3; s.stamina = Math.min(100, s.stamina + 10);
+    beep(900, 0.15, 'triangle', 0.08); spawnStars(player.pos, 0xffffff);
+    showMsg('💨 SUPER DASH! Zoom for 3 seconds!', 1500);
+  } else if (kind === 'trap') {
+    s.abCd.trap = SURV_AB_CD.trap;
+    if (!s.traps) s.traps = [];
+    const mine = s.traps.filter(t2 => t2.mine);
+    if (mine.length >= 2) { const old = mine[0]; scene.remove(old.mesh); s.traps.splice(s.traps.indexOf(old), 1); }
+    dropGoo(player.pos.x, player.pos.z, true);
+    showMsg('🪤 Goo trap planted! If THE LEGENDARY steps in it... STUCK for 3 seconds!', 2200);
+  } else if (kind === 'shield') {
+    s.abCd.shield = SURV_AB_CD.shield;
+    let best = null, bd = 5 * 5;
+    for (const c of s.toads) if (c.alive && !c.shielded) { const dd = dist2(c.pos.x, c.pos.z, player.pos.x, player.pos.z); if (dd < bd) { bd = dd; best = c; } }
+    if (best) { best.shielded = true; best.bubble = makeBubble(1.6); best.bubble.position.y = 1; best.model.add(best.bubble); showMsg('🛡️ Bubble shield on ' + best.name + '! It blocks the next hit.', 2200); }
+    else { s.myShield = true; if (!s.myBubble) { s.myBubble = makeBubble(1.5 * Math.min(STAGES[save.stage].scale, 2.3)); s.myBubble.position.y = 1.1 * Math.min(STAGES[save.stage].scale, 2.3); player.group.add(s.myBubble); } s.myBubble.visible = true; showMsg('🛡️ Bubble shield on YOU! It blocks the next hit.', 2200); }
+    jingle([659, 988]); beep(1100, 0.2, 'triangle');
+  }
+}
+function dropGoo(x, z, mine) {
+  const s = surv; if (!s) return; if (!s.traps) s.traps = [];
+  const mesh = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.4, 0.18, 14), M(0x5fd44a, { transparent: true, opacity: 0.9 }));
+  mesh.position.set(x, LAB.floorY + 0.1, z); scene.add(mesh);
+  s.traps.push({ mesh, x, z, mine: !!mine });
+  beep(300, 0.15, 'sine', 0.08);
+}
+function useAbilityKey(k) {
+  const s = surv;
+  if (!s || mode !== 'survive') return;
+  if (k === 'f') useAbility(s.meLegend ? 'slam' : { medic: 'heal', bonker: 'throw', scout: 'dash', trapper: 'trap', shieldy: 'shield' }[s.cls] || 'none');
+  if (k === 'g' && s.meLegend) useAbility('croak');
+}
+function renderAbilityBtns() {
+  const s = surv, wrap = $('abilityBtns'); wrap.innerHTML = ''; s.abBtns = {};
+  const mk = (key, em, label, kb) => {
+    const b = document.createElement('button'); b.className = 'ab';
+    b.innerHTML = em + '<br>' + label + '<small data-k="' + kb + '">' + kb + '</small>';
+    const fn = (e) => { e.preventDefault(); useAbility(key); };
+    b.addEventListener('touchstart', fn, { passive: false }); b.onclick = fn;
+    wrap.appendChild(b); s.abBtns[key] = b;
+  };
+  if (s.meLegend) { mk('slam', '💥', 'SLAM', 'F'); mk('croak', '📢', 'CROAK', 'G'); mk('tongue', '👅', 'TONGUE', 'H'); }
+  else if (s.cls === 'medic') mk('heal', '➕', 'HEAL', 'F');
+  else if (s.cls === 'bonker') mk('throw', '🔨', 'THROW', 'F');
+  else if (s.cls === 'scout') mk('dash', '💨', 'DASH', 'F');
+  else if (s.cls === 'trapper') mk('trap', '🪤', 'TRAP', 'F');
+  else if (s.cls === 'shieldy') mk('shield', '🛡️', 'SHIELD', 'F');
+}
+function updateSurvExtras(dt, t) {
+  const s = surv; if (!s) return;
+  if (!s.abCd) s.abCd = {};
+  for (const k in s.abCd) {
+    if (s.abCd[k] > 0) s.abCd[k] = Math.max(0, s.abCd[k] - dt);
+    const b = s.abBtns && s.abBtns[k];
+    if (b) { b.classList.toggle('cd', s.abCd[k] > 0); const sm = b.querySelector('small'); if (sm) sm.textContent = s.abCd[k] > 0 ? Math.ceil(s.abCd[k]) + 's' : sm.dataset.k; }
+  }
+  if (s.dashT > 0) { s.dashT -= dt; if (Math.random() < dt * 10) spawnStars(player.pos, 0xffffff); }
+  // shockwaves, croak ripples, tongue fx
+  if (s.pfx) for (let i = s.pfx.length - 1; i >= 0; i--) {
+    const p = s.pfx[i];
+    if (p.type === 'slam') {
+      p.r += 15 * dt; p.mesh.scale.setScalar(p.r);
+      for (const c of s.toads) {
+        if (!c.alive || p.hit.includes(c)) continue;
+        const dd = Math.hypot(c.pos.x - p.x, c.pos.z - p.z);
+        if (Math.abs(dd - p.r) < 1.4) { p.hit.push(c); if (c.dodgeSlam) { c.hopT += 4; spawnStars(c.pos, 0xffffff); if (dd < 20) showMsg('🐸 ' + c.name + ' jumped over the shockwave!', 1000); } else hurtRunner(c, 25, true, true); }
+      }
+      if (p.r > 14) { scene.remove(p.mesh); s.pfx.splice(i, 1); }
+    } else if (p.type === 'croak') {
+      p.r += 30 * dt; p.mesh.scale.setScalar(p.r); p.mesh.material.opacity = Math.max(0, 0.7 - p.r / 24);
+      if (p.r > 17) { scene.remove(p.mesh); s.pfx.splice(i, 1); }
+    } else {
+      p.life -= dt; if (p.life <= 0) { scene.remove(p.mesh); s.pfx.splice(i, 1); }
+    }
+  }
+  // magnet tongue yank
+  if (s.yank) {
+    const y = s.yank; y.t += dt;
+    const k = Math.min(1, y.t / 0.4);
+    y.c.pos.x = lerp(y.c.pos.x, y.tx, k); y.c.pos.z = lerp(y.c.pos.z, y.tz, k);
+    if (k >= 1) s.yank = null;
+  }
+  // goo traps catch the hunter
+  if (s.traps) {
+    const hx = s.meLegend ? player.pos.x : (s.legend ? s.legend.pos.x : 1e9), hz = s.meLegend ? player.pos.z : (s.legend ? s.legend.pos.z : 1e9);
+    for (let i = s.traps.length - 1; i >= 0; i--) {
+      const tr = s.traps[i];
+      if (dist2(tr.x, tr.z, hx, hz) < 2.6 * 2.6) {
+        scene.remove(tr.mesh); s.traps.splice(i, 1);
+        beep(200, 0.4, 'sine', 0.12); beep(120, 0.5, 'sawtooth', 0.08);
+        if (s.meLegend) { s.meGooT = 3; showMsg('🪤 You stepped in GOO! Stuck for 3 seconds!', 2500); }
+        else { s.legend.gooT = 3; if (tr.mine) stat('traps'); spawnStars(s.legend.pos, 0x5fd44a); showMsg('🪤 THE LEGENDARY stepped in the goo! STUCK for 3 seconds!', 2500); checkBadges(); }
+      }
+    }
+  }
+  // scout: see THE LEGENDARY through everything
+  if (s.legendAura) s.legendAura.visible = s.cls === 'scout' && !s.spec && !s.over;
+  if (s.myBubble) s.myBubble.visible = !!s.myShield;
+}
+
+// ---------------------------------------------------------------- JUDGEMENTAL: POWER BONK
+function judgePowerSwing() {
+  const j = judge; if (!j || j.over || j.countdown > 0 || j.spec || j.meJudge) return;
+  j.powerCd = j.powerCd || 0;
+  if (j.powerCd > 0) { showMsg('⚔️ POWER BONK ready in ' + Math.ceil(j.powerCd) + 's', 900); return; }
+  j.powerCd = 3; j.swingT = 0.4;
+  beep(70, 0.4, 'sawtooth', 0.16); spawnStars(player.pos, 0xffd700);
+  const reach = 5.5 + player.model.scale.x * 1.7, fx2 = Math.sin(player.yaw), fz2 = Math.cos(player.yaw);
+  const dmg = hammerDmg(save.stage) + 3 + (j.boostSide === j.mySide ? 1 : 0);
+  let hits = 0;
+  for (const o of j.fighters) {
+    if (!o.alive || o.side === j.mySide) continue;
+    const dx = o.pos.x - player.pos.x, dz = o.pos.z - player.pos.z, dd = Math.hypot(dx, dz) || 1;
+    if (dd < reach + o.model.scale.x && (dx * fx2 + dz * fz2) / dd > -0.35) { judgeHit(o, dmg, dx / dd, dz / dd, true, 24); hits++; }
+  }
+  const b = j.boss;
+  if (b && b.alive) {
+    const dx = b.pos.x - player.pos.x, dz = b.pos.z - player.pos.z, dd = Math.hypot(dx, dz) || 1;
+    if (dd < reach + 3 && (dx * fx2 + dz * fz2) / dd > -0.35) { b.hearts -= dmg; b.hitT = 0.4; spawnStars(b.pos); hits++; if (b.hearts <= 0) killJudgeBoss(); }
+  }
+  if (hits) { stat('powerBonks'); showMsg('⚔️ MEGA POWER BONK! ' + hits + ' hit for ' + dmg + ' each!', 1400); checkBadges(); }
+  else showMsg('⚔️ Power swing... and a miss!', 1000);
+}
+function sideRing(side, scale) {
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(1.15, 0.13, 6, 20), new THREE.MeshBasicMaterial({ color: side === 'light' ? 0xffd700 : 0xb266ff, transparent: true, opacity: 0.85, depthTest: false }));
+  ring.renderOrder = 5; ring.rotation.x = -Math.PI / 2; ring.position.y = 0.14; ring.scale.setScalar(scale || 1);
+  return ring;
+}
+BADGES.push(
+  { id: 'classfull', em: '🎖️', name: 'Class Collector', desc: 'Own all 5 lab classes', test: () => (save.classes || []).length >= 5 },
+  { id: 'slamko', em: '💥', name: 'Shockwave Slam', desc: 'Caught a toad with the Hammer Slam', test: () => (save.stats.slamKos || 0) >= 1 },
+  { id: 'gotcha', em: '🪤', name: 'Gotcha!', desc: 'Trapped THE LEGENDARY in goo', test: () => (save.stats.traps || 0) >= 1 },
+  { id: 'megabonk', em: '⚔️', name: 'Mega Bonker', desc: 'Landed a POWER BONK in Judgemental', test: () => (save.stats.powerBonks || 0) >= 1 }
+);
+CLASSES.push(
+  { id: 'scout', name: 'Scout', em: '👀', cost: 300, desc: 'You ALWAYS see THE LEGENDARY glowing red — through every wall! Press F for a 3-second SUPER DASH. Scouts can\'t do tasks.', btn: 'green' },
+  { id: 'shieldy', name: 'Shieldy', em: '🛡️', cost: 400, desc: 'Press F to pop a bubble shield on yourself or a nearby toad — it blocks the next hammer hit! Shieldys can\'t do tasks.', btn: 'blue' },
+  { id: 'trapper', name: 'Trapper', em: '🪤', cost: 600, desc: 'Press F to plant sticky goo. If THE LEGENDARY steps in it, it\'s STUCK for 3 whole seconds! Trappers can\'t do tasks.', btn: 'red' }
 );
 
 // ---------------------------------------------------------------- GAME LOOP
@@ -5581,7 +5883,7 @@ loadSave();
 buildSky(); buildGround(); buildIslands(); buildScenery(); buildMushrooms(); buildFood(); buildBurrow(); buildNPCs(); buildAnimals(); buildArena(); buildTrack(); buildEggs(); buildNight(); buildCave(); assignNpcPets(); buildNests(); buildNpcForts(); buildNpcFamilies(); buildHouse(); buildBiomes(); buildTown(); buildFarm(); buildWildFlowers(); buildSpace(); buildSpriteSpots();
 $('playBtn').onclick = () => { $('start').style.display = 'none'; beep(660, 0.1); startGame(); };
 $('resetBtn').onclick = () => { if (confirm('Start a brand new game? Your toad will go back to being a tadpole!')) { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} location.reload(); } };
-window.TA = { player, mush, npcs, animals, babies, makeClothing, CLOTHES, equipVisual, hatchPet, startSteal, myNest, startTag, startTagWith, startSurvive, get surv() { return surv; }, frame, LAB, LAB_GRID, labDoors2: () => labDoors, labCellCenter, startBirthday, get bday() { return bday; }, set bdayT(v) { bdayT = v; }, celebrate, refreshTraders, set traderT(v) { traderT = v; }, renderTrade, set tradeNpc(n) { tradeNpc = n; }, surviveAction, surviveSwing, setDoor, nearestDoor, BIOMES, SPRITES, SPACE, CAFE, FARM, SEEDS, SHOES, FLAVORS, aliens, enterSpace, exitSpace, meetSprite, spriteSpots, seatNpc, startChat, finishChat, acceptFriend, inviteFriend, harvestPlot, sellBouquets, cropStage, plotPos, TOPICS, get chatSeq() { return chatSeq; }, get giftState() { return giftState; }, set giftT(v) { giftT = v; }, set visitorT(v) { visitorT = v; }, set pairT(v) { pairT = v; }, get cafeSeats() { return cafeSeats; }, talkToAlien, biomeAt, H2: H, tagAction, bonkThief, get carrying() { return carrying; }, set thiefT(v) { thiefT = v; }, startHamashWith, enterHouse, exitHouse, callTaxi, startFishing, fishAction, renderPets, addStar, get fishing() { return fishing; }, get stealing() { return stealing; }, get taxi() { return taxi; }, get wx() { return wx; }, set rainT(v) { wx.t = v; }, HOUSE, ARENAS, DISCOVER, TAXI_STOPS, startSnailRace, snailCheer, togglePhoto, snapPhoto, setPose, enterCave, exitCave, openCaveChest, playNote, applySeason, get season() { return season; }, get petSnail() { return petSnail; }, CAVE, SEASONS, get photoMode() { return photoMode; }, get curGame() { return curGame; }, get heron() { return heron; }, get friend() { return friend; }, startFlyCatch, startLily, startSky, startHide, finishGame, questTalk, offerQuests, babyGift, checkBadges, earnedBadges, applyReward, GEAR, BADGES, dayFactor, set heronT(v) { heronT = v; }, set questOfferT(v) { questOfferT = v; }, get mode() { return mode; }, get worldReturn() { return worldReturn; }, get hamash() { return hamash; }, get race() { return race; }, startHamash, startRace, endGame, leaveGame, usePower, swingHammer, applyEffect, eggs, BIRDS, get bird() { return bird; }, get save() { return save; }, get camYaw() { return camYaw; }, set camYaw(v) { camYaw = v; camManual = 5; }, get running() { return running; }, keys, H, gainXP, adoptBird, hatchBaby, meetFriend, feedBird, startFlying, updateHUD, openClassSelect, pickClassAndGo, CLASSES, labTasks: () => LAB_TASKS, openTask, taskSuccess, taskFail, nearestTask, bonkToad, get duel() { return duel; }, set duelCool(v) { duelCool = v; }, set bonkCool(v) { bonkCool = v; }, offerDuel, startDuel, duelSwing, endDuel, openBabyModal, sendOffBaby, BABY_STAGES, babyStageOf, get skyGift() { return skyGift; }, set giftDropT(v) { giftDropT = v; }, openSkyGift, updateTutorial, renderHowto, get bonkPending() { return pendingDuelNpc; }, stunHunter, ejectFromDoorCell, resetLabTasks, spawnBaby, babies2: () => babies, startJudgemental, get judge() { return judge; }, judgeSwing, judgeAction, spawnJudgeBoss, judgeBoost, judgeZap, JUDGE };
+window.TA = { player, mush, npcs, animals, babies, makeClothing, CLOTHES, equipVisual, hatchPet, startSteal, myNest, startTag, startTagWith, startSurvive, get surv() { return surv; }, frame, LAB, LAB_GRID, labDoors2: () => labDoors, labCellCenter, startBirthday, get bday() { return bday; }, set bdayT(v) { bdayT = v; }, celebrate, refreshTraders, set traderT(v) { traderT = v; }, renderTrade, set tradeNpc(n) { tradeNpc = n; }, surviveAction, surviveSwing, setDoor, nearestDoor, BIOMES, SPRITES, SPACE, CAFE, FARM, SEEDS, SHOES, FLAVORS, aliens, enterSpace, exitSpace, meetSprite, spriteSpots, seatNpc, startChat, finishChat, acceptFriend, inviteFriend, harvestPlot, sellBouquets, cropStage, plotPos, TOPICS, get chatSeq() { return chatSeq; }, get giftState() { return giftState; }, set giftT(v) { giftT = v; }, set visitorT(v) { visitorT = v; }, set pairT(v) { pairT = v; }, get cafeSeats() { return cafeSeats; }, talkToAlien, biomeAt, H2: H, tagAction, bonkThief, get carrying() { return carrying; }, set thiefT(v) { thiefT = v; }, startHamashWith, enterHouse, exitHouse, callTaxi, startFishing, fishAction, renderPets, addStar, get fishing() { return fishing; }, get stealing() { return stealing; }, get taxi() { return taxi; }, get wx() { return wx; }, set rainT(v) { wx.t = v; }, HOUSE, ARENAS, DISCOVER, TAXI_STOPS, startSnailRace, snailCheer, togglePhoto, snapPhoto, setPose, enterCave, exitCave, openCaveChest, playNote, applySeason, get season() { return season; }, get petSnail() { return petSnail; }, CAVE, SEASONS, get photoMode() { return photoMode; }, get curGame() { return curGame; }, get heron() { return heron; }, get friend() { return friend; }, startFlyCatch, startLily, startSky, startHide, finishGame, questTalk, offerQuests, babyGift, checkBadges, earnedBadges, applyReward, GEAR, BADGES, dayFactor, set heronT(v) { heronT = v; }, set questOfferT(v) { questOfferT = v; }, get mode() { return mode; }, get worldReturn() { return worldReturn; }, get hamash() { return hamash; }, get race() { return race; }, startHamash, startRace, endGame, leaveGame, usePower, swingHammer, applyEffect, eggs, BIRDS, get bird() { return bird; }, get save() { return save; }, get camYaw() { return camYaw; }, set camYaw(v) { camYaw = v; camManual = 5; }, get running() { return running; }, keys, H, gainXP, adoptBird, hatchBaby, meetFriend, feedBird, startFlying, updateHUD, openClassSelect, pickClassAndGo, CLASSES, labTasks: () => LAB_TASKS, openTask, taskSuccess, taskFail, nearestTask, bonkToad, get duel() { return duel; }, set duelCool(v) { duelCool = v; }, set bonkCool(v) { bonkCool = v; }, offerDuel, startDuel, duelSwing, endDuel, openBabyModal, sendOffBaby, BABY_STAGES, babyStageOf, get skyGift() { return skyGift; }, set giftDropT(v) { giftDropT = v; }, openSkyGift, updateTutorial, renderHowto, get bonkPending() { return pendingDuelNpc; }, stunHunter, ejectFromDoorCell, resetLabTasks, spawnBaby, babies2: () => babies, startJudgemental, get judge() { return judge; }, judgeSwing, judgeAction, spawnJudgeBoss, judgeBoost, judgeZap, JUDGE, useAbility, useAbilityKey, labSight, renderAbilityBtns, judgePowerSwing, hurtRunner, dropGoo, updateSurvExtras };
 requestAnimationFrame(frame);
 })();
 </script>
