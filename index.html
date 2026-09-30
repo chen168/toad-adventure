@@ -126,6 +126,7 @@
   #abilityUI .ab.cd { opacity: .45; }
   #abilityUI .ab small { display: block; font-size: 9px; color: #234; }
   #abilityBtns { display: flex; gap: 10px; }
+  #abilityUI .ab.run { width: 88px; height: 88px; font-size: 15px; }
   @media (max-width: 700px) {
     #help, #maplabel { display: none; }
     #topleft { min-width: 0; width: 52%; padding: 6px 10px; } #quest { font-size: 12px; } #stage { font-size: 17px; }
@@ -144,6 +145,7 @@
     #tut { top: auto; bottom: 200px; font-size: 12px; max-width: 92%; }
     body.touch.ingame #tbtns { bottom: 160px; }
     #abilityUI .ab { width: 58px; height: 58px; font-size: 11px; }
+    #abilityUI .ab.run { width: 74px; height: 74px; font-size: 12px; }
   }
 </style>
 </head>
@@ -169,6 +171,7 @@
     <button class="btn blue" id="buildBtn">🧱 Build</button>
     <button class="btn green" id="boardBtn">🏆 Race</button>
     <button class="btn pink" id="babyBtn" style="display:none">🥚 Hatch a baby toad!</button>
+    <button class="btn" id="babiesBtn" style="display:none">🐸 My Babies</button>
     <button class="btn" id="birdBtn">🐦 Birds</button>
     <button class="btn pink" id="spritesBtn">✨ Sprites</button>
     <button class="btn green" id="trophyBtn">🏆 Trophies</button>
@@ -183,7 +186,7 @@
     <button class="btn pink" id="gamesBtn">🎮 Play Your<br>Games</button>
     <div class="title" style="margin:6px 0 0">11 games inside!</div>
   </div>
-  <div id="gamehud" class="panel"><div id="gameinfo"></div><div id="survUI" style="display:none"><div id="hpWrap" class="sbar"><div id="hpFill" style="background:linear-gradient(90deg,#ff6b6b,#ff9f43)"></div></div><div class="sbar"><div id="stFill" style="background:linear-gradient(90deg,#ffe66d,#7cff5a)"></div></div></div><div id="judgeUI" style="display:none"><div style="font-size:13px;margin:4px 0">⚖️ JUDGE POWERS · you have <b id="judgeCoins">0</b> 🪙</div><button class="btn red" id="jBoss" style="font-size:13px">👹 Boss 12🪙</button> <button class="btn" id="jBoostL" style="font-size:13px">⚡☀️ 6🪙</button> <button class="btn blue" id="jBoostD" style="font-size:13px">⚡🌑 6🪙</button> <button class="btn" id="jZapL" style="font-size:13px">💥☀️ 4🪙</button> <button class="btn blue" id="jZapD" style="font-size:13px">💥🌑 4🪙</button></div><button class="btn red" id="quitGame">🏳️ Quit game</button></div>
+  <div id="gamehud" class="panel"><div id="gameinfo"></div><div id="survUI" style="display:none"><div id="hpWrap" class="sbar"><div id="hpFill" style="background:linear-gradient(90deg,#ff6b6b,#ff9f43)"></div></div><div class="sbar"><div id="stFill" style="background:linear-gradient(90deg,#ffe66d,#7cff5a)"></div></div></div><div id="judgeUI" style="display:none"><div style="font-size:13px;margin:4px 0">⚖️ JUDGE POWERS · you have <b id="judgeCoins">0</b> 🪙</div><button class="btn red" id="jBoss" style="font-size:13px">👹 Boss 12🪙</button> <button class="btn" id="jBoostL" style="font-size:13px">⚡☀️ 6🪙</button> <button class="btn blue" id="jBoostD" style="font-size:13px">⚡🌑 6🪙</button> <button class="btn" id="jZapL" style="font-size:13px">💥☀️ 4🪙</button> <button class="btn blue" id="jZapD" style="font-size:13px">💥🌑 4🪙</button><div id="pickUI" style="display:none;margin-top:6px"><div style="font-size:14px;margin-bottom:4px" id="pickName">?</div><button class="btn" id="jPickL" style="font-size:15px">☀️ LIGHT</button> <button class="btn blue" id="jPickD" style="font-size:15px">🌑 DARK</button> <button class="btn" id="jPickAuto" style="font-size:12px">🎲 auto-sort the rest</button></div></div><button class="btn red" id="quitGame">🏳️ Quit game</button></div>
   <div id="photoUI" class="panel">
     <div style="margin-bottom:4px">📸 Drag to look around · scroll to zoom · pick a pose</div>
     <button class="btn pose" data-pose="happy">😊 Happy</button><button class="btn pose" data-pose="dance">🕺 Dance</button><button class="btn pose" data-pose="wave">👋 Wave</button><br>
@@ -274,7 +277,7 @@
     <div class="gcard"><div class="em">👅</div><div style="flex:1"><div class="nm">Fly Catch</div><p>60 seconds to eat more flies than 4 toad friends. Run into flies, or press <b>E</b> to shoot your tongue at far ones!</p></div><button class="btn green" id="playFly">Play</button></div>
     <div class="gcard"><div class="em">🪷</div><div style="flex:1"><div class="nm">Lily Pad Hop</div><p>Hop across wobbly, moving lily pads all the way across the pond to the golden pad. Fall in and you start over!</p></div><button class="btn pink" id="playLily">Play</button></div>
     <div class="gcard"><div class="em">☁️</div><div style="flex:1"><div class="nm">Sky Ring Race</div><p>Ride your grown-up magic bird through 12 rings in the sky before the other toads on their birds. Needs a bird that can fly.</p></div><button class="btn" id="playSky">Play</button></div>
-    <div class="gcard"><div class="em">🔦</div><div style="flex:1"><div class="nm">Survive the Lab</div><p>Locked inside a big spooky lab with 7 toad friends... and <b>THE LEGENDARY</b>! It stalks slowly, but when it SEES you it flies into a RAGE — and every toad it catches adds 30 seconds to the clock. Do 🧪 tasks, slam doors, and pick from FIVE classes (➕ Medic, 🔨 Bonker, 👀 Scout, 🪤 Trapper, 🛡️ Shieldy) with abilities on the F button. And 1 game in 10, YOU are the golden Legendary with three powers: 💥 Hammer Slam, 📢 Sonic Croak, and 👅 Magnet Tongue!</p></div><button class="btn red" id="playSurvive">Play</button></div>
+    <div class="gcard"><div class="em">🔦</div><div style="flex:1"><div class="nm">Survive the Lab</div><p>Locked inside a big spooky lab with 7 toad friends... and <b>THE LEGENDARY</b>! It stalks slowly, but when it SEES you it flies into a RAGE — and every toad it catches adds 30 seconds to the clock. Do 🧪 tasks, slam doors, and pick from FIVE classes (➕ Medic, 🔨 Bonker, 👀 Scout, 🪤 Trapper, 🛡️ Shieldy) with abilities on the F button. And 1 game in 10, YOU are the golden Legendary with three powers! NEW: a bigger lab, class skins and LEVELS, the ⭐ VIP club with 20 rewards, and a cozy toad LOBBY after every game.</p></div><button class="btn red" id="playSurvive">Play</button></div>
     <div class="gcard"><div class="em">⚖️</div><div style="flex:1"><div class="nm">Judgemental</div><p>All 40 toad friends line up before the JUDGE, who sorts everyone onto the ☀️ LIGHT or 🌑 DARK side — usually UNEVEN teams! — then... Ready... FIGHT! Teams glow gold and purple so you can't mix them up. Swing with E, or press Q for a MEGA POWER BONK. Wipe out the other side and SURVIVE to win. The Judge meddles with 👹 bosses, ⚡ boosts, and 💥 zaps... and 1 game in 5, the Judge is YOU!</p></div><button class="btn" id="playJudge">Play</button></div>
     <div class="gcard"><div class="em">🏷️</div><div style="flex:1"><div class="nm">Tag</div><p>9 toads in a huge fenced meadow. One 30-second clock keeps ticking. Whoever is IT when it hits zero is OUT, then a new round starts. Tag with <b>E</b>, and no tagging back the toad who just tagged you. Last toad standing wins!</p></div><button class="btn red" id="playTag">Play</button></div>
     <div class="gcard"><div class="em">🐌</div><div style="flex:1"><div class="nm">Snail Race</div><p>Your pet snail races 3 other snails. Very. Slowly. Mash <b>E</b> to cheer and make it crawl faster! (The first time, you adopt and name your snail.)</p></div><button class="btn green" id="playSnail">Play</button></div>
@@ -304,7 +307,19 @@
   <div class="card">
     <h2>📋 Update Log</h2>
     <div>Everything new in Toad Adventure, newest first. Ideas by Sasha!</div>
-    <div class="upd"><h3>🆕 Update 12 · September 28, 2026</h3><ul>
+    <div class="upd"><h3>🆕 Update 13 · September 29, 2026</h3><ul>
+      <li>🗺️ <b>A much bigger, cooler lab!</b> A brand-new symmetric map with 11 rooms, 23 doors, 6 task tables, and long hallways to sprint down.</li>
+      <li>🛋️ <b>THE TOAD LOBBY:</b> after every Survive game you land in a cozy lobby with toad friends hopping around. Check the ⭐ VIP board, browse the 🎨 skin rack, hop on the red pad to play again, or take the green door home!</li>
+      <li>⭐ <b>VIP!</b> Join for 100 🪙, then EVERY finished game unlocks the next of 20 rewards, each better than the rest — from 200 coins, to the shiny VIP name tag, to three special skins, all the way to reward #20: the secret ❄️ FREEZER class that freezes THE LEGENDARY for 10 whole seconds. Computer toads can be VIP too!</li>
+      <li>🎖️ <b>Class levels:</b> every class (Runner, Medic, Bonker, Scout, Trapper, Shieldy) earns its own XP when you use abilities and win. 100 levels each — reach Level 100 for that class's golden 👑 CHAMPION skin!</li>
+      <li>🎨 <b>Class skins:</b> your class stays the same, your toad just looks amazing. Buy them with coins, earn them from VIP, or become a Champion. Computer toads wear skins too. It's all in the new 🎒 Lab Locker!</li>
+      <li>🏃 The RUN button is BIGGER.</li>
+      <li>🧠 <b>Fixed:</b> the Legendary used to run face-first into walls when it smelled a toad in the next room. It now follows the hallways like a proper hunter (and so do task-hunting toads).</li>
+      <li>⚖️ <b>Judgemental:</b> when YOU are the Judge, YOU choose each toad's side — ☀️ or 🌑 buttons as every toad steps before your throne (or tap 🎲 to auto-sort).</li>
+      <li>🐸 <b>My Babies button:</b> manage all your baby toads in one list — open, pet, paint, send off, or call one to your side. And fixed the baby speech bubbles that got stuck on the screen!</li>
+      <li>🏆 6 new trophies.</li>
+    </ul></div>
+    <div class="upd"><h3>Update 12 · September 28, 2026</h3><ul>
       <li>🔦 <b>THE LEGENDARY got scarier AND fairer:</b> it now walks a bit slower than a toad and has its own stamina... but the moment a toad is in its SIGHT it flies into a 😡 RAGE — a big speed boost that costs no stamina at all. And every toad it catches adds ⏱️ 30 seconds to the clock!</li>
       <li>🎮 <b>New controls:</b> the RUN button lives in the bottom-right corner with your ability button right beside it, same size. Keyboard: <b>J</b> = run, <b>F</b> = ability.</li>
       <li>➕🔨👀🪤🛡️ <b>Three NEW classes</b> join Medic and Bonker: the <b>Scout</b> (300 🪙) sees THE LEGENDARY through every wall and gets a super dash, the <b>Shieldy</b> (400 🪙) pops bubble shields that block a hit, and the <b>Trapper</b> (600 🪙) plants sticky goo that STOPS the Legendary for 3 seconds. Computer toads can have them all too!</li>
@@ -554,7 +569,7 @@
     <h2>🔦 Survive the Lab — pick your class!</h2>
     <div>Classes are special lab jobs. Buy one once with coins and it is yours forever! You have <b id="classCoins">0</b> 🪙. (If you get picked as THE LEGENDARY, your class sits out that round.)</div>
     <div id="classList"></div>
-    <p style="text-align:center"><button class="btn" id="closeClass">Cancel</button></p>
+    <p style="text-align:center"><button class="btn green" id="lockerBtn">🎒 Skins, Levels &amp; VIP</button> <button class="btn" id="closeClass">Cancel</button></p>
   </div>
 </div>
 
@@ -592,6 +607,23 @@
     <h2 id="howtoTitle">📖 How to Play</h2>
     <div id="howtoBody" style="min-height:200px"></div>
     <p style="text-align:center"><button class="btn" id="howtoPrev">⬅ Back</button> <span id="howtoPage" style="font-weight:bold;margin:0 10px"></span> <button class="btn green" id="howtoNext">Next ➡</button> <button class="btn" id="closeHowto">Close</button></p>
+  </div>
+</div>
+
+<div id="babies" class="modal">
+  <div class="card">
+    <h2>🐸 My Baby Toads</h2>
+    <div>All your babies in one place — open one to pet, paint, or send off, or call it to your side!</div>
+    <div id="babiesList"></div>
+    <p style="text-align:center"><button class="btn" id="closeBabies">Done</button></p>
+  </div>
+</div>
+
+<div id="locker" class="modal">
+  <div class="card">
+    <h2>🎒 The Lab Locker</h2>
+    <div id="lockerBody"></div>
+    <p style="text-align:center"><button class="btn" id="closeLocker">Done</button></p>
   </div>
 </div>
 
@@ -827,6 +859,7 @@ function groundY(x, z, y) {           // where the toad stands: terrain, or a sk
   if (player.inSpace) return dist2(x, z, SPACE.x, SPACE.z) < (SPACE.r + 4) * (SPACE.r + 4) ? SPACE.y : H(x, z);
   if (mode === 'survive') return LAB.floorY;
   if (mode === 'judge') return JUDGE.floorY;
+  if (mode === 'lobby') return LOBBY.floorY;
   const isl = islandAt(x, z);
   if (isl && y > isl.y - 3) return isl.y;
   for (const pf of PLATFORMS) if (dist2(x, z, pf.x, pf.z) < pf.r * pf.r && y > pf.y - 3) return pf.y;
@@ -900,8 +933,9 @@ function loadSave() {
   if (!save.classes) save.classes = []; if (save.activeClass === undefined) save.activeClass = null;
   if (!save.sentBabies) save.sentBabies = [];
   if (typeof save.tutStep !== 'number') save.tutStep = save.xp > 30 ? 999 : 0;
+  if (!save.labXp) save.labXp = {}; if (typeof save.vip !== 'boolean') save.vip = false; if (typeof save.vipLevel !== 'number') save.vipLevel = 0; if (typeof save.vipTag !== 'boolean') save.vipTag = false; if (!save.labSkins) save.labSkins = []; if (!save.labSkinEq) save.labSkinEq = {};
 }
-const GAME_VERSION = 12;
+const GAME_VERSION = 13;
 function curBird() { return save.activeBird ? save.birds[save.activeBird] : null; }
 function curBirdSpec() { return BIRDS.find(b => b.id === save.activeBird) || BIRDS[0]; }
 function writeSave() {
@@ -1523,6 +1557,7 @@ function updateHUD() {
   $('rank').textContent = '#' + (1 + npcs.filter(n => n.xp > save.xp).length) + ' of ' + (npcs.length + 1);
   const maxBabies = Math.max(0, save.stage - 1);
   $('babyBtn').style.display = save.stage >= 2 && save.babies.length < maxBabies ? 'block' : 'none';
+  $('babiesBtn').style.display = save.babies.length >= 1 ? 'block' : 'none';
   $('birdinfo').innerHTML = cb ? '<br>' + curBirdSpec().em + ' ' + cb.name + ': ' + (cb.xp >= BIRD_READY_XP ? 'ready to fly! (E)' : Math.floor(cb.xp) + '/' + BIRD_READY_XP) : '';
 }
 function gainXP(n) {
@@ -1567,7 +1602,7 @@ function renderBoard() {
   const rows = npcs.map(n => ({ name: n.name, xp: n.xp })).concat([{ name: 'YOU', xp: save.xp, me: true }]).sort((a, b) => b.xp - a.xp);
   $('boardTable').innerHTML = rows.map((r, i) => '<tr class="' + (r.me ? 'me' : '') + '"><td>#' + (i + 1) + '</td><td>' + r.name + '</td><td>' + STAGES[stageFor(r.xp)].emoji + ' ' + STAGES[stageFor(r.xp)].name + '</td><td>' + Math.floor(r.xp) + ' XP</td></tr>').join('');
 }
-function anyModalOpen() { return ['shop', 'build', 'board', 'namer', 'birds', 'gamesModal', 'results', 'trophies', 'updates', 'music', 'photoModal', 'pets', 'arenaModal', 'taxi', 'wallpaper', 'cafe', 'chatTopics', 'friendReq', 'iceShop', 'shoeShop', 'farmShop', 'flowerStand', 'seedPick', 'sprites', 'tagMapModal', 'trade', 'classModal', 'taskModal', 'babyModal', 'bonkModal', 'howto'].some(id => $(id).style.display === 'flex'); }
+function anyModalOpen() { return ['shop', 'build', 'board', 'namer', 'birds', 'gamesModal', 'results', 'trophies', 'updates', 'music', 'photoModal', 'pets', 'arenaModal', 'taxi', 'wallpaper', 'cafe', 'chatTopics', 'friendReq', 'iceShop', 'shoeShop', 'farmShop', 'flowerStand', 'seedPick', 'sprites', 'tagMapModal', 'trade', 'classModal', 'taskModal', 'babyModal', 'bonkModal', 'howto', 'babies', 'locker'].some(id => $(id).style.display === 'flex'); }
 function toggleModal(id, open) {
   const el = $(id); const show = open === undefined ? el.style.display !== 'flex' : open;
   if (show) ['shop', 'build', 'board'].forEach(o => { if (o !== id) $(o).style.display = 'none'; });
@@ -1614,6 +1649,13 @@ $('howtoPrev').onclick = () => renderHowto(howtoIdx - 1);
 $('howtoNext').onclick = () => renderHowto(howtoIdx + 1);
 $('bonkYes').onclick = () => { toggleModal('bonkModal', false); if (pendingDuelNpc) startDuel(pendingDuelNpc); pendingDuelNpc = null; };
 $('bonkNo').onclick = () => { toggleModal('bonkModal', false); if (pendingDuelNpc) { duelCool = 45; pendingDuelNpc.line = 'Chicken! 🐔 Just kidding — rematch anytime!'; pendingDuelNpc.bubbleT = 4; } pendingDuelNpc = null; };
+$('babiesBtn').onclick = () => { renderBabies(); toggleModal('babies', true); };
+$('closeBabies').onclick = () => toggleModal('babies', false);
+$('closeLocker').onclick = () => toggleModal('locker', false);
+$('lockerBtn').onclick = () => { toggleModal('classModal', false); openLocker(); };
+$('jPickL').onclick = () => judgePick('light');
+$('jPickD').onclick = () => judgePick('dark');
+$('jPickAuto').onclick = () => { if (judge) { judge.autoSort = true; $('pickUI').style.display = 'none'; } };
 { const rb = $('runBtn'); const dn = e => { e.preventDefault(); if (surv) surv.runHeld = true; }; const up2 = e => { e.preventDefault(); if (surv) surv.runHeld = false; };
   rb.addEventListener('mousedown', dn); rb.addEventListener('touchstart', dn, { passive: false });
   window.addEventListener('mouseup', up2); rb.addEventListener('touchend', up2); rb.addEventListener('touchcancel', up2); }
@@ -1656,7 +1698,7 @@ window.addEventListener('keydown', ev => {
   if (ev.target.tagName === 'INPUT') { if (code === 'Enter' || ev.key === 'Enter') $('namerOk').onclick(); return; }
   keys[code] = true;
   if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(code)) ev.preventDefault();
-  if (code === 'Escape') { ['shop', 'build', 'board', 'birds', 'gamesModal', 'trophies', 'updates', 'music', 'pets', 'arenaModal', 'taxi', 'wallpaper', 'cafe', 'chatTopics', 'iceShop', 'shoeShop', 'farmShop', 'flowerStand', 'seedPick', 'sprites', 'tagMapModal', 'trade', 'classModal', 'babyModal', 'bonkModal', 'howto'].forEach(id => toggleModal(id, false)); return; }
+  if (code === 'Escape') { ['shop', 'build', 'board', 'birds', 'gamesModal', 'trophies', 'updates', 'music', 'pets', 'arenaModal', 'taxi', 'wallpaper', 'cafe', 'chatTopics', 'iceShop', 'shoeShop', 'farmShop', 'flowerStand', 'seedPick', 'sprites', 'tagMapModal', 'trade', 'classModal', 'babyModal', 'bonkModal', 'howto', 'babies', 'locker'].forEach(id => toggleModal(id, false)); return; }
   if (mode === 'race' && race.me.frozenT > 0) { mash(); return; }
   if (/^Digit[1-8]$/.test(code) && save.instruments.length && mode === 'world') { playNote(+code[5] - 1); return; }
   if (anyModalOpen()) return;
@@ -1860,9 +1902,9 @@ function setGameInfo(html) { $('gameinfo').innerHTML = html; }
 function announce(r, text) { showMsg((r.isPlayer ? 'You ' : r.name + ' ') + text, 2200); }
 function setFollowersVisible(vis) { for (const b of babies) b.group.visible = vis; if (friend) friend.group.visible = vis; }
 function enterGame(kind) {
-  worldReturn = { pos: player.pos.clone(), inWater: player.inWater };
+  if (mode === 'world' || !worldReturn) worldReturn = { pos: player.pos.clone(), inWater: player.inWater };
   player.flying = false; player.inWater = false; player.vy = 0; player.kx = player.kz = 0; player.slowMul = 0; player.frozen = false; player.stunned = true;
-  mode = kind; ['shop', 'build', 'board', 'birds', 'gamesModal', 'cafe', 'chatTopics', 'iceShop', 'shoeShop', 'farmShop', 'flowerStand', 'seedPick', 'sprites', 'tagMapModal', 'trade', 'classModal', 'babyModal', 'bonkModal', 'howto'].forEach(id => toggleModal(id, false));
+  mode = kind; ['shop', 'build', 'board', 'birds', 'gamesModal', 'cafe', 'chatTopics', 'iceShop', 'shoeShop', 'farmShop', 'flowerStand', 'seedPick', 'sprites', 'tagMapModal', 'trade', 'classModal', 'babyModal', 'bonkModal', 'howto', 'babies', 'locker'].forEach(id => toggleModal(id, false));
   document.body.classList.add('ingame'); $('games').style.display = 'none'; $('gamehud').style.display = 'block'; $('buttons').style.display = 'none'; $('babyBtn').style.display = 'none';
   setFollowersVisible(false); spiritShield = !!friend && save.activeSprite === 'ember'; if (spiritShield) showMsg('✨ ' + friend.name + ' will protect you from one hit!', 2000);
 }
@@ -1895,6 +1937,7 @@ function updateFx(dt) {
 function gameInteraction() {
   if (mode === 'survive') return surviveInteraction();
   if (mode === 'judge') return judgeInteraction();
+  if (mode === 'lobby') return lobbyInteraction();
   if (mode === 'race' && race && race.me.bomb > 0) return { label: '💣 Press E near a racer to pass the bomb! ' + Math.ceil(race.me.bomb) + 's', fn: () => usePower(race.me) };
   return null;
 }
@@ -2538,6 +2581,11 @@ function endGame(result, quit) {
 }
 function leaveGame() {
   if (mode === 'world') return;
+  if (mode === 'survive') {
+    if (curGame) { try { curGame.cleanup(); } catch (e) {} curGame = null; }
+    showGear(false); player.flying = false;
+    enterLobby(); checkBadges(); return;
+  }
   if (curGame) { try { curGame.cleanup(); } catch (e) {} curGame = null; }
   showGear(false); player.flying = false;
   const wasMode = mode; leaveGameClassic();
@@ -2702,7 +2750,7 @@ function updateHide(dt, t) {
     finishGame({ win: all, title: all ? '🏆 YOU FOUND EVERYONE!' : "⏰ Time's up! You found " + g.found + ' of 6', body: '<div style="font-size:20px">' + (all ? 'Found all 6 in ' + Math.floor(g.t) + ' seconds!' : 'The others were hiding really well.') + '</div>', reward: all ? { mush: 30, petals: 12, coins: 20, xp: 70 } : { mush: g.found * 4, coins: g.found * 2, xp: g.found * 8 } });
   }
 }
-const EXTRA_GAMES = { fly: updateFlyCatch, lily: updateLily, sky: updateSky, hide: updateHide, snail: updateSnailRace, tag: updateTag, survive: updateSurvive, judge: updateJudge };
+const EXTRA_GAMES = { fly: updateFlyCatch, lily: updateLily, sky: updateSky, hide: updateHide, snail: updateSnailRace, tag: updateTag, survive: updateSurvive, judge: updateJudge, lobby: updateLobby };
 function overPlatform(x, z, y) { for (const pf of PLATFORMS) if (dist2(x, z, pf.x, pf.z) < pf.r * pf.r && y > pf.y - 3) return true; return false; }
 
 // ================================================================ UPDATE 5: seasons, pet snail, camera, cave, music
@@ -4140,22 +4188,26 @@ function buildTagProps(g, mapId) {
 // ---------------------------------------------------------------- SURVIVE THE LAB
 const LAB = { x: 700, z: 700, floorY: -160, cs: 10 };
 const LAB_GRID = [
-  '######################',
-  '#........D...#.......#',
-  '#.######.###.#.#####.#',
-  '#.#....#...#.#.#...#.#',
-  '#.#....D...D.#.D...#.#',
-  '#.#....#...#.#.#...#.#',
-  '#.######.#.#.#.###D#.#',
-  '#........#.D.#.......#',
-  '#.#####D##.#.####.##.#',
-  '#.#......#.#....#..#.#',
-  '#.#......D.#.##.D..#.#',
-  '#.#......#.#..#.#..#.#',
-  '#.##.#####.##D#.#.##.#',
-  '#....D........#.#....#',
-  '#....#........D.#....#',
-  '######################',
+  '##############################',
+  '#............................#',
+  '#.###D####.###D####.###D####.#',
+  '#.#......#.#......#.#......#.#',
+  '#.#......D.D......#.D......#.#',
+  '#.#......#.#......#.#......#.#',
+  '#.########.########.########.#',
+  '#............................#',
+  '#.##D##.##D###.##D####.##D##.#',
+  '#.#...#.#....#.#.....#.#...#.#',
+  '#.D...#.#....D.#.....D.#...#.#',
+  '#.#...#.#....#.#.....#.#...#.#',
+  '#.#####.##D###.###D###.##D##.#',
+  '#............................#',
+  '#.#D#.##D###.##D##.##D##.###.#',
+  '#.#...#....#.#...#.#...#.###.#',
+  '#.#...#....D.#...D.#...D.###.#',
+  '#.#...#....#.#...#.#...#.###.#',
+  '#............................#',
+  '##############################',
 ];
 const LAB_COLS = LAB_GRID[0].length, LAB_ROWS = LAB_GRID.length;
 const LAB_BG = new THREE.Color(0x11131f), fogLab = new THREE.Fog(0x11131f, 34, 150);
@@ -4220,7 +4272,7 @@ function buildLab() {
   // checker tiles
   for (let row = 1; row < LAB_ROWS - 1; row++) for (let col = 1; col < LAB_COLS - 1; col++) if (LAB_GRID[row][col] === '.' && (row + col) % 2 === 0) { const c = labCellCenter(col, row); const tile = new THREE.Mesh(new THREE.BoxGeometry(LAB.cs - 0.2, 0.05, LAB.cs - 0.2), M(0xa6aec8)); tile.position.set(c.x, LAB.floorY + 0.03, c.z); labGroup.add(tile); }
   const ceil = new THREE.Mesh(new THREE.BoxGeometry(LAB_COLS * LAB.cs, 0.4, LAB_ROWS * LAB.cs), M(0x3a3f57)); ceil.position.set(LAB.x, LAB.floorY + wallH + 0.2, LAB.z); labGroup.add(ceil);
-  for (const [c, r] of [[4, 4], [16, 4], [5, 10], [13, 9], [17, 13], [7, 13], [11, 1], [11, 7]]) { const cc = labCellCenter(c, r); const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.4, 8, 6), new THREE.MeshBasicMaterial({ color: 0xfff3a0 })); lamp.position.set(cc.x, LAB.floorY + wallH - 0.7, cc.z); labGroup.add(lamp); const li = new THREE.PointLight(0xfff0c0, 0.9, 36); li.position.set(cc.x, LAB.floorY + wallH - 1.2, cc.z); labGroup.add(li); }
+  for (const [c, r] of [[5, 1], [23, 1], [10, 4], [19, 7], [2, 7], [27, 7], [14, 10], [5, 13], [20, 13], [12, 16], [24, 18]]) { const cc = labCellCenter(c, r); const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.4, 8, 6), new THREE.MeshBasicMaterial({ color: 0xfff3a0 })); lamp.position.set(cc.x, LAB.floorY + wallH - 0.7, cc.z); labGroup.add(lamp); const li = new THREE.PointLight(0xfff0c0, 0.9, 36); li.position.set(cc.x, LAB.floorY + wallH - 1.2, cc.z); labGroup.add(li); }
   buildLabTasks();
   labGroup.visible = false; scene.add(labGroup);
 }
@@ -4234,18 +4286,21 @@ function nearestDoor(x, z, maxD) { let best = null, bd = (maxD || 4) * (maxD || 
 let surv = null;
 function startSurvive() {
   if (needToad()) return;
+  if (mode === 'lobby' && curGame) { try { curGame.cleanup(); } catch (e) {} curGame = null; }
   enterGame('survive');
   if (!labGroup) buildLab();
   labGroup.visible = true;
   for (const d of labDoors) { d.open = false; d.cool = 0; d.flashT = 0; d.hinge.rotation.y = d.baseYaw; d.panel.material.emissive.setHex(0x000000); d.beacon.visible = false; }
   resetLabTasks();
   const meLegend = Math.random() < 0.1;
-  surv = { t: 0, countdown: 4, timer: 120, over: false, toads: [], me: null, legend: null, meLegend, spec: false, specIdx: 0, runHeld: false, stamina: 100, hp: 100, kos: 0, cls: meLegend ? null : save.activeClass, medCd: 0, bonkCdP: 0, meStunT: 0, bashT: 0, fx: [], task: null, abCd: {}, pfx: [], traps: [], yank: null, dashT: 0, meGooT: 0, rage: false, myShield: false };
-  curGame = { cleanup() { for (const c of surv.toads) if (c.group) scene.remove(c.group); if (surv.legend) scene.remove(surv.legend.group); if (surv.myModel) { player.group.remove(surv.myModel); player.model.visible = true; } if (surv.clsMesh) player.model.remove(surv.clsMesh); if (surv.glowMy) player.group.remove(surv.glowMy); for (const f of surv.fx) scene.remove(f.mesh); for (const p of surv.pfx) scene.remove(p.mesh); for (const tr of surv.traps) scene.remove(tr.mesh); if (surv.myBubble) player.group.remove(surv.myBubble); $('abilityUI').style.display = 'none'; if (surv.task) { surv.task = null; toggleModal('taskModal', false); } player.model.scale.setScalar(STAGES[save.stage].scale); labGroup.visible = false; player.group.visible = true; blob.visible = true; if (bird) bird.group.visible = true; $('survUI').style.display = 'none'; surv = null; }, over: false };
+  surv = { t: 0, countdown: 4, timer: 120, over: false, toads: [], me: null, legend: null, meLegend, spec: false, specIdx: 0, runHeld: false, stamina: 100, hp: 100, kos: 0, cls: meLegend ? null : save.activeClass, medCd: 0, bonkCdP: 0, meStunT: 0, bashT: 0, fx: [], task: null, abCd: {}, pfx: [], traps: [], yank: null, dashT: 0, meGooT: 0, rage: false, myShield: false, xpCls: save.activeClass || 'runner' };
+  curGame = { cleanup() { for (const c of surv.toads) if (c.group) scene.remove(c.group); if (surv.legend) scene.remove(surv.legend.group); if (surv.myModel) { player.group.remove(surv.myModel); player.model.visible = true; } if (surv.clsMesh) player.model.remove(surv.clsMesh); if (surv.glowMy) player.group.remove(surv.glowMy); for (const f of surv.fx) scene.remove(f.mesh); for (const p of surv.pfx) scene.remove(p.mesh); for (const tr of surv.traps) scene.remove(tr.mesh); if (surv.myBubble) player.group.remove(surv.myBubble); if (surv.skinCap) player.model.remove(surv.skinCap); if (surv.vipTagMesh) player.model.remove(surv.vipTagMesh); if (surv.skinned) player.model.userData.mat.color.setHex(STAGES[save.stage].color); $('abilityUI').style.display = 'none'; if (surv.task) { surv.task = null; toggleModal('taskModal', false); } player.model.scale.setScalar(STAGES[save.stage].scale); labGroup.visible = false; player.group.visible = true; blob.visible = true; if (bird) bird.group.visible = true; $('survUI').style.display = 'none'; surv = null; }, over: false };
   // spawn cells for runners (open floor spots)
-  const spawns = [[3, 4], [17, 4], [5, 9], [12, 10], [18, 13], [2, 13], [8, 1], [15, 7], [10, 9]];
+  const spawns = [[2, 1], [27, 1], [14, 4], [4, 10], [25, 10], [3, 16], [15, 16], [7, 10], [12, 18]];
   const mk = (n) => { const r = makeRival(n, false); r.hp = 100; r.alive = true; r.stam = 100; r.runT = 0; r.think = 0; r.dir = rand(0, 6.283); r.doorCool = 0; r.model.scale.setScalar(1);
     r.flask = new THREE.Mesh(new THREE.IcosahedronGeometry(0.28, 0), new THREE.MeshBasicMaterial({ color: 0x35f5e0 })); r.flask.position.y = 3; r.flask.visible = false; r.model.add(r.flask);
+    if (Math.random() < 0.35) { const sk2 = LAB_SKINS[Math.floor(Math.random() * LAB_SKINS.length)]; r.model.userData.mat.color.setHex(sk2.body); }
+    if (Math.random() < 0.25) { const tg2 = makeVipTag(); tg2.position.y = 3.6; r.model.add(tg2); }
     return r; };
   const opp = pickOpponents(7);
   opp.forEach((n, i) => {
@@ -4271,16 +4326,22 @@ function startSurvive() {
   } else {
     player.model.scale.setScalar(Math.min(STAGES[save.stage].scale, 2.3));
     if (surv.cls) { surv.clsMesh = makeClassMark(surv.cls); player.model.add(surv.clsMesh); }
+    const mySkin = LAB_SKINS.find(sk2 => sk2.id === save.labSkinEq[surv.cls || 'runner']);
+    if (mySkin && skinOwned(mySkin)) {
+      player.model.userData.mat.color.setHex(mySkin.body); surv.skinned = true;
+      if (mySkin.cap) { surv.skinCap = new THREE.Mesh(new THREE.SphereGeometry(0.78, 10, 8, 0, 6.283, 0, 1.5), M(mySkin.cap)); surv.skinCap.position.y = 2.05; player.model.add(surv.skinCap); }
+    }
+    if (save.vipTag) { surv.vipTagMesh = makeVipTag(); surv.vipTagMesh.position.y = 3.3; player.model.add(surv.vipTagMesh); }
     const lm = makeToadModel(0xffd700); lm.scale.setScalar(2.4);
     for (const ch of lm.children) if (ch.material && ch.material.color && ch.geometry && ch.geometry.type === 'SphereGeometry' && ch.material.color.getHex() === 0x111111) ch.material = M(0xff2222);
     const ham = makeHammer(1.6); ham.position.set(0.95, 0.7, 0.5); ham.rotation.set(-0.6, 0, -0.3); lm.add(ham);
     const g = new THREE.Group(); g.add(lm); scene.add(g);
-    const sp = labCellCenter(11, 4);
+    const sp = labCellCenter(14, 7);
     surv.legend = { name: 'THE LEGENDARY', model: lm, hammer: ham, group: g, pos: new THREE.Vector3(sp.x, LAB.floorY, sp.z), yaw: 0, hopT: 0, cd: 0, swingT: 0, stuckT: 0, lastX: sp.x, lastZ: sp.z, doorT: 0, freeDir: null, freeT: 0, stunT: 0, stam: 100, gooT: 0, rageMsgT: 0 };
     surv.legendAura = new THREE.Mesh(new THREE.SphereGeometry(3.4, 12, 10), new THREE.MeshBasicMaterial({ color: 0xff2222, transparent: true, opacity: 0.28, depthTest: false }));
     surv.legendAura.renderOrder = 985; surv.legendAura.position.y = 2.6; surv.legendAura.visible = false; g.add(surv.legendAura);
   }
-  const mySp = meLegend ? labCellCenter(11, 4) : labCellCenter(10, 13);
+  const mySp = meLegend ? labCellCenter(14, 7) : labCellCenter(5, 18);
   player.pos.set(mySp.x, LAB.floorY, mySp.z); player.yaw = 0; camYaw = 0; camManual = 0; player.vy = 0;
   if (bird) bird.group.visible = false;
   camera.position.set(player.pos.x, LAB.floorY + 6, player.pos.z - 8);
@@ -4395,6 +4456,11 @@ function updateSurvive(dt, t) {
       else { sp = 16; L.stam = Math.min(100, L.stam + 12 * dt); }
       L.rageMsgT = Math.max(0, L.rageMsgT - dt);
       if (L.gooT > 0) { L.gooT -= dt; sp = 0; if (Math.random() < dt * 5) spawnStars(L.pos, 0x5fd44a); }
+      if (!sight && L.freeT <= 0) {
+        L.wpT = Math.max(0, (L.wpT || 0) - dt);
+        if (!L.wp || L.wpT <= 0 || dist2(L.wp.x, L.wp.z, L.pos.x, L.pos.z) < 9) { L.wp = labNextStep(L.pos.x, L.pos.z, tx, tz); L.wpT = 0.5; }
+        if (L.wp) { dx = L.wp.x - L.pos.x; dz = L.wp.z - L.pos.z; }
+      }
       labMove(L, L.pos.x + dx / (Math.hypot(dx, dz) || 1) * sp * dt, L.pos.z + dz / (Math.hypot(dx, dz) || 1) * sp * dt, 1.4);
       const moved = Math.hypot(L.pos.x - L.lastX, L.pos.z - L.lastZ);
       if (moved < sp * dt * 0.25) { L.stuckT += dt; } else L.stuckT = 0;
@@ -4439,7 +4505,7 @@ function updateSurvive(dt, t) {
       if (c.think <= 0) {
         c.think = rand(0.3, 0.8);
         if (c.goalKind === 'flee') c.dir = fleeDir(c, hunterX, hunterZ);
-        else if (goal) c.dir = Math.atan2(goal.x - c.pos.x, goal.z - c.pos.z);
+        else if (goal) { if (labSight(c.pos.x, c.pos.z, goal.x, goal.z, 70)) c.dir = Math.atan2(goal.x - c.pos.x, goal.z - c.pos.z); else { const wp = labNextStep(c.pos.x, c.pos.z, goal.x, goal.z); c.dir = wp ? Math.atan2(wp.x - c.pos.x, wp.z - c.pos.z) : Math.atan2(goal.x - c.pos.x, goal.z - c.pos.z); } }
         else if (Math.random() < 0.4) c.dir = rand(0, 6.283);
       }
       const gd = goal ? Math.hypot(goal.x - c.pos.x, goal.z - c.pos.z) : 99;
@@ -4483,12 +4549,12 @@ function updateSurvive(dt, t) {
       s.glowNpcMesh.position.y = 1; last.group.add(s.glowNpcMesh);
       showMsg('🚨 Only ' + last.name + ' is left! They glow RED — go get them!', 3500); beep(880, 0.2);
     }
-    if (s.meLegend && runnersLeft === 0) { s.over = true; stat('hunterWin'); finishGame({ win: true, title: '👑 THE LEGENDARY WINS! You caught them ALL!', body: '<div style="font-size:20px">' + s.kos + ' toads caught with ' + Math.ceil(s.timer) + 's to spare!</div>', reward: { mush: 30, coins: 45, petals: 10, xp: 90 } }); return; }
+    if (s.meLegend && runnersLeft === 0) { s.over = true; stat('hunterWin'); labXpGain(50); finishGame({ win: true, title: '👑 THE LEGENDARY WINS! You caught them ALL!', body: '<div style="font-size:20px">' + s.kos + ' toads caught with ' + Math.ceil(s.timer) + 's to spare!</div>', reward: { mush: 30, coins: 45, petals: 10, xp: 90 } }); return; }
     if (s.timer <= 0) {
       s.over = true;
-      if (s.meLegend) finishGame({ title: '⏰ Time up! You caught ' + s.kos + ' of ' + s.toads.length, body: '<div>The sneaky toads survived you!</div>', reward: { mush: s.kos * 4, coins: s.kos * 5, xp: s.kos * 10 } });
-      else if (s.spec) finishGame({ title: '💀 The Legendary got you... but ' + runnersLeft + ' toads made it!', body: '<div>Thanks for cheering from ghost-town. Better luck next time!</div>', reward: { mush: 5, coins: 8, xp: 15 } });
-      else { if (s.lastOne) stat('lastSurvive'); finishGame({ win: true, title: s.lastOne ? '🚨🏆 LAST TOAD STANDING! YOU SURVIVED!' : '🏆 YOU SURVIVED THE LAB!', body: '<div style="font-size:20px">Two whole minutes and THE LEGENDARY never got you!' + (runnersLeft ? ' ' + runnersLeft + ' toad friends survived too.' : ' And you did it all ALONE!') + '</div>', reward: { mush: 40, coins: s.lastOne ? 55 : 40, petals: 10, xp: 90 } }); }
+      if (s.meLegend) { labXpGain(25); finishGame({ title: '⏰ Time up! You caught ' + s.kos + ' of ' + s.toads.length, body: '<div>The sneaky toads survived you!</div>', reward: { mush: s.kos * 4, coins: s.kos * 5, xp: s.kos * 10 } }); }
+      else if (s.spec) { labXpGain(15); finishGame({ title: '💀 The Legendary got you... but ' + runnersLeft + ' toads made it!', body: '<div>Thanks for cheering from ghost-town. Better luck next time!</div>', reward: { mush: 5, coins: 8, xp: 15 } }); }
+      else { if (s.lastOne) stat('lastSurvive'); labXpGain(s.lastOne ? 60 : 50); finishGame({ win: true, title: s.lastOne ? '🚨🏆 LAST TOAD STANDING! YOU SURVIVED!' : '🏆 YOU SURVIVED THE LAB!', body: '<div style="font-size:20px">Two whole minutes and THE LEGENDARY never got you!' + (runnersLeft ? ' ' + runnersLeft + ' toad friends survived too.' : ' And you did it all ALONE!') + '</div>', reward: { mush: 40, coins: s.lastOne ? 55 : 40, petals: 10, xp: 90 } }); }
       return;
     }
   }
@@ -4654,13 +4720,14 @@ function renderClassSelect() {
   mkRow('🏃', 'Runner (no class)', 'Just a quick toad. Runners are the only ones who can do 🧪 lab tasks!', 'Play!', 'green', () => pickClassAndGo(null));
   for (const cl of CLASSES) {
     if (save.classes.includes(cl.id)) mkRow(cl.em, cl.name, cl.desc, 'Play as ' + cl.name + '!', cl.btn, () => pickClassAndGo(cl.id));
+    else if (cl.vipOnly) mkRow(cl.em, cl.name + ' · ⭐ VIP only', cl.desc, '🔒 Unlock: VIP reward #20', 'blue', () => openLocker(), false);
     else mkRow(cl.em, cl.name + ' · ' + cl.cost + ' 🪙', cl.desc, 'Buy (' + cl.cost + ' 🪙)', 'blue', () => { if (save.coins < cl.cost) { beep(150, 0.2, 'sawtooth'); showMsg('Not enough coins! Win mini-games and quests to earn 🪙'); return; } save.coins -= cl.cost; save.classes.push(cl.id); jingle([660, 880, 1100]); showMsg('🎉 You bought the ' + cl.em + ' ' + cl.name + ' class! You own it FOREVER.', 3500); writeSave(); updateHUD(); renderClassSelect(); }, save.coins < cl.cost);
   }
 }
 function makeMedicCross() { const g = new THREE.Group(); const m = M(0xff5252); const a = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.18, 0.18), m); g.add(a); const b = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.56, 0.18), m); g.add(b); const ring = new THREE.Mesh(new THREE.SphereGeometry(0.4, 8, 6), M(0xffffff)); ring.scale.z = 0.3; ring.position.z = -0.05; g.add(ring); g.position.y = 2.7; return g; }
 
 // ---------------------------------------------------------------- LAB TASKS
-const LAB_TASK_CELLS = [[4, 4], [16, 4], [4, 10], [17, 10]];
+const LAB_TASK_CELLS = [[5, 4], [23, 4], [10, 10], [18, 10], [8, 16], [21, 16]];
 const LAB_TASKS = [];
 const TASK_TYPES = ['potion', 'wires', 'simon'];
 const TASK_COLORS = [
@@ -4696,7 +4763,7 @@ function taskSuccess() {
   const s = surv; if (!s || !s.task) return;
   finishStation(s.task.stn); s.task = null; toggleModal('taskModal', false);
   s.timer = Math.max(1, s.timer - 15);
-  stat('tasks'); jingle([784, 1047, 1319]);
+  stat('tasks'); labXpGain(10); jingle([784, 1047, 1319]);
   showMsg('🧪 TASK DONE! ⏱️ -15 seconds! (' + LAB_TASKS.filter(ts => !ts.done).length + ' tasks left)', 3000);
   writeSave(); checkBadges();
 }
@@ -4826,6 +4893,7 @@ function renderBabyModal() {
 }
 function repaintBaby(b) {
   const idx = babies.indexOf(b); if (idx < 0) return;
+  if (b.bubble) { b.bubble.remove(); b.bubble = null; }
   scene.remove(b.group); babies.splice(idx, 1);
   const nb = spawnBaby(b.data); nb.pos.copy(b.pos); nb.stName = b.stName;
   if (curBaby === b) curBaby = nb;
@@ -4836,7 +4904,7 @@ function sendOffBaby(b) {
   toggleModal('babyModal', false);
   const bi = save.babies.indexOf(b.data); if (bi >= 0) save.babies.splice(bi, 1);
   save.sentBabies.push({ name: b.name, color: b.data.color });
-  const ei = babies.findIndex(x => x === b || x.data === b.data); if (ei >= 0) { const be = babies[ei]; spawnStars(be.pos, 0xff9ff3); spawnStars(be.pos, 0x7cff5a); scene.remove(be.group); babies.splice(ei, 1); }
+  const ei = babies.findIndex(x => x === b || x.data === b.data); if (ei >= 0) { const be = babies[ei]; if (be.bubble) { be.bubble.remove(); be.bubble = null; } spawnStars(be.pos, 0xff9ff3); spawnStars(be.pos, 0x7cff5a); scene.remove(be.group); babies.splice(ei, 1); }
   stat('sentOff'); jingle([784, 659, 523, 659, 784, 1047]);
   showMsg('🎓💚 ' + b.name + ' hops off into the big wide world!<br>"I will NEVER forget your face. Watch the sky for my gifts! 🎈"', 7000);
   writeSave(); updateHUD(); checkBadges();
@@ -5105,7 +5173,7 @@ function startJudgemental() {
   judgeGroup.visible = true;
   const meJudge = Math.random() < 0.2;
   judge = { t: 0, countdown: 999, over: false, meJudge, fighters: [], boss: null, boostSide: null, boostT: 0, judgeName: 'YOU', npcActT: rand(7, 11), spec: false, specIdx: 0, zapFx: [], myHearts: 8, cd: 0, swingT: 0, powerCd: 0, mySide: null, flyY: JUDGE.floorY + 12, phase: 'sort', sortT: 0.8, readyT: 0, sortQueue: [], quota: null, meSpot: null };
-  curGame = { cleanup() { for (const c of judge.fighters) if (c.group) scene.remove(c.group); if (judge.boss) scene.remove(judge.boss.group); if (judge.judgeNpcMesh) judgeGroup.userData.throne.remove(judge.judgeNpcMesh); if (judge.hammerMesh) player.model.remove(judge.hammerMesh); if (judge.myRing) player.group.remove(judge.myRing); for (const z of judge.zapFx) scene.remove(z.mesh); player.model.scale.setScalar(STAGES[save.stage].scale); judgeGroup.visible = false; player.group.visible = true; blob.visible = true; if (bird) bird.group.visible = true; $('judgeUI').style.display = 'none'; judge = null; }, over: false };
+  curGame = { cleanup() { for (const c of judge.fighters) if (c.group) scene.remove(c.group); if (judge.boss) scene.remove(judge.boss.group); if (judge.judgeNpcMesh) judgeGroup.userData.throne.remove(judge.judgeNpcMesh); if (judge.hammerMesh) player.model.remove(judge.hammerMesh); if (judge.myRing) player.group.remove(judge.myRing); for (const z of judge.zapFx) scene.remove(z.mesh); player.model.scale.setScalar(STAGES[save.stage].scale); judgeGroup.visible = false; player.group.visible = true; blob.visible = true; if (bird) bird.group.visible = true; $('judgeUI').style.display = 'none'; $('pickUI').style.display = 'none'; judge = null; }, over: false };
   const j = judge;
   let pool = npcs.slice();
   if (!meJudge) {
@@ -5145,9 +5213,29 @@ function startJudgemental() {
   player.vy = 0; if (bird) bird.group.visible = false;
   camera.position.set(player.pos.x, player.pos.y + 7, player.pos.z - 10);
   jingle([330, 392, 494]);
-  showMsg(meJudge ? '⚖️ YOU are THE JUDGE! Watch your royal sorting from the sky, then meddle: 👹 bosses, ⚡ boosts, and 💥 ZAPS. You ARE the law!' : '⚖️ All the toads line up before the Judge... wait to hear YOUR side! (E = swing · Q = MEGA POWER BONK · teams glow ☀️ gold and 🌑 purple)', 8000);
+  showMsg(meJudge ? '⚖️ YOU are THE JUDGE! Each toad steps before your throne — YOU pick ☀️ LIGHT or 🌑 DARK with the buttons (or tap 🎲 to auto-sort). Then meddle: 👹 bosses, ⚡ boosts, 💥 ZAPS!' : '⚖️ All the toads line up before the Judge... wait to hear YOUR side! (E = swing · Q = MEGA POWER BONK · teams glow ☀️ gold and 🌑 purple)', 8000);
 }
 function updateJudgeUI() { $('judgeCoins').textContent = save.coins; }
+function assignJudgeSide(pick, side) {
+  const j = judge;
+  beep(side === 'light' ? 740 : 300, 0.09, 'triangle', 0.06);
+  if (pick === 'me') {
+    j.mySide = side;
+    j.myRing = sideRing(side, Math.min(STAGES[save.stage].scale, 2)); player.group.add(j.myRing);
+    j.meSpot = { x: JUDGE.x + (side === 'light' ? -1 : 1) * (JUDGE.r - 14), z: JUDGE.z };
+    showMsg('⚖️ The Judge points at YOU... ' + (side === 'light' ? '☀️ LIGHT SIDE!' : '🌑 DARK SIDE!'), 3000); jingle(side === 'light' ? [659, 880] : [330, 262]);
+  } else {
+    pick.side = side;
+    pick.ring = sideRing(side, pick.model.scale.x); pick.group.add(pick.ring);
+    pick.sortTo = { x: JUDGE.x + (side === 'light' ? -1 : 1) * rand(10, JUDGE.r - 8), z: JUDGE.z + rand(-22, 22) };
+  }
+}
+function judgePick(side) {
+  const j = judge; if (!j || j.phase !== 'sort' || !j.meJudge || !j.currentPick) return;
+  const pick = j.currentPick; j.currentPick = null; j.sortT = 0.25;
+  assignJudgeSide(pick, side);
+  $('pickUI').style.display = 'none';
+}
 function judgeAlive(side) { return judge.fighters.filter(c => c.alive && c.side === side).length + (!judge.meJudge && !judge.spec && judge.mySide === side ? 1 : 0); }
 function judgeSwing() {
   const j = judge; if (!j || j.over || j.countdown > 0 || j.spec || j.meJudge || j.cd > 0) return;
@@ -5225,24 +5313,22 @@ function updateJudge(dt, t) {
   if (j.phase === 'sort') {
     if (!j.meJudge) player.stunned = true;
     j.sortT -= dt;
-    if (j.sortT <= 0 && j.sortQueue.length) {
-      j.sortT = 0.22;
-      const pick = j.sortQueue.shift();
-      const side = Math.random() * (j.quota.light + j.quota.dark) < j.quota.light ? 'light' : 'dark';
-      if (side === 'light') j.quota.light--; else j.quota.dark--;
-      beep(side === 'light' ? 740 : 300, 0.09, 'triangle', 0.06);
-      if (pick === 'me') {
-        j.mySide = side;
-        j.myRing = sideRing(side, Math.min(STAGES[save.stage].scale, 2)); player.group.add(j.myRing);
-        j.meSpot = { x: JUDGE.x + (side === 'light' ? -1 : 1) * (JUDGE.r - 14), z: JUDGE.z };
-        showMsg('⚖️ The Judge points at YOU... ' + (side === 'light' ? '☀️ LIGHT SIDE!' : '🌑 DARK SIDE!'), 3000); jingle(side === 'light' ? [659, 880] : [330, 262]);
-      } else {
-        pick.side = side;
-        pick.ring = sideRing(side, pick.model.scale.x); pick.group.add(pick.ring);
-        pick.sortTo = { x: JUDGE.x + (side === 'light' ? -1 : 1) * rand(10, JUDGE.r - 8), z: JUDGE.z + rand(-22, 22) };
+    if (j.meJudge && !j.autoSort) {
+      $('pickUI').style.display = j.currentPick ? 'block' : 'none';
+      if (!j.currentPick && j.sortQueue.length && j.sortT <= 0) {
+        j.currentPick = j.sortQueue.shift();
+        j.currentPick.sortTo = { x: JUDGE.x, z: JUDGE.z + 9 };
+        $('pickName').textContent = '⚖️ ' + j.currentPick.name + ' awaits your judgement!';
+        beep(520, 0.08, 'triangle', 0.05);
       }
+    } else if (j.sortT <= 0 && (j.sortQueue.length || j.currentPick)) {
+      j.sortT = 0.22;
+      const pick = j.currentPick || j.sortQueue.shift(); j.currentPick = null;
+      const side = Math.random() * (j.quota.light + j.quota.dark) < j.quota.light ? 'light' : 'dark';
+      if (side === 'light') j.quota.light = Math.max(0, j.quota.light - 1); else j.quota.dark = Math.max(0, j.quota.dark - 1);
+      assignJudgeSide(pick, side);
     }
-    if (!j.sortQueue.length && !j.fighters.some(c => c.sortTo)) { j.phase = 'ready'; j.readyT = 1.4; showMsg('⚔️ Ready...', 1300); beep(440, 0.35); }
+    if (!j.sortQueue.length && !j.currentPick && !j.fighters.some(c => c.sortTo)) { j.phase = 'ready'; j.readyT = 1.4; $('pickUI').style.display = 'none'; showMsg('⚔️ Ready...', 1300); beep(440, 0.35); }
   } else if (j.phase === 'ready') {
     if (!j.meJudge) player.stunned = true;
     j.readyT -= dt;
@@ -5428,11 +5514,11 @@ function hurtRunner(c, dmg, byPlayer, viaSlam) {
     c.alive = false; c.group.visible = false;
     s.timer += 30;
     if (viaSlam) stat('slamKos');
-    if (byPlayer) { s.kos++; showMsg('💥 You caught ' + c.name + '! (' + s.kos + '/' + s.toads.length + ') ⏱️ +30 seconds!', 2200); jingle([440, 330]); }
+    if (byPlayer) { s.kos++; labXpGain(8); showMsg('💥 You caught ' + c.name + '! (' + s.kos + '/' + s.toads.length + ') ⏱️ +30 seconds!', 2200); jingle([440, 330]); }
     else showMsg('💀 ' + c.name + ' was caught by THE LEGENDARY! ⏱️ +30 seconds on the clock!', 2500);
   }
 }
-const SURV_AB_CD = { slam: 9, croak: 15, tongue: 12, heal: 8, throw: 20, dash: 15, trap: 12, shield: 20 };
+const SURV_AB_CD = { slam: 9, croak: 15, tongue: 12, heal: 8, throw: 20, dash: 15, trap: 12, shield: 20, freeze: 35 };
 function useAbility(kind) {
   const s = surv; if (!s || s.over || s.spec || s.countdown > 0 || s.meStunT > 0) return;
   if (s.meLegend && !['slam', 'croak', 'tongue'].includes(kind)) return;
@@ -5440,7 +5526,7 @@ function useAbility(kind) {
   if (!s.abCd) s.abCd = {};
   if ((s.abCd[kind] || 0) > 0) { beep(180, 0.1, 'sawtooth', 0.05); showMsg('⏳ ' + kind.toUpperCase() + ' ready in ' + Math.ceil(s.abCd[kind]) + 's', 900); return; }
   if (kind === 'slam') {
-    s.abCd.slam = SURV_AB_CD.slam; s.swingT = 0.4; beep(70, 0.5, 'sawtooth', 0.18); stat('slams');
+    s.abCd.slam = SURV_AB_CD.slam; s.swingT = 0.4; beep(70, 0.5, 'sawtooth', 0.18); stat('slams'); labXpGain(5);
     const ring = new THREE.Mesh(new THREE.TorusGeometry(1, 0.35, 8, 32), new THREE.MeshBasicMaterial({ color: 0xff9f43, transparent: true, opacity: 0.9 }));
     ring.rotation.x = -Math.PI / 2; ring.position.set(player.pos.x, LAB.floorY + 0.4, player.pos.z); scene.add(ring);
     if (!s.pfx) s.pfx = [];
@@ -5448,7 +5534,7 @@ function useAbility(kind) {
     for (const c of s.toads) if (c.alive && dist2(c.pos.x, c.pos.z, player.pos.x, player.pos.z) < 15 * 15) c.dodgeSlam = Math.random() < 0.55;
     showMsg('💥 HAMMER SLAM! A shockwave rolls across the floor!', 1800);
   } else if (kind === 'croak') {
-    s.abCd.croak = SURV_AB_CD.croak; beep(90, 0.7, 'square', 0.16); beep(60, 0.9, 'sawtooth', 0.12); stat('croaks');
+    s.abCd.croak = SURV_AB_CD.croak; beep(90, 0.7, 'square', 0.16); beep(60, 0.9, 'sawtooth', 0.12); stat('croaks'); labXpGain(5);
     const ring = new THREE.Mesh(new THREE.TorusGeometry(1, 0.25, 8, 32), new THREE.MeshBasicMaterial({ color: 0x35f5e0, transparent: true, opacity: 0.7 }));
     ring.rotation.x = -Math.PI / 2; ring.position.set(player.pos.x, LAB.floorY + 1.2, player.pos.z); scene.add(ring);
     if (!s.pfx) s.pfx = [];
@@ -5460,7 +5546,7 @@ function useAbility(kind) {
     let best = null, bd = 22 * 22;
     for (const c of s.toads) if (c.alive) { const dd = dist2(c.pos.x, c.pos.z, player.pos.x, player.pos.z); if (dd < bd && labSight(player.pos.x, player.pos.z, c.pos.x, c.pos.z, 24)) { bd = dd; best = c; } }
     if (!best) { showMsg('👅 No toad in tongue range (they must be in sight)!', 1200); return; }
-    s.abCd.tongue = SURV_AB_CD.tongue; beep(500, 0.12, 'square', 0.08); beep(240, 0.25, 'square', 0.1); stat('tongues');
+    s.abCd.tongue = SURV_AB_CD.tongue; beep(500, 0.12, 'square', 0.08); beep(240, 0.25, 'square', 0.1); stat('tongues'); labXpGain(5);
     const dx = best.pos.x - player.pos.x, dz = best.pos.z - player.pos.z, dd = Math.hypot(dx, dz) || 1;
     const tx = player.pos.x + dx / dd * 3, tz = player.pos.z + dz / dd * 3;
     const len = Math.hypot(best.pos.x - player.pos.x, best.pos.z - player.pos.z);
@@ -5475,26 +5561,33 @@ function useAbility(kind) {
     let best = null, bd = 6 * 6;
     for (const c of s.toads) if (c.alive && c.hp < 100) { const dd = dist2(c.pos.x, c.pos.z, player.pos.x, player.pos.z); if (dd < bd) { bd = dd; best = c; } }
     if (!best) { showMsg('➕ No hurt toad close enough to heal!', 1200); return; }
-    s.abCd.heal = SURV_AB_CD.heal;
+    s.abCd.heal = SURV_AB_CD.heal; labXpGain(5);
     best.hp = 100; save.coins += 2; stat('heals'); spawnStars(best.pos, 0x7cff5a); jingle([784, 988]);
     showMsg('➕ You healed ' + best.name + ' back to full! +2 🪙', 2500); updateHUD(); checkBadges();
   } else if (kind === 'throw') {
     if (!s.legend || Math.hypot(s.legend.pos.x - player.pos.x, s.legend.pos.z - player.pos.z) > 20) { showMsg('🔨 THE LEGENDARY is too far away to hit!', 1200); return; }
-    s.abCd.throw = SURV_AB_CD.throw;
+    s.abCd.throw = SURV_AB_CD.throw; labXpGain(5);
     stat('stuns'); stunHunter(null); checkBadges();
+  } else if (kind === 'freeze') {
+    if (!s.legend) { showMsg('❄️ Nobody to freeze!', 1200); return; }
+    if (Math.hypot(s.legend.pos.x - player.pos.x, s.legend.pos.z - player.pos.z) > 24) { showMsg('❄️ THE LEGENDARY is too far away to freeze!', 1200); return; }
+    s.abCd.freeze = SURV_AB_CD.freeze; labXpGain(5); stat('freezes');
+    s.legend.stunT = 10; spawnStars(s.legend.pos, 0x9be7ff); spawnStars(s.legend.pos, 0xffffff);
+    beep(1500, 0.3, 'triangle', 0.1); beep(90, 0.6, 'sine', 0.1);
+    showMsg('❄️ DEEP FREEZE!! THE LEGENDARY is frozen SOLID for 10 seconds!', 3500); checkBadges();
   } else if (kind === 'dash') {
-    s.abCd.dash = SURV_AB_CD.dash; s.dashT = 3; s.stamina = Math.min(100, s.stamina + 10);
+    s.abCd.dash = SURV_AB_CD.dash; s.dashT = 3; s.stamina = Math.min(100, s.stamina + 10); labXpGain(5);
     beep(900, 0.15, 'triangle', 0.08); spawnStars(player.pos, 0xffffff);
     showMsg('💨 SUPER DASH! Zoom for 3 seconds!', 1500);
   } else if (kind === 'trap') {
-    s.abCd.trap = SURV_AB_CD.trap;
+    s.abCd.trap = SURV_AB_CD.trap; labXpGain(5);
     if (!s.traps) s.traps = [];
     const mine = s.traps.filter(t2 => t2.mine);
     if (mine.length >= 2) { const old = mine[0]; scene.remove(old.mesh); s.traps.splice(s.traps.indexOf(old), 1); }
     dropGoo(player.pos.x, player.pos.z, true);
     showMsg('🪤 Goo trap planted! If THE LEGENDARY steps in it... STUCK for 3 seconds!', 2200);
   } else if (kind === 'shield') {
-    s.abCd.shield = SURV_AB_CD.shield;
+    s.abCd.shield = SURV_AB_CD.shield; labXpGain(5);
     let best = null, bd = 5 * 5;
     for (const c of s.toads) if (c.alive && !c.shielded) { const dd = dist2(c.pos.x, c.pos.z, player.pos.x, player.pos.z); if (dd < bd) { bd = dd; best = c; } }
     if (best) { best.shielded = true; best.bubble = makeBubble(1.6); best.bubble.position.y = 1; best.model.add(best.bubble); showMsg('🛡️ Bubble shield on ' + best.name + '! It blocks the next hit.', 2200); }
@@ -5512,7 +5605,7 @@ function dropGoo(x, z, mine) {
 function useAbilityKey(k) {
   const s = surv;
   if (!s || mode !== 'survive') return;
-  if (k === 'f') useAbility(s.meLegend ? 'slam' : { medic: 'heal', bonker: 'throw', scout: 'dash', trapper: 'trap', shieldy: 'shield' }[s.cls] || 'none');
+  if (k === 'f') useAbility(s.meLegend ? 'slam' : { medic: 'heal', bonker: 'throw', scout: 'dash', trapper: 'trap', shieldy: 'shield', freezer: 'freeze' }[s.cls] || 'none');
   if (k === 'g' && s.meLegend) useAbility('croak');
 }
 function renderAbilityBtns() {
@@ -5530,6 +5623,7 @@ function renderAbilityBtns() {
   else if (s.cls === 'scout') mk('dash', '💨', 'DASH', 'F');
   else if (s.cls === 'trapper') mk('trap', '🪤', 'TRAP', 'F');
   else if (s.cls === 'shieldy') mk('shield', '🛡️', 'SHIELD', 'F');
+  else if (s.cls === 'freezer') mk('freeze', '❄️', 'FREEZE', 'F');
 }
 function updateSurvExtras(dt, t) {
   const s = surv; if (!s) return;
@@ -5574,7 +5668,7 @@ function updateSurvExtras(dt, t) {
         scene.remove(tr.mesh); s.traps.splice(i, 1);
         beep(200, 0.4, 'sine', 0.12); beep(120, 0.5, 'sawtooth', 0.08);
         if (s.meLegend) { s.meGooT = 3; showMsg('🪤 You stepped in GOO! Stuck for 3 seconds!', 2500); }
-        else { s.legend.gooT = 3; if (tr.mine) stat('traps'); spawnStars(s.legend.pos, 0x5fd44a); showMsg('🪤 THE LEGENDARY stepped in the goo! STUCK for 3 seconds!', 2500); checkBadges(); }
+        else { s.legend.gooT = 3; if (tr.mine) { stat('traps'); labXpGain(10); } spawnStars(s.legend.pos, 0x5fd44a); showMsg('🪤 THE LEGENDARY stepped in the goo! STUCK for 3 seconds!', 2500); checkBadges(); }
       }
     }
   }
@@ -5621,6 +5715,268 @@ CLASSES.push(
   { id: 'scout', name: 'Scout', em: '👀', cost: 300, desc: 'You ALWAYS see THE LEGENDARY glowing red — through every wall! Press F for a 3-second SUPER DASH. Scouts can\'t do tasks.', btn: 'green' },
   { id: 'shieldy', name: 'Shieldy', em: '🛡️', cost: 400, desc: 'Press F to pop a bubble shield on yourself or a nearby toad — it blocks the next hammer hit! Shieldys can\'t do tasks.', btn: 'blue' },
   { id: 'trapper', name: 'Trapper', em: '🪤', cost: 600, desc: 'Press F to plant sticky goo. If THE LEGENDARY steps in it, it\'s STUCK for 3 whole seconds! Trappers can\'t do tasks.', btn: 'red' }
+);
+
+// ================================================================ UPDATE 13
+// ---------------------------------------------------------------- LAB PATHFINDING (no more wall-running hunters)
+function labNextStep(fx, fz, txx, tzz) {
+  const a = labCellAt(fx, fz), b = labCellAt(txx, tzz);
+  if (a.col === b.col && a.row === b.row) return null;
+  const N = LAB_COLS * LAB_ROWS, prev = new Int32Array(N).fill(-1);
+  const pass = (c, r) => c >= 0 && r >= 0 && c < LAB_COLS && r < LAB_ROWS && LAB_GRID[r][c] !== '#';
+  if (!pass(a.col, a.row) || !pass(b.col, b.row)) return null;
+  const startK = b.row * LAB_COLS + b.col, meK = a.row * LAB_COLS + a.col;
+  prev[startK] = startK;
+  const q = [startK]; let head = 0;
+  while (head < q.length) {
+    const cur = q[head++], cc = cur % LAB_COLS, cr = (cur / LAB_COLS) | 0;
+    if (cur === meK) break;
+    for (const d of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+      const nc = cc + d[0], nr = cr + d[1];
+      if (!pass(nc, nr)) continue;
+      const k = nr * LAB_COLS + nc;
+      if (prev[k] === -1) { prev[k] = cur; q.push(k); }
+    }
+  }
+  if (prev[meK] === -1) return null;
+  const nxt = prev[meK];
+  return labCellCenter(nxt % LAB_COLS, (nxt / LAB_COLS) | 0);
+}
+
+// ---------------------------------------------------------------- CLASS XP LEVELS (each class levels to 100!)
+function labLevel(xp) { return Math.min(100, Math.floor((xp || 0) / 25) + 1); }
+function labXpGain(n) {
+  const cls = surv && surv.xpCls ? surv.xpCls : (save.activeClass || 'runner');
+  const lv0 = labLevel(save.labXp[cls]);
+  save.labXp[cls] = (save.labXp[cls] || 0) + n;
+  const lv1 = labLevel(save.labXp[cls]);
+  if (lv1 > lv0) { save.coins += 3; jingle([659, 880, 1100]); showMsg('🎖️ ' + cls.toUpperCase() + ' reached Level ' + lv1 + '! +3 🪙' + (lv1 >= 100 ? ' 👑 CHAMPION SKIN UNLOCKED!!' : ''), 3500); updateHUD(); checkBadges(); }
+}
+
+// ---------------------------------------------------------------- VIP (buy once, a reward every game — each better than the rest!)
+const VIP_REWARDS = [
+  { t: '200 🪙', fn: () => save.coins += 200 },
+  { t: '40 🪙', fn: () => save.coins += 40 },
+  { t: 'the shiny ⭐ VIP NAME TAG for your toad', fn: () => save.vipTag = true },
+  { t: '10 🌸', fn: () => save.petals += 10 },
+  { t: 'Runner skin: 🍄 MUSHROOM MUNCHERS', fn: () => save.labSkins.push('mushmunch') },
+  { t: '60 🪙', fn: () => save.coins += 60 },
+  { t: '30 🍄', fn: () => save.mush += 30 },
+  { t: '80 🪙', fn: () => save.coins += 80 },
+  { t: '20 🌸', fn: () => save.petals += 20 },
+  { t: 'Medic skin: 💜 LILAC LOVE', fn: () => save.labSkins.push('lilaclove') },
+  { t: '100 🪙', fn: () => save.coins += 100 },
+  { t: '120 🪙', fn: () => save.coins += 120 },
+  { t: '50 🍄', fn: () => save.mush += 50 },
+  { t: '30 🌸', fn: () => save.petals += 30 },
+  { t: 'Shieldy skin: 🍬 SWEET SUBWAY', fn: () => save.labSkins.push('sweetsubway') },
+  { t: '150 🪙', fn: () => save.coins += 150 },
+  { t: '80 🍄', fn: () => save.mush += 80 },
+  { t: '200 🪙', fn: () => save.coins += 200 },
+  { t: '50 🌸', fn: () => save.petals += 50 },
+  { t: 'the ❄️ FREEZER CLASS! Freeze the Legendary solid for 10 SECONDS', fn: () => { if (!save.classes.includes('freezer')) save.classes.push('freezer'); } },
+];
+function grantVip() {
+  if (!save.vip || save.vipLevel >= 20) return;
+  const rw = VIP_REWARDS[save.vipLevel]; save.vipLevel++;
+  rw.fn();
+  jingle([784, 988, 1175, 1568]);
+  showMsg('⭐ VIP REWARD ' + save.vipLevel + '/20 unlocked: ' + rw.t + '!', 6500);
+  writeSave(); updateHUD(); checkBadges();
+}
+let vipTagTex = null;
+function makeVipTag() {
+  if (!vipTagTex) {
+    const cv = document.createElement('canvas'); cv.width = 128; cv.height = 48;
+    const cx = cv.getContext('2d');
+    cx.fillStyle = '#ffd700'; cx.fillRect(2, 2, 124, 44);
+    cx.strokeStyle = '#7a5b00'; cx.lineWidth = 4; cx.strokeRect(2, 2, 124, 44);
+    cx.fillStyle = '#3b2a00'; cx.font = 'bold 30px sans-serif'; cx.textAlign = 'center'; cx.textBaseline = 'middle';
+    cx.fillText('⭐ VIP', 64, 26);
+    vipTagTex = new THREE.CanvasTexture(cv);
+  }
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: vipTagTex, depthTest: false }));
+  sp.renderOrder = 950; sp.scale.set(2, 0.75, 1);
+  return sp;
+}
+
+// ---------------------------------------------------------------- CLASS SKINS
+const LAB_SKINS = [
+  { id: 'toadberry', cls: 'runner', name: 'Toadberry', em: '🍓', body: 0xe4485f, cost: 40 },
+  { id: 'minty', cls: 'runner', name: 'Minty Hopper', em: '🌿', body: 0x59d9a4, cost: 40 },
+  { id: 'mushmunch', cls: 'runner', name: 'Mushroom Munchers', em: '🍄', body: 0xf5f0e6, cap: 0xff4d4d, vip: 5 },
+  { id: 'nurse', cls: 'medic', name: 'Night Nurse', em: '🩺', body: 0xf2f6ff, cost: 60 },
+  { id: 'lilaclove', cls: 'medic', name: 'Lilac Love', em: '💜', body: 0xb794e6, vip: 10 },
+  { id: 'lava', cls: 'bonker', name: 'Lava Smash', em: '🌋', body: 0x9b3210, cost: 60 },
+  { id: 'nighty', cls: 'scout', name: 'Night Vision', em: '🌙', body: 0x2c3e70, cost: 60 },
+  { id: 'knighty', cls: 'shieldy', name: 'Knight Shift', em: '⚔️', body: 0x9aa5b1, cost: 60 },
+  { id: 'sweetsubway', cls: 'shieldy', name: 'Sweet Subway', em: '🍬', body: 0xffb3d9, cap: 0x74d0f0, vip: 15 },
+  { id: 'swampy', cls: 'trapper', name: 'Swamp King', em: '🐊', body: 0x3e5f2a, cost: 60 },
+  { id: 'frosty', cls: 'freezer', name: 'Frosty', em: '❄️', body: 0x9be7ff, freezer: true },
+  { id: 'champ-runner', cls: 'runner', name: 'Champion', em: '👑', body: 0xffd700, champ: true },
+  { id: 'champ-medic', cls: 'medic', name: 'Champion', em: '👑', body: 0xffd700, champ: true },
+  { id: 'champ-bonker', cls: 'bonker', name: 'Champion', em: '👑', body: 0xffd700, champ: true },
+  { id: 'champ-scout', cls: 'scout', name: 'Champion', em: '👑', body: 0xffd700, champ: true },
+  { id: 'champ-trapper', cls: 'trapper', name: 'Champion', em: '👑', body: 0xffd700, champ: true },
+  { id: 'champ-shieldy', cls: 'shieldy', name: 'Champion', em: '👑', body: 0xffd700, champ: true },
+];
+function skinOwned(sk) {
+  if (save.labSkins.includes(sk.id)) return true;
+  if (sk.champ) return labLevel(save.labXp[sk.cls]) >= 100;
+  if (sk.freezer) return save.classes.includes('freezer');
+  return false;
+}
+
+// ---------------------------------------------------------------- THE LAB LOCKER (VIP + levels + skins)
+function renderLocker() {
+  const wrap = $('lockerBody'); wrap.innerHTML = '';
+  const add = (html) => { const d = document.createElement('div'); d.innerHTML = html; while (d.firstChild) wrap.appendChild(d.firstChild); };
+  // VIP
+  add('<h3 style="color:#d35400;margin:8px 0 4px">⭐ VIP — ' + (save.vip ? 'level <b>' + save.vipLevel + ' / 20</b>. Finish a Survive game to unlock the next reward!' : 'not a member yet') + '</h3>');
+  if (!save.vip) {
+    const b = document.createElement('button'); b.className = 'btn green'; b.textContent = '⭐ Become VIP — 100 🪙 (reward #1 pays back 200!)';
+    b.onclick = () => { if (save.coins < 100) { beep(150, 0.2, 'sawtooth'); showMsg('Not enough coins! (100 🪙)'); return; } save.coins -= 100; save.vip = true; jingle([523, 659, 784, 1047]); showMsg('⭐ YOU ARE VIP! Finish Survive games to unlock all 20 rewards!', 5000); writeSave(); updateHUD(); renderLocker(); checkBadges(); };
+    wrap.appendChild(b);
+  }
+  let vlist = '<div style="max-height:180px;overflow:auto;border:3px solid #ffd27f;border-radius:12px;padding:6px 10px;background:#fff;margin:6px 0">';
+  VIP_REWARDS.forEach((rw, i) => {
+    const st2 = i < save.vipLevel ? '✅' : (save.vip && i === save.vipLevel ? '▶️' : '🔒');
+    vlist += '<div style="font-size:13px;padding:1px 0;' + (i < save.vipLevel ? 'opacity:.6' : i === save.vipLevel && save.vip ? 'font-weight:bold' : 'opacity:.75') + '">' + st2 + ' ' + (i + 1) + '. ' + rw.t + '</div>';
+  });
+  add(vlist + '</div>');
+  // class levels
+  add('<h3 style="color:#d35400;margin:8px 0 4px">🎖️ Class Levels (100 each!)</h3>');
+  const clsList = ['runner', 'medic', 'bonker', 'scout', 'trapper', 'shieldy'].concat(save.classes.includes('freezer') ? ['freezer'] : []);
+  const ems = { runner: '🏃', medic: '➕', bonker: '🔨', scout: '👀', trapper: '🪤', shieldy: '🛡️', freezer: '❄️' };
+  let lrows = '';
+  for (const cls of clsList) {
+    const xp = save.labXp[cls] || 0, lv = labLevel(xp), pct = lv >= 100 ? 100 : Math.round((xp % 25) / 25 * 100);
+    lrows += '<div class="bird-row" style="padding:6px 10px"><div class="em" style="font-size:26px">' + ems[cls] + '</div><div class="info"><div class="nm" style="font-size:15px">' + cls.toUpperCase() + ' · Level ' + lv + (lv >= 100 ? ' 👑 CHAMPION!' : '') + '</div><div style="height:9px;background:#eee;border-radius:5px;overflow:hidden;border:1px solid #ffd27f"><div style="height:100%;width:' + pct + '%;background:linear-gradient(90deg,#7cff5a,#ffe66d)"></div></div>Use abilities and win games as this class to earn XP!</div></div>';
+  }
+  add(lrows);
+  // skins
+  add('<h3 style="color:#d35400;margin:8px 0 4px">🎨 Class Skins</h3><div style="font-size:13px">Class stays the same — your toad just looks EXTRA cool. Computer toads wear skins too!</div>');
+  let srows = '';
+  for (const sk of LAB_SKINS) {
+    const owned = skinOwned(sk), eq = save.labSkinEq[sk.cls] === sk.id;
+    srows += '<div class="bird-row" style="padding:6px 10px"><div class="em" style="font-size:26px">' + sk.em + '</div><div class="info"><div class="nm" style="font-size:15px">' + sk.name + ' <small>(' + sk.cls + ')</small></div>' + (owned ? (eq ? 'Wearing it!' : 'Owned') : sk.champ ? '👑 Reach ' + sk.cls + ' Level 100' : sk.vip ? '⭐ VIP reward #' + sk.vip : sk.freezer ? '❄️ Comes with the Freezer class' : sk.cost + ' 🪙') + '</div><button class="btn ' + (eq ? 'green' : '') + '" data-skin="' + sk.id + '">' + (eq ? 'Take off' : owned ? 'Wear' : sk.cost && !sk.vip && !sk.champ && !sk.freezer ? 'Buy' : '🔒') + '</button></div>';
+  }
+  add(srows);
+  wrap.querySelectorAll('button[data-skin]').forEach(b => {
+    b.onclick = () => {
+      const sk = LAB_SKINS.find(x => x.id === b.dataset.skin);
+      const owned = skinOwned(sk), eq = save.labSkinEq[sk.cls] === sk.id;
+      if (eq) { delete save.labSkinEq[sk.cls]; beep(400, 0.1); }
+      else if (owned) { save.labSkinEq[sk.cls] = sk.id; jingle([660, 880]); }
+      else if (sk.cost && !sk.vip && !sk.champ && !sk.freezer) {
+        if (save.coins < sk.cost) { beep(150, 0.2, 'sawtooth'); showMsg('Not enough coins! (' + sk.cost + ' 🪙)'); return; }
+        save.coins -= sk.cost; save.labSkins.push(sk.id); save.labSkinEq[sk.cls] = sk.id; jingle([523, 659, 784]);
+      } else { beep(150, 0.2, 'sawtooth'); return; }
+      writeSave(); updateHUD(); renderLocker(); checkBadges();
+    };
+  });
+}
+function openLocker() { renderLocker(); toggleModal('locker', true); }
+
+// ---------------------------------------------------------------- THE TOAD LOBBY
+const LOBBY = { x: 700, z: 480, floorY: -160, w: 24, d: 15 };
+const LOBBY_BG = new THREE.Color(0xffe3bd), fogLobby = new THREE.Fog(0xffe3bd, 50, 140);
+let lobbyGroup = null, lobbyState = null;
+function buildLobby() {
+  lobbyGroup = new THREE.Group();
+  const floor = new THREE.Mesh(new THREE.BoxGeometry(LOBBY.w * 2 + 4, 0.4, LOBBY.d * 2 + 4), M(0xc9a26b)); floor.position.set(LOBBY.x, LOBBY.floorY - 0.2, LOBBY.z); lobbyGroup.add(floor);
+  const rug = new THREE.Mesh(new THREE.CircleGeometry(8, 20), M(0xff9ff3, { side: THREE.DoubleSide })); rug.rotation.x = -Math.PI / 2; rug.position.set(LOBBY.x, LOBBY.floorY + 0.06, LOBBY.z); lobbyGroup.add(rug);
+  const wallM = M(0xf3dcae);
+  for (const [wx2, wz, ww, wd] of [[LOBBY.x, LOBBY.z - LOBBY.d - 1, LOBBY.w * 2 + 4, 2], [LOBBY.x, LOBBY.z + LOBBY.d + 1, LOBBY.w * 2 + 4, 2], [LOBBY.x - LOBBY.w - 1, LOBBY.z, 2, LOBBY.d * 2 + 4], [LOBBY.x + LOBBY.w + 1, LOBBY.z, 2, LOBBY.d * 2 + 4]]) {
+    const w = new THREE.Mesh(new THREE.BoxGeometry(ww, 9, wd), wallM); w.position.set(wx2, LOBBY.floorY + 4.5, wz); lobbyGroup.add(w);
+  }
+  const ceil = new THREE.Mesh(new THREE.BoxGeometry(LOBBY.w * 2 + 4, 0.4, LOBBY.d * 2 + 4), M(0xe8cf9d)); ceil.position.set(LOBBY.x, LOBBY.floorY + 9, LOBBY.z); lobbyGroup.add(ceil);
+  // exit door (north), replay pad (south), VIP board (west), skin rack (east)
+  const door2 = new THREE.Mesh(new THREE.BoxGeometry(6, 7, 0.6), M(0x2ecc71)); door2.position.set(LOBBY.x, LOBBY.floorY + 3.5, LOBBY.z + LOBBY.d + 0.6); lobbyGroup.add(door2);
+  const pad = new THREE.Mesh(new THREE.CylinderGeometry(3, 3.2, 0.3, 18), new THREE.MeshBasicMaterial({ color: 0xff5252 })); pad.position.set(LOBBY.x, LOBBY.floorY + 0.15, LOBBY.z - LOBBY.d + 4); lobbyGroup.add(pad); lobbyGroup.userData.pad = pad;
+  const board = new THREE.Mesh(new THREE.BoxGeometry(0.6, 5, 8), M(0xffd700)); board.position.set(LOBBY.x - LOBBY.w + 0.6, LOBBY.floorY + 3.4, LOBBY.z); lobbyGroup.add(board);
+  const star = new THREE.Mesh(new THREE.OctahedronGeometry(0.9), new THREE.MeshBasicMaterial({ color: 0xfff3a0 })); star.position.set(LOBBY.x - LOBBY.w + 1.4, LOBBY.floorY + 6.6, LOBBY.z); lobbyGroup.add(star); lobbyGroup.userData.star = star;
+  const rack = new THREE.Mesh(new THREE.BoxGeometry(0.6, 4.5, 9), M(0xa0703c)); rack.position.set(LOBBY.x + LOBBY.w - 0.6, LOBBY.floorY + 2.6, LOBBY.z); lobbyGroup.add(rack);
+  for (let i = 0; i < 5; i++) { const mini = new THREE.Mesh(new THREE.SphereGeometry(0.6, 8, 6), M([0xe4485f, 0x59d9a4, 0xb794e6, 0xffb3d9, 0xffd700][i])); mini.position.set(LOBBY.x + LOBBY.w - 1.3, LOBBY.floorY + 1.6 + (i % 3) * 1.5, LOBBY.z - 3 + Math.floor(i / 3) * 3.4); lobbyGroup.add(mini); }
+  for (const sx of [-10, 10]) { const li = new THREE.PointLight(0xffd9a0, 1.1, 60); li.position.set(LOBBY.x + sx, LOBBY.floorY + 7, LOBBY.z); lobbyGroup.add(li); }
+  lobbyGroup.visible = false; scene.add(lobbyGroup);
+}
+function enterLobby() {
+  if (!lobbyGroup) buildLobby();
+  lobbyGroup.visible = true;
+  mode = 'lobby';
+  lobbyState = { toads: [], t: 0 };
+  curGame = { cleanup() { for (const c of lobbyState.toads) scene.remove(c.group); player.model.scale.setScalar(STAGES[save.stage].scale); lobbyGroup.visible = false; lobbyState = null; }, over: false };
+  for (const n of pickOpponents(8)) {
+    const c = makeRival(n, false);
+    c.model.scale.setScalar(clamp(c.model.scale.x, 0.7, 1.3));
+    if (Math.random() < 0.5) { const sk = LAB_SKINS[Math.floor(Math.random() * LAB_SKINS.length)]; c.model.userData.mat.color.setHex(sk.body); }
+    if (Math.random() < 0.3) { const tg = makeVipTag(); tg.position.y = 2.9; c.model.add(tg); }
+    c.pos.set(LOBBY.x + rand(-LOBBY.w + 4, LOBBY.w - 4), LOBBY.floorY, LOBBY.z + rand(-LOBBY.d + 4, LOBBY.d - 4));
+    c.yaw = rand(0, 6.283); c.wait = rand(0, 3); c.hopT = rand(0, 5); c.target = null;
+    lobbyState.toads.push(c);
+  }
+  player.model.scale.setScalar(Math.min(STAGES[save.stage].scale, 1.8));
+  player.pos.set(LOBBY.x, LOBBY.floorY, LOBBY.z + 6); player.vy = 0; player.stunned = false; player.slowMul = 0; player.kx = player.kz = 0;
+  camYaw = Math.PI; camManual = 0;
+  camera.position.set(LOBBY.x, LOBBY.floorY + 6, LOBBY.z + 14);
+  setGameInfo('🛋️ <b>TOAD LOBBY</b> · ⭐ VIP board · 🎨 skin rack · 🔦 red pad = play again · 🌍 green door = home');
+  showMsg('🛋️ Welcome to the TOAD LOBBY! Check the ⭐ VIP board and the 🎨 skin rack, hop on the red pad to play again, or take the green door back to the world!', 7000);
+  grantVip();
+}
+function updateLobby(dt, t) {
+  if (!lobbyState) return;
+  lobbyState.t += dt;
+  player.pos.x = clamp(player.pos.x, LOBBY.x - LOBBY.w + 1.5, LOBBY.x + LOBBY.w - 1.5);
+  player.pos.z = clamp(player.pos.z, LOBBY.z - LOBBY.d + 1.5, LOBBY.z + LOBBY.d - 1.5);
+  if (lobbyGroup.userData.pad) lobbyGroup.userData.pad.material.color.setHSL(0, 0.8, 0.5 + Math.sin(t * 4) * 0.15);
+  if (lobbyGroup.userData.star) lobbyGroup.userData.star.rotation.y = t * 2;
+  for (const c of lobbyState.toads) {
+    if (c.wait > 0) { c.wait -= dt; c.moving = false; }
+    else {
+      if (!c.target) c.target = { x: LOBBY.x + rand(-LOBBY.w + 4, LOBBY.w - 4), z: LOBBY.z + rand(-LOBBY.d + 4, LOBBY.d - 4) };
+      const dx = c.target.x - c.pos.x, dz = c.target.z - c.pos.z, dd = Math.hypot(dx, dz);
+      if (dd < 1) { c.target = null; c.wait = rand(1, 4); c.moving = false; }
+      else { c.pos.x += dx / dd * 5 * dt; c.pos.z += dz / dd * 5 * dt; c.yaw = Math.atan2(dx, dz); c.hopT += dt; c.moving = true; }
+    }
+    c.group.position.set(c.pos.x, LOBBY.floorY + (c.moving ? Math.abs(Math.sin(c.hopT * 9)) * 0.4 : 0), c.pos.z);
+    c.group.rotation.y = c.yaw;
+  }
+}
+function lobbyInteraction() {
+  const p = player.pos;
+  if (dist2(p.x, p.z, LOBBY.x, LOBBY.z + LOBBY.d) < 30) return { label: '🌍 Press E to hop back to the Toad World!', fn: () => leaveGame() };
+  if (dist2(p.x, p.z, LOBBY.x, LOBBY.z - LOBBY.d + 4) < 22) return { label: '🔦 Press E to play Survive the Lab again!', fn: () => openClassSelect() };
+  if (dist2(p.x, p.z, LOBBY.x - LOBBY.w, LOBBY.z) < 42) return { label: '⭐ Press E: the VIP board (' + (save.vip ? save.vipLevel + '/20 rewards' : 'join VIP!') + ')', fn: () => openLocker() };
+  if (dist2(p.x, p.z, LOBBY.x + LOBBY.w, LOBBY.z) < 42) return { label: '🎨 Press E: skins, class levels, and your stuff!', fn: () => openLocker() };
+  return { label: '🛋️ Chill with the toads! (E near the door, pad, board, or rack)', fn: () => {} };
+}
+
+// ---------------------------------------------------------------- BABY MANAGER
+function renderBabies() {
+  const wrap = $('babiesList'); wrap.innerHTML = '';
+  if (!babies.length) { wrap.innerHTML = '<div class="pr" style="text-align:center">No baby toads yet! Big toads can hatch them with the 🥚 button.</div>'; return; }
+  for (const b of babies) {
+    const bst = babyStageOf(b.data);
+    const d = document.createElement('div'); d.className = 'bird-row';
+    d.innerHTML = '<div class="em">🐸</div><div class="info"><div class="nm">' + b.name + '</div>' + bst.name + ' · grow ' + Math.floor(b.data.xp || 0) + (b.data.mode === 'follow' ? ' · follows you' : ' · lives at home') + '</div>';
+    const open = document.createElement('button'); open.className = 'btn green'; open.textContent = '💕 Open';
+    open.onclick = () => { toggleModal('babies', false); openBabyModal(b); };
+    const come = document.createElement('button'); come.className = 'btn blue'; come.textContent = '📍 Come here'; come.style.marginLeft = '4px';
+    come.onclick = () => { b.pos.set(player.pos.x + rand(-2, 2), player.pos.y, player.pos.z + rand(-2, 2)); if (b.data.mode === 'home') { b.data.home = { x: Math.round(player.pos.x), z: Math.round(player.pos.z) }; b.target = null; } spawnStars(b.pos, 0xff9ff3); jingle([880, 1100]); showMsg('🐸 ' + b.name + ' hopped right over to you!', 2000); writeSave(); };
+    d.appendChild(open); d.appendChild(come); wrap.appendChild(d);
+  }
+}
+BADGES.push(
+  { id: 'vipstar', em: '⭐', name: 'VIP Toad', desc: 'Joined the VIP club', test: () => !!save.vip },
+  { id: 'viplegend', em: '👑', name: 'VIP Legend', desc: 'Collected all 20 VIP rewards', test: () => (save.vipLevel || 0) >= 20 },
+  { id: 'classlv10', em: '🎖️', name: 'Class Trainee', desc: 'Got a lab class to Level 10', test: () => Object.values(save.labXp || {}).some(xp => labLevel(xp) >= 10) },
+  { id: 'champion', em: '🏅', name: 'Lab Champion', desc: 'Got a lab class to Level 100', test: () => Object.values(save.labXp || {}).some(xp => labLevel(xp) >= 100) },
+  { id: 'deepfreeze', em: '❄️', name: 'Deep Freeze', desc: 'Froze THE LEGENDARY with the Freezer class', test: () => (save.stats.freezes || 0) >= 1 },
+  { id: 'labfashion', em: '🎨', name: 'Lab Fashion', desc: 'Wore your first class skin', test: () => Object.keys(save.labSkinEq || {}).length >= 1 }
+);
+CLASSES.push(
+  { id: 'freezer', name: 'Freezer', em: '❄️', cost: 0, vipOnly: true, desc: "The secret VIP class (reward #20)! Press F to FREEZE THE LEGENDARY solid for 10 whole seconds. Freezers can't do tasks.", btn: 'blue' }
 );
 
 // ---------------------------------------------------------------- GAME LOOP
@@ -5692,7 +6048,7 @@ function update(dt, t) {
   if (player.model.userData.tail) { player.model.userData.tail.rotation.y = Math.sin(t * (moving ? 14 : 5)) * 0.5; player.model.rotation.x = player.inWater ? (keys.Space ? -0.4 : (keys.ShiftLeft ? 0.4 : 0)) : 0; }
   else player.model.rotation.x = player.flying ? (up ? -0.3 : dn ? 0.3 : 0) : 0;
   if (player.model.userData.mouth) player.model.userData.mouth.scale.y = 1 + Math.max(0, Math.sin(t * 6)) * (moving ? 0.5 : 0.1);
-  if (st.rainbow) player.model.userData.mat.color.setHSL((t * 0.25) % 1, 0.85, 0.55);
+  if (surv && surv.skinned) {} else if (st.rainbow) player.model.userData.mat.color.setHSL((t * 0.25) % 1, 0.85, 0.55);
   else if (st.galaxy) player.model.userData.mat.color.setHSL((0.62 + Math.sin(t * 0.6) * 0.12 + 1) % 1, 0.75, 0.42);
   if (player.clothes.back && player.clothes.back.userData.cape) player.clothes.back.userData.cape.rotation.x = 0.35 + (moving || player.flying ? 0.5 + Math.sin(t * 10) * 0.15 : 0);
   if (player.clothes.hat && player.clothes.hat.userData.spin) player.clothes.hat.userData.spin.rotation.y = t * 15;
@@ -5763,7 +6119,7 @@ function update(dt, t) {
   camera.position.lerp(tmpV, Math.min(1, dt * 6));
   camera.lookAt(p.x, p.y + st.scale * 1.2, p.z);
   const camUnder = camera.position.y < -0.1 && pondAt(camera.position.x, camera.position.z);
-  scene.fog = mode === 'survive' ? fogLab : mode === 'judge' ? fogJudge : player.inSpace ? fogSpace : player.inCave ? fogCave : player.inHouse ? fogHouse : camUnder ? fogWater : fogAir; scene.background = mode === 'survive' ? LAB_BG : mode === 'judge' ? JUDGE_BG : player.inSpace ? SPACE_BG : player.inCave ? CAVE_BG : player.inHouse ? HOUSE_BG : camUnder ? WATER : SKY; skyGroup.visible = !camUnder && !player.inCave && !player.inHouse && !player.inSpace && mode !== 'survive' && mode !== 'judge';
+  scene.fog = mode === 'survive' ? fogLab : mode === 'judge' ? fogJudge : mode === 'lobby' ? fogLobby : player.inSpace ? fogSpace : player.inCave ? fogCave : player.inHouse ? fogHouse : camUnder ? fogWater : fogAir; scene.background = mode === 'survive' ? LAB_BG : mode === 'judge' ? JUDGE_BG : mode === 'lobby' ? LOBBY_BG : player.inSpace ? SPACE_BG : player.inCave ? CAVE_BG : player.inHouse ? HOUSE_BG : camUnder ? WATER : SKY; skyGroup.visible = !camUnder && !player.inCave && !player.inHouse && !player.inSpace && mode !== 'survive' && mode !== 'judge' && mode !== 'lobby';
   skyGroup.position.set(p.x, 0, p.z);
   sun.position.set(p.x + 120, p.y + 200, p.z + 80); sun.target.position.set(p.x, p.y, p.z);
 
@@ -5820,6 +6176,14 @@ function drawMap() {
     for (const t2 of surv.toads) if (t2.alive) { c.fillStyle = '#7cff5a'; c.fillRect(px(t2.pos.x) - 2, pz(t2.pos.z) - 2, 4, 4); }
     if (surv.legend) { c.fillStyle = '#ff2222'; c.beginPath(); c.arc(px(surv.legend.pos.x), pz(surv.legend.pos.z), 4, 0, 6.3); c.fill(); }
     if (!surv.spec) { c.fillStyle = surv.meLegend ? '#ff2222' : '#fff'; c.strokeStyle = '#000'; c.beginPath(); c.arc(px(player.pos.x), pz(player.pos.z), 4, 0, 6.3); c.fill(); c.stroke(); }
+    return;
+  }
+  if (mode === 'lobby') {
+    const c = mapCtx, S = 170;
+    c.fillStyle = '#ffe3bd'; c.fillRect(0, 0, S, S);
+    c.fillStyle = '#c9a26b'; c.fillRect(20, 30, 130, 110);
+    c.font = '34px sans-serif'; c.textAlign = 'center'; c.fillText('🛋️', 85, 95);
+    c.font = 'bold 13px sans-serif'; c.fillStyle = '#7a4b00'; c.fillText('TOAD LOBBY', 85, 122);
     return;
   }
   if (mode === 'judge' && judge) {
@@ -5883,7 +6247,7 @@ loadSave();
 buildSky(); buildGround(); buildIslands(); buildScenery(); buildMushrooms(); buildFood(); buildBurrow(); buildNPCs(); buildAnimals(); buildArena(); buildTrack(); buildEggs(); buildNight(); buildCave(); assignNpcPets(); buildNests(); buildNpcForts(); buildNpcFamilies(); buildHouse(); buildBiomes(); buildTown(); buildFarm(); buildWildFlowers(); buildSpace(); buildSpriteSpots();
 $('playBtn').onclick = () => { $('start').style.display = 'none'; beep(660, 0.1); startGame(); };
 $('resetBtn').onclick = () => { if (confirm('Start a brand new game? Your toad will go back to being a tadpole!')) { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} location.reload(); } };
-window.TA = { player, mush, npcs, animals, babies, makeClothing, CLOTHES, equipVisual, hatchPet, startSteal, myNest, startTag, startTagWith, startSurvive, get surv() { return surv; }, frame, LAB, LAB_GRID, labDoors2: () => labDoors, labCellCenter, startBirthday, get bday() { return bday; }, set bdayT(v) { bdayT = v; }, celebrate, refreshTraders, set traderT(v) { traderT = v; }, renderTrade, set tradeNpc(n) { tradeNpc = n; }, surviveAction, surviveSwing, setDoor, nearestDoor, BIOMES, SPRITES, SPACE, CAFE, FARM, SEEDS, SHOES, FLAVORS, aliens, enterSpace, exitSpace, meetSprite, spriteSpots, seatNpc, startChat, finishChat, acceptFriend, inviteFriend, harvestPlot, sellBouquets, cropStage, plotPos, TOPICS, get chatSeq() { return chatSeq; }, get giftState() { return giftState; }, set giftT(v) { giftT = v; }, set visitorT(v) { visitorT = v; }, set pairT(v) { pairT = v; }, get cafeSeats() { return cafeSeats; }, talkToAlien, biomeAt, H2: H, tagAction, bonkThief, get carrying() { return carrying; }, set thiefT(v) { thiefT = v; }, startHamashWith, enterHouse, exitHouse, callTaxi, startFishing, fishAction, renderPets, addStar, get fishing() { return fishing; }, get stealing() { return stealing; }, get taxi() { return taxi; }, get wx() { return wx; }, set rainT(v) { wx.t = v; }, HOUSE, ARENAS, DISCOVER, TAXI_STOPS, startSnailRace, snailCheer, togglePhoto, snapPhoto, setPose, enterCave, exitCave, openCaveChest, playNote, applySeason, get season() { return season; }, get petSnail() { return petSnail; }, CAVE, SEASONS, get photoMode() { return photoMode; }, get curGame() { return curGame; }, get heron() { return heron; }, get friend() { return friend; }, startFlyCatch, startLily, startSky, startHide, finishGame, questTalk, offerQuests, babyGift, checkBadges, earnedBadges, applyReward, GEAR, BADGES, dayFactor, set heronT(v) { heronT = v; }, set questOfferT(v) { questOfferT = v; }, get mode() { return mode; }, get worldReturn() { return worldReturn; }, get hamash() { return hamash; }, get race() { return race; }, startHamash, startRace, endGame, leaveGame, usePower, swingHammer, applyEffect, eggs, BIRDS, get bird() { return bird; }, get save() { return save; }, get camYaw() { return camYaw; }, set camYaw(v) { camYaw = v; camManual = 5; }, get running() { return running; }, keys, H, gainXP, adoptBird, hatchBaby, meetFriend, feedBird, startFlying, updateHUD, openClassSelect, pickClassAndGo, CLASSES, labTasks: () => LAB_TASKS, openTask, taskSuccess, taskFail, nearestTask, bonkToad, get duel() { return duel; }, set duelCool(v) { duelCool = v; }, set bonkCool(v) { bonkCool = v; }, offerDuel, startDuel, duelSwing, endDuel, openBabyModal, sendOffBaby, BABY_STAGES, babyStageOf, get skyGift() { return skyGift; }, set giftDropT(v) { giftDropT = v; }, openSkyGift, updateTutorial, renderHowto, get bonkPending() { return pendingDuelNpc; }, stunHunter, ejectFromDoorCell, resetLabTasks, spawnBaby, babies2: () => babies, startJudgemental, get judge() { return judge; }, judgeSwing, judgeAction, spawnJudgeBoss, judgeBoost, judgeZap, JUDGE, useAbility, useAbilityKey, labSight, renderAbilityBtns, judgePowerSwing, hurtRunner, dropGoo, updateSurvExtras };
+window.TA = { player, mush, npcs, animals, babies, makeClothing, CLOTHES, equipVisual, hatchPet, startSteal, myNest, startTag, startTagWith, startSurvive, get surv() { return surv; }, frame, LAB, LAB_GRID, labDoors2: () => labDoors, labCellCenter, startBirthday, get bday() { return bday; }, set bdayT(v) { bdayT = v; }, celebrate, refreshTraders, set traderT(v) { traderT = v; }, renderTrade, set tradeNpc(n) { tradeNpc = n; }, surviveAction, surviveSwing, setDoor, nearestDoor, BIOMES, SPRITES, SPACE, CAFE, FARM, SEEDS, SHOES, FLAVORS, aliens, enterSpace, exitSpace, meetSprite, spriteSpots, seatNpc, startChat, finishChat, acceptFriend, inviteFriend, harvestPlot, sellBouquets, cropStage, plotPos, TOPICS, get chatSeq() { return chatSeq; }, get giftState() { return giftState; }, set giftT(v) { giftT = v; }, set visitorT(v) { visitorT = v; }, set pairT(v) { pairT = v; }, get cafeSeats() { return cafeSeats; }, talkToAlien, biomeAt, H2: H, tagAction, bonkThief, get carrying() { return carrying; }, set thiefT(v) { thiefT = v; }, startHamashWith, enterHouse, exitHouse, callTaxi, startFishing, fishAction, renderPets, addStar, get fishing() { return fishing; }, get stealing() { return stealing; }, get taxi() { return taxi; }, get wx() { return wx; }, set rainT(v) { wx.t = v; }, HOUSE, ARENAS, DISCOVER, TAXI_STOPS, startSnailRace, snailCheer, togglePhoto, snapPhoto, setPose, enterCave, exitCave, openCaveChest, playNote, applySeason, get season() { return season; }, get petSnail() { return petSnail; }, CAVE, SEASONS, get photoMode() { return photoMode; }, get curGame() { return curGame; }, get heron() { return heron; }, get friend() { return friend; }, startFlyCatch, startLily, startSky, startHide, finishGame, questTalk, offerQuests, babyGift, checkBadges, earnedBadges, applyReward, GEAR, BADGES, dayFactor, set heronT(v) { heronT = v; }, set questOfferT(v) { questOfferT = v; }, get mode() { return mode; }, get worldReturn() { return worldReturn; }, get hamash() { return hamash; }, get race() { return race; }, startHamash, startRace, endGame, leaveGame, usePower, swingHammer, applyEffect, eggs, BIRDS, get bird() { return bird; }, get save() { return save; }, get camYaw() { return camYaw; }, set camYaw(v) { camYaw = v; camManual = 5; }, get running() { return running; }, keys, H, gainXP, adoptBird, hatchBaby, meetFriend, feedBird, startFlying, updateHUD, openClassSelect, pickClassAndGo, CLASSES, labTasks: () => LAB_TASKS, openTask, taskSuccess, taskFail, nearestTask, bonkToad, get duel() { return duel; }, set duelCool(v) { duelCool = v; }, set bonkCool(v) { bonkCool = v; }, offerDuel, startDuel, duelSwing, endDuel, openBabyModal, sendOffBaby, BABY_STAGES, babyStageOf, get skyGift() { return skyGift; }, set giftDropT(v) { giftDropT = v; }, openSkyGift, updateTutorial, renderHowto, get bonkPending() { return pendingDuelNpc; }, stunHunter, ejectFromDoorCell, resetLabTasks, spawnBaby, babies2: () => babies, startJudgemental, get judge() { return judge; }, judgeSwing, judgeAction, spawnJudgeBoss, judgeBoost, judgeZap, JUDGE, useAbility, useAbilityKey, labSight, renderAbilityBtns, judgePowerSwing, hurtRunner, dropGoo, updateSurvExtras, labNextStep, labLevel, labXpGain, VIP_REWARDS, grantVip, LAB_SKINS, skinOwned, openLocker, renderLocker, enterLobby, LOBBY, get lobbyState() { return lobbyState; }, lobbyInteraction, renderBabies, makeVipTag, judgePick };
 requestAnimationFrame(frame);
 })();
 </script>

@@ -52,7 +52,10 @@ Out in the world you'll find:
 - 🏷️ Tag maps: Meadow, Playground, School, and City.
 - 🔦 **Survive the Lab**: a big fully-walled lab of hallways, rooms, and slammable metal doors (they all start CLOSED and flash yellow — visible through walls!). THE LEGENDARY stalks slower than a toad with its own stamina, but flies into a RAGE speed boost the moment it SEES you, and every toad it catches adds 30 seconds to the clock. RUN and ability buttons sit in the bottom-right corner (J / F on a keyboard). 1 game in 10, YOU are the giant golden Legendary with three powers: 💥 Hammer Slam shockwave, 📢 Sonic Croak freeze, and 👅 Magnet Tongue.
 - 🧪 **Lab tasks** in the corner rooms: mix potions, fix wires, repeat beaker patterns. Winning drops the clock 15 seconds, failing adds 10. Computer toads do tasks too.
-- ➕🔨👀🪤🛡️ **Five lab classes**: Medic (heals), Bonker (hammer-throw stun), Scout (sees the Legendary through walls + super dash), Shieldy (bubble shields that block a hit), and Trapper (sticky goo that stops the Legendary for 3 seconds). Abilities on F; computer toads can have classes too.
+- ➕🔨👀🪤🛡️❄️ **Six lab classes**: Medic, Bonker, Scout, Shieldy, Trapper — and the secret VIP-only **Freezer**, which freezes the Legendary solid for 10 seconds. Abilities on F; computer toads can have classes too.
+- 🛋️ **The Toad Lobby**: after every Survive game you land in a cozy lobby with toads hopping around — check the ⭐ VIP board, browse the 🎨 skin rack, replay from the red pad, or take the green door home.
+- ⭐ **VIP**: join for 100 coins, then every finished game unlocks the next of 20 escalating rewards, from coin piles to a shiny VIP name tag, three special skins, and the Freezer class itself.
+- 🎖️ **Class levels**: every class earns its own XP (abilities + wins), 100 levels each, with a golden 👑 Champion skin at the top. 🎨 **Class skins** for everyone — computer toads wear them too.
 - 🚨 Last toad standing glows **red** — the Legendary knows exactly where you are.
 - 🎓 **Baby toads grow up** through five stages. Grown babies can be painted any color and sent off into the world; they send gift balloons 🎈 from the sky forever.
 - ⚔️ **Bonk battles**: press Q (or the BONK button) to bonk a toad for fun. Sometimes it becomes a duel — first to 3 bonks wins, and the winner takes the loser's best pet.
