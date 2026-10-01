@@ -55,9 +55,9 @@ Out in the world you'll find:
 - ➕🔨👀🪤🛡️❄️ **Six lab classes**: Medic, Bonker, Scout, Shieldy, Trapper — and the secret VIP-only **Freezer**, which freezes the Legendary solid for 10 seconds. Abilities on F; computer toads can have classes too.
 - 🛋️ **The Toad Lobby**: after every Survive game you land in a cozy lobby with toads hopping around — check the ⭐ VIP board, browse the 🎨 skin rack, replay from the red pad, or take the green door home.
 - ⭐ **VIP**: join for 100 coins, then every finished game unlocks the next of 20 escalating rewards, from coin piles to a shiny VIP name tag, three special skins, and the Freezer class itself.
-- 🎖️ **Class levels**: every class earns its own XP (abilities + wins), 100 levels each, with a golden 👑 Champion skin at the top. 🎨 **Class skins** for everyone — computer toads wear them too.
+- 🎖️ **Class levels**: every class earns its own XP (abilities, tasks, and WINS only — losing or quitting earns nothing), 100 levels each, topped by 👑 Mastery skins designed by Sasha (Cloud Racer 1000, Star Doctor, Fluffy Smasher, Tiger Stripes, Goo Goggles, Shark Guard, Frost King). 🎨 26 **class skins** bought with the 🧪 **Research** currency earned in the lab — computer toads wear them too.
 - 🚨 Last toad standing glows **red** — the Legendary knows exactly where you are.
-- 🎓 **Baby toads grow up** through five stages. Grown babies can be painted any color and sent off into the world; they send gift balloons 🎈 from the sky forever.
+- 🎓 **Baby toads grow up** through five stages, can be painted any color, and when sent off they become REAL computer toads (up to 10): exploring, racing in the Legendary Race, keeping pets, birds, sprites — even their own babies — and leaving presents at the Toad Café 🎁.
 - ⚔️ **Bonk battles**: press Q (or the BONK button) to bonk a toad for fun. Sometimes it becomes a duel — first to 3 bonks wins, and the winner takes the loser's best pet.
 - 🐸 Toad friends have their own baby toads, glowing sprites, and little forts.
 - 📖 A **tutorial** for new players and a How to Play book behind the ❓ button.
@@ -67,7 +67,7 @@ Out in the world you'll find:
 - 📋 An in-game **Update Log** with everything that's new.
 - 🌲 A giant mushroom forest (press E on a giant mushroom to bounce!), a stone circle, four lakes, and four floating sky islands.
 
-Evolution: Tadpole → Mini Toad → Toad → Big Toad → 👑 Legendary Toad → 💜 Mega Toad → 🔮 Mythic Toad → 🌈 Rainbow Toad → 💪 Unstoppable Toad → ⚡ Ultimate Toad → 🌌 Galaxy Toad.
+Evolution: Tadpole → Mini Toad → Toad → Big Toad → 👑 Legendary Toad → 💜 Mega Toad → 🔮 Mythic Toad → 🌈 Rainbow Toad → 💪 Unstoppable Toad → ⚡ Ultimate Toad → 🌌 Galaxy Toad → ☁️ Sky Legend → 🔥 Flaming Toad → 🪐 Universe Toad.
 
 Add it to your phone or tablet home screen and it opens like a real app with its own toad icon.
 
