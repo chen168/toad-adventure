@@ -61,6 +61,11 @@ Out in the world you'll find:
 - ⚔️ **Bonk battles**: press Q (or the BONK button) to bonk a toad for fun. Sometimes it becomes a duel — first to 3 bonks wins, and the winner takes the loser's best pet.
 - 🐸 Toad friends have their own baby toads, glowing sprites, and little forts.
 - 📖 A **tutorial** for new players and a How to Play book behind the ❓ button.
+- 🧫 **Scientist Cards** with your Research, class levels, and a Legendary chance that GROWS every game you wait (10% → 40%).
+- 🧁 **The Baker class** (900 coins): F = cupcake for full health, G = a whole cake for full stamina.
+- 🔨 **Hammer Skins shop**: six hammers with real powers (+damage, knockback, freezing bonks, faster swings) that work in every hammer game.
+- 🌈 **Baby Skin Shop**: Gold, Gemstone, Rainbow, Pastel Rainbow, and Flaming skins for your babies; their treasures auto-collect from menus. Computer toads' released babies now become REAL world toads, forever.
+- 👤 **Toad Profiles**: a username (shown on the race board!), cute profile pictures, a ✨ shiny effect for finishing the tutorial, and six earnable frames up to the sparkling 💎 Diamond.
 - ⚖️ **Judgemental**: all 40 toad friends LINE UP before the JUDGE, who sorts everyone onto the ☀️ LIGHT or 🌑 DARK side — usually uneven teams! — then: Ready... FIGHT! Teams glow gold and purple, Q throws a MEGA POWER BONK, and you must wipe out the other side AND survive. The Judge meddles from a floating throne with 👹 toad bosses, ⚡ boosts, and 💥 zaps. 1 game in 5, YOU are the Judge and spend coins on the chaos.
 - 🎂 **Birthday parties** at the café with balloons and cake. Celebrate for coins, double while wearing a 🎉 Party Hat.
 - 🔄 **Trading** with 💰-marked toads: mushrooms, petals, coins, stones, flowers, carrots, stars, and sometimes full pet swaps.
